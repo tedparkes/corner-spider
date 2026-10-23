@@ -12,7 +12,8 @@ namespace CornerSpider {
         public double GuestWebFactor { get; private set; }
         public double GuestWebScale { get { return GuestScale*GuestWebFactor; } }
         public double GuestWebExtent { get { return 188*GuestWebScale; } }
-        public V GuestPluckPoint { get { return GuestPatternPoint(GuestWebPattern.Rim(0)); } }
+        public int GuestPluckSpoke { get; private set; }
+        public V GuestPluckPoint { get { return GuestPatternPoint(GuestWebPattern.Rim(GuestPluckSpoke)); } }
         public V GuestPluckPosition { get { return guestStop; } }
         public bool GuestFadeStarted { get; private set; }
         public double NextWebVisit=100;
@@ -105,6 +106,15 @@ namespace CornerSpider {
                 best=distance;found=true;GuestArea=area;GuestCornerIndex=corner;GuestCorner=edge;GuestCenter=center;GuestInward=inward*(1/Math.Sqrt(2));GuestScale=s;GuestWebFactor=factor;
             }
             if(!found) { NextWebVisit=Clock+120;return false; }
+            // Pluck at the nearer outer desktop attachment, never on the
+            // unsupported middle of the open rim. Both choices join a spoke.
+            V topStop,topGoal,sideStop,sideGoal;
+            bool top=PlanPlucking(GuestWebPattern.TopBridgeAnchor,out topStop,out topGoal);
+            bool side=PlanPlucking(GuestWebPattern.SideBridgeAnchor,out sideStop,out sideGoal);
+            if(!top && !side) { NextWebVisit=Clock+120;return false; }
+            bool useTop=top && (!side || (topStop-Spider).Length<=(sideStop-Spider).Length);
+            GuestPluckSpoke=useTop?GuestWebPattern.TopBridgeAnchor:GuestWebPattern.SideBridgeAnchor;
+            guestStop=useTop?topStop:sideStop;guestResidentGoal=useTop?topGoal:sideGoal;
             GuestAge=GuestStageAge=GuestProgress=GuestLure=guestResponse=previousPulse=0;GuestTaps=0;
             GuestBuildTime=Between(180,240);GuestWaitTime=Between(60,120);GuestOpacity=1;
             GuestFadeStarted=false;guestFadeAge=0;
@@ -166,13 +176,29 @@ namespace CornerSpider {
                 MoveGuest(GuestCenter+(guestResidentGoal-GuestCenter)*GuestLure,dt);
             }
         }
+        V PluckingPerch(V contact) {
+            double s=Scale*Areas[GuestArea].Dpi;V outward=contact-GuestCenter;outward=outward*(1/outward.Length);
+            // Keep the entire hunter inside the desktop beside the attachment.
+            return Areas[GuestArea].Clamp(contact+outward*(52*s),SpiderPose.Radius*s);
+        }
+        bool PlanPlucking(int spoke,out V stop,out V goal) {
+            V contact=GuestPatternPoint(GuestWebPattern.Rim(spoke));stop=PluckingPerch(contact);goal=GuestCenter;
+            double s=Scale*Areas[GuestArea].Dpi;
+            // A fitted web's anchor is too close to the edge for the hunter's
+            // whole-body landing. Keep the resident on its connected spoke,
+            // but shorten the lure until the normal mouth-offset jump fits.
+            for(int step=0;step<18;step++) {
+                V candidate=GuestCenter+(contact-GuestCenter)*(.45-step*.025);
+                V direction=candidate-stop;
+                V landing=Areas[GuestArea].Clamp(candidate-direction*(25*s/direction.Length),SpiderPose.Radius*s);
+                if((landing-candidate).Length<32*s) { goal=candidate;return true; }
+            }
+            return false;
+        }
         void BeginWebApproach() {
             ClearPlay();WebStage=WebVisit.Approach;GuestStageAge=0;guestReachedDetour=false;
             double s=Scale*Areas[GuestArea].Dpi;
-            V outward=GuestPluckPoint-GuestCenter;outward=outward*(1/outward.Length);
-            guestStop=GuestPluckPoint+outward*(52*s);
             guestDetour=GuestLocal(GuestWebExtent+110*s,GuestWebExtent+40*s);
-            guestResidentGoal=GuestCenter+(GuestPluckPoint-GuestCenter)*.45;
             Enter(Mood.WebApproach);
         }
         void SneakToWeb(double dt) {
@@ -181,12 +207,12 @@ namespace CornerSpider {
             double distance=(target-Spider).Length/BodyScale;
             if(BurstMove(target,distance>400?135:distance>140?85:44,dt,true)) {
                 if(!guestReachedDetour) guestReachedDetour=true;
-                else { WebStage=WebVisit.Plucking;GuestStageAge=0;Face(GuestCenter);Enter(Mood.WebPluck); }
+                else { WebStage=WebVisit.Plucking;GuestStageAge=0;Face(GuestPluckPoint);Enter(Mood.WebPluck); }
             }
         }
         void PluckWeb() {
             if(!GuestPrey) { Wake();return; }
-            Face(Fly);
+            Face(GuestPluckPoint);
             if(GuestLure>=1 && GuestTaps>=8) { WebStage=WebVisit.Attack;GuestStageAge=0;PrepareJump(Fly,"fly"); }
         }
     }

@@ -5,8 +5,8 @@ by the local packaging script or build workflow.
 
 Changes after a preserved tag belong to the next release. Choose its version,
 update the version sources below and tag the reviewed commit containing the new
-documentation. Replace `vNEXT_VERSION` below with that tag. Keep the existing RC8
-tag and ZIPs unchanged; documentation previews built from RC8 are drafts.
+documentation. Replace `vNEXT_VERSION` below with that tag. Keep the existing release
+tags and ZIPs unchanged.
 
 1. Create an empty public repository named corner-spider under your chosen
    GitHub account. Review LICENSE and the public README before uploading.
@@ -42,7 +42,7 @@ The portable executable is unsigned. Do not claim it is signed, security-certifi
 or tested on systems that were not exercised. Code signing is a future improvement.
 
 Before final 1.0, complete the manual checklist and update the informational
-version from 1.0.0-rc.8 to 1.0.0. Retest the exact release contents. The optional
+version from 1.0.0-rc.9 to 1.0.0. Retest the exact release contents. The optional
 support QR intentionally identifies the creator; review docs/SUPPORT.md before
 redistributing a fork. Keep this recipient or replace both QR and link deliberately.
 

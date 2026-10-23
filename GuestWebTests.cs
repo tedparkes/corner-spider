@@ -32,7 +32,19 @@ static class GuestWebTests {
         }
         V openMiddle=GuestWebPattern.Rim(0),chord=new V(-183,188);
         double inset=Math.Abs((openMiddle.X-183)*chord.Y-openMiddle.Y*chord.X)/chord.Length;
-        Check(inset>8 && inset<15,"outer edge has a visible but gentle inward bow between fixed anchors");
+        V chordMiddle=new V(91.5,94);
+        double chordDepth=183*188/chord.Length;
+        Check(inset/chordDepth>.34 && inset/chordDepth<.36,"outer edge bows inward by 35 percent of the full corner-to-chord depth");
+        V priorMiddle=chordMiddle+(GuestWebPattern.Hub-chordMiddle)*.125;
+        Check(openMiddle.Length/priorMiddle.Length>.69 && openMiddle.Length/priorMiddle.Length<.72,
+            "middle edge is about 30 percent shallower than RC8 while its anchors stay fixed");
+        Check((openMiddle-GuestWebPattern.Hub).Length>35,"deep curve leaves room around the resident hub");
+        foreach(int spoke in new[]{GuestWebPattern.TopBridgeAnchor,GuestWebPattern.SideBridgeAnchor}) {
+            V contact=GuestWebPattern.Rim(spoke);
+            Check(contact.X==0 || contact.Y==0,"each plucking choice is a real desktop attachment");
+            Check((contact-GuestWebPattern.Hub).Length*3+52>250,
+                "anchor plucking preserves separation between Portia and the waiting resident on a full-size web");
+        }
         int anchors=0,curved=0,spiral=0;V previous=new V();bool first=true;
         for(int i=0;i<GuestWebPattern.Count;i++) {
             var strand=GuestWebPattern.Strand(i);
@@ -74,7 +86,11 @@ static class GuestWebTests {
                 if(rim.X==0) Check(Math.Min(Math.Abs(at.X-area.X),Math.Abs(at.X-area.X-area.W))<.000001,"side anchor touches the actual work-area boundary");
                 if(rim.Y==0) Check(Math.Min(Math.Abs(at.Y-area.Y),Math.Abs(at.Y-area.Y-area.H))<.000001,"top/bottom anchor touches the actual work-area boundary");
             }
-            Check((w.GuestPatternPoint(GuestWebPattern.Rim(0))-w.GuestPluckPoint).Length<.000001,"Portia plucks the endpoint of a real hub-connected spoke");
+            Check(w.GuestPluckSpoke==GuestWebPattern.TopBridgeAnchor || w.GuestPluckSpoke==GuestWebPattern.SideBridgeAnchor,"Portia chooses an outer desktop anchor, never the floating bridge middle");
+            Check((w.GuestPatternPoint(GuestWebPattern.Rim(w.GuestPluckSpoke))-w.GuestPluckPoint).Length<.000001,"Portia plucks the endpoint of a real hub-connected spoke");
+            V contact=w.GuestPluckPoint;
+            Check(Math.Min(Math.Min(Math.Abs(contact.X-area.X),Math.Abs(contact.X-area.X-area.W)),Math.Min(Math.Abs(contact.Y-area.Y),Math.Abs(contact.Y-area.Y-area.H)))<.000001,
+                "chosen plucking contact stays on a physical display edge after mirroring and scaling");
             V last=w.Fly;
             while(w.WebStage==WebVisit.Building) {
                 w.Tick(.1,new V(-10000,-10000));

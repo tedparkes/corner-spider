@@ -16,6 +16,7 @@ namespace CornerSpider {
     }
     public static class GuestWebPattern {
         public const int Spokes=16,Turns=9;
+        public const int TopBridgeAnchor=13,SideBridgeAnchor=3;
         public static readonly V Hub=new V(34,36);
         static readonly double[] bridgeTimes={0,.2,.36,.5,.64,.8,1};
         static readonly V[] rim=MakeRim();
@@ -49,11 +50,12 @@ namespace CornerSpider {
             for(int i=0;i<bridgeTimes.Length;i++) points[(13+i)%Spokes]=BridgePoint(bridgeTimes[i]);
             return points;
         }
-        // Pull the bridge control point one quarter of the way toward the hub.
-        // A single quadratic arc keeps the open edge gently concave throughout,
-        // with both desktop attachment points fixed. Split it exactly at spoke
-        // joins so construction, artwork and plucking use the same curve.
-        static V BridgeControl { get { V middle=new V(91.5,94);return middle+(Hub-middle)*.25; } }
+        // A quadratic's midpoint lies halfway between its chord midpoint and
+        // control point. Place the control at 30% of the corner-to-chord depth:
+        // the visible middle is at 65%, about 30% shallower than RC8's 92%.
+        // Keep both edge anchors fixed and split the arc exactly at spoke joins
+        // so construction, artwork and plucking use the same smooth curve.
+        static V BridgeControl { get { return new V(91.5,94)*.30; } }
         static V BridgePoint(double t) { double u=1-t;return new V(183,0)*(u*u)+BridgeControl*(2*u*t)+new V(0,188)*(t*t); }
         static V BridgeTangent(double t) { return (BridgeControl-new V(183,0))*(2*(1-t))+(new V(0,188)-BridgeControl)*(2*t); }
         static GuestStrand Bridge(double start,double end) {

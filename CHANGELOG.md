@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 1.0.0-rc.9
+
+- Deepen the resident web's open-edge curve: the middle sits about 30% closer to
+  the corner than in RC8, with both end anchors fixed and smooth spoke joins.
+- Portia chooses the nearer outer attachment on a desktop edge, approaches beside
+  it and faces the anchor to pluck. Keep full body clearance, the resident's hub,
+  web footprint and separation between the hunter and resident.
+- Shorten the resident's lure path on fitted webs when needed for a safe capture;
+  retain contact with its spoke. Add complete fitted-web hunts in all four corners.
 - Include the complete version-by-version changelog in release notes and both
   Windows/source packages, with a standalone CHANGELOG.md release attachment.
 - Add the initial prototype and early build changes to the changelog.

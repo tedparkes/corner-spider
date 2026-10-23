@@ -1,4 +1,4 @@
-Corner Spider RC8 targeted WPF web checks
+Corner Spider RC9 targeted WPF web checks
 PASS: completed orb web reuses one generated silk image across 180 redraws
 PASS: departure fade reuses the web artwork without rebuilding geometry
 PASS: construction progress replaces the single retained silk layer

@@ -12,8 +12,10 @@ static class EncounterTests {
         w.Corner=Settings.Corners[seed%4];w.UpdateHome();w.Spider=w.Home;w.SetSpecies("PortiaLabiata");w.AutoFeed=w.CursorPlay=false;return w;
     }
     public static void Run() {
+        var attachmentChoices=new HashSet<int>();
         foreach(double size in new[]{.2,1,1.8}) foreach(double dt in new[]{.033,.1}) for(int seed=0;seed<8;seed++) {
             var w=New(seed,size,new[]{1,1.5,2}[seed%3]);Check(w.StartWebVisit(),"Portia can invite a web builder");
+            attachmentChoices.Add(w.GuestPluckSpoke);
             Check(w.GuestBuildTime>=180 && w.GuestBuildTime<=240 && w.GuestWaitTime>=60 && w.GuestWaitTime<=120,"real build and post-build wait durations");
             Check((w.GuestCenter-w.Home).Length>320*w.HomeScale,"guest web is separate from the hammock");
             Check(Math.Abs(w.GuestWebFactor-3)<.001 && Math.Abs((w.GuestNode(2)-w.GuestNode(0)).Length/w.GuestScale-549)<.001,"roomy displays use three times the original web span");
@@ -36,6 +38,8 @@ static class EncounterTests {
                     if(w.GuestLure==0) Check((w.Spider-w.Fly).Length>250*w.GuestScale,"central resident and edge-plucking Portia are visibly separated");
                     if(w.GuestTaps>0 && w.GuestTaps<4) { Check(w.GuestLure==0,"initial probes do not immediately summon resident");ignoredProbe=true; }
                     if(w.GuestLure>0) Check(w.GuestTaps>=4,"resident responds only after exploratory signals");
+                    V spoke=w.GuestPluckPoint-w.GuestCenter,along=w.Fly-w.GuestCenter;
+                    Check(Math.Abs(spoke.X*along.Y-spoke.Y*along.X)<.00001*w.GuestScale*w.GuestScale,"lured resident stays on the spoke connected to the chosen desktop anchor");
                 }
             }
             Check(w.Meals==1 && w.Meal==PreyKind.SmallSpider && !w.HasFly,"complete web encounter captures exactly one resident, seed "+seed+" size "+size+" state "+w.State+" visit "+w.WebStage);
@@ -89,6 +93,26 @@ static class EncounterTests {
             Check(fitted.GuestWebFactor<=3 && fitted.GuestWebFactor>=1 && fitted.GuestWebExtent+200*fitted.GuestScale<=1000,"fitted web leaves an approach lane");
             for(int j=0;j<15;j++) Check(fitted.Areas[fitted.GuestArea].Contains(fitted.GuestNode(j)),"every enlarged thread junction stays on its selected display");
         }
+        for(int orientation=0;orientation<2;orientation++) for(int corner=0;corner<4;corner++) {
+            var fitted=New(corner,1.8,1);fitted.ConfigureDisplays(new[]{new Area(0,0,orientation==0?1920:1000,orientation==0?1000:1920,1)},0);fitted.Spider=fitted.Home;
+            Check(fitted.StartWebVisit() && fitted.GuestWebFactor<3,"deep-curve fixture uses a fitted web");
+            attachmentChoices.Add(fitted.GuestPluckSpoke);
+            bool plucked=false;
+            for(int i=0;i<8500 && fitted.Meals==0;i++) {
+                fitted.Tick(.1,away);
+                if(fitted.WebStage==WebVisit.Plucking) {
+                    plucked=true;var area=fitted.Areas[fitted.GuestArea];
+                    Check((area.Clamp(fitted.GuestPluckPosition,SpiderPose.Radius*fitted.GuestScale)-fitted.GuestPluckPosition).Length<.000001,
+                        "fitted web's plucking perch leaves full body clearance at the display edge");
+                }
+            }
+            Check(plucked && fitted.Meals==1,"deep curved web remains reachable through a complete fitted encounter in corner "+corner+
+                "; mood="+fitted.State+", visit="+fitted.WebStage+", plucked="+plucked+", meals="+fitted.Meals+
+                ", contact="+fitted.GuestPluckSpoke+", prey gap="+(fitted.Fly-fitted.Spider).Length/fitted.GuestScale);
+            complete++;
+        }
+        Check(attachmentChoices.Contains(GuestWebPattern.TopBridgeAnchor) && attachmentChoices.Contains(GuestWebPattern.SideBridgeAnchor),
+            "complete hunts exercise both outer desktop attachments on landscape and portrait displays");
         // A route that cuts across the reserved corner must take the outside lane,
         // even though neither its start nor its goal is in the web.
         var route=New(3,1,1);route.StartWebVisit();V signs=route.GuestInward*Math.Sqrt(2);double edge=route.GuestWebExtent;
