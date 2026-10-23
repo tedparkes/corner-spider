@@ -6,8 +6,11 @@ namespace CornerSpider {
         public int FingerDirection=1;
         public V FingerOrigin,SilkStart,SilkEnd;
         public string LastDismount="";
-        V carryVelocity,climbFrom;
-        bool climbing;
+        V carryVelocity,climbFrom,touchdownOffset;
+        bool climbing,tipBoarding=true;
+        double boardingPosition=65;
+        public bool TipBoarding { get { return tipBoarding; } }
+        public bool SettlingOnFinger { get { return State==Mood.Ride && !tipBoarding && RideAge<.24; } }
         double fingerGoal=65,fingerDecision,nextFingerWave;
         V dismountFrom,dismountPerch;
         double dismountClimbTime,dismountReadyAt=-1;
@@ -15,15 +18,25 @@ namespace CornerSpider {
             if(State!=Mood.Dismount || dismountReadyAt<0) return 0;
             double t=Math.Max(0,Math.Min(1,(StateTime-dismountReadyAt-.06)/.18));return t*t*(3-2*t);
         } }
-        public bool Hanging { get { return State==Mood.Ride && RideAge<1.8; } }
-        public bool Climbing { get { return State==Mood.Ride && RideAge>=1.8 && RideAge<2.8; } }
-        public bool OnFinger { get { return State==Mood.Ride && RideAge>=2.8; } }
+        public bool Hanging { get { return State==Mood.Ride && tipBoarding && RideAge<1.8; } }
+        public bool Climbing { get { return State==Mood.Ride && tipBoarding && RideAge>=1.8 && RideAge<2.8; } }
+        public bool OnFinger { get { return State==Mood.Ride && (!tipBoarding || RideAge>=2.8); } }
         public bool FingerActive { get { return InviteTime>=InviteDelay || State==Mood.Ride || (jumpPurpose=="cursor" && (State==Mood.Reach || State==Mood.Crouch || State==Mood.Jump)); } }
         V TipAt(V cursor,int direction) { return cursor+new V(-direction*75,12)*BodyScale; }
         V SurfaceAt(V cursor,double x,int direction) { return TipAt(cursor,direction)+new V(direction*x,-.22*x)*BodyScale; }
         public V FingerTip(V cursor) { return TipAt(cursor,FingerDirection); }
-        public V CursorLanding(V cursor) { return FingerTip(cursor)+new V(0,52*BodyScale); }
+        public V CursorLanding(V cursor) { return tipBoarding?FingerTip(cursor)+new V(0,52*BodyScale):SurfaceAt(cursor,boardingPosition,FingerDirection); }
         public V FingerPoint(double x) { return SurfaceAt(FingerOrigin,x,FingerDirection); }
+        void PlanFingerBoarding(V cursor) {
+            V from=Spider-FingerTip(cursor);
+            double x=from.X*FingerDirection/BodyScale,y=from.Y/BodyScale;
+            // Only the exposed side of the tip offers a natural front-leg catch.
+            // Above the finger or behind its base, land on the upper surface.
+            tipBoarding=x< -18 && y> -12 && y<120 && random.NextDouble()<.6;
+            double nearest=Math.Max(45,Math.Min(103,(x-.22*y)/1.0484));
+            double low=Math.Max(45,nearest-24),high=Math.Min(103,nearest+24);
+            boardingPosition=tipBoarding?65:Between(low,high);
+        }
         bool Safe(V point) { return (Clamp(point)-point).Length<.01; }
         bool FitsFinger(V cursor,int direction) {
             return InsideAny(cursor) && Safe(TipAt(cursor,direction)+new V(0,52*BodyScale)) &&
@@ -35,7 +48,7 @@ namespace CornerSpider {
             if(FitsFinger(cursor,-1)) { FingerDirection=-1;return true; }
             return false;
         }
-        void ClearPlay() { InviteTime=FingerBlend=RideAge=0;FingerWaveAge=-1;carryVelocity=new V();climbing=false;dismountReadyAt=-1; }
+        void ClearPlay() { InviteTime=FingerBlend=RideAge=0;FingerWaveAge=-1;carryVelocity=touchdownOffset=new V();climbing=false;tipBoarding=true;boardingPosition=65;dismountReadyAt=-1; }
         void UpdateInvitation(double dt,V cursor,double speed,bool safe,bool free,bool clicked) {
             if(clicked) { samples.Clear();StillTime=InviteTime=0; }
             double distance=(cursor-Spider).Length;
@@ -51,8 +64,11 @@ namespace CornerSpider {
             if(target>0 && State!=Mood.Ride && State!=Mood.Dismount) FingerOrigin=cursor;
         }
         void BeginRide() {
-            rideDuration=Between(35,55);RideAge=0;FingerWaveAge=-1;FingerPosition=fingerGoal=65;
+            rideDuration=Between(35,55);RideAge=0;FingerWaveAge=-1;FingerPosition=fingerGoal=boardingPosition;
             nextFingerWave=Clock+5;fingerDecision=Clock+3;carryVelocity=new V();climbing=false;
+            // Small pointer drift during the leap is absorbed by a brief landing
+            // adjustment, never by snapping the body to a new finger coordinate.
+            touchdownOffset=Spider-SurfaceAt(Cursor,boardingPosition,FingerDirection);
             FingerOrigin=Cursor;FingerBlend=1;LastDismount="";Enter(Mood.Ride);
         }
         void LeaveRide(bool scared,string reason) {
@@ -125,6 +141,9 @@ namespace CornerSpider {
                 double t=RideAge-1.8;t=t*t*(3-2*t);
                 Spider=cursor+climbFrom*(1-t)+(FingerPoint(65)-cursor)*t;
                 desiredAngle=FingerDirection>0?90:270;Speed=35*BodyScale;StepPhase+=dt*7;
+            } else if(!tipBoarding && RideAge<=.24) {
+                double t=Math.Min(1,RideAge/.24);t=t*t*(3-2*t);
+                Spider=FingerPoint(FingerPosition)+touchdownOffset*(1-t);Speed=0;
             } else {
                 if(FingerWaveAge<0 && Clock>=nextFingerWave) { FingerWaveAge=0;nextFingerWave=Clock+Between(10,16); }
                 if(FingerWaveAge>=0) {

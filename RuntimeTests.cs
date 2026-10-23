@@ -32,7 +32,7 @@ namespace CornerSpider {
                 using(var icon=PetHost.MakeIcon("Bold")) using(var file=File.Create(Path.Combine(folder,"CornerSpider.ico"))) icon.Save(file);
                 return 0;
             }
-            log=new StringBuilder();log.AppendLine("Corner Spider 1.0 RC4 Windows runtime checks "+DateTime.Now.ToString("s"));
+            log=new StringBuilder();log.AppendLine("Corner Spider 1.0 RC5 Windows runtime checks "+DateTime.Now.ToString("s"));
             string testSettings=Path.Combine(folder,"settings");Check(new Settings { FingerTone=.37,Species="PortiaLabiata" }.Save(testSettings),"seed isolated finger-tone and Portia preferences");
             IntPtr foreground=Native.GetForegroundWindow();var host=new PetHost(testSettings,true);
             IntPtr afterCreation=Native.GetForegroundWindow();uint foregroundPid,afterCreationPid;

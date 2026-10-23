@@ -50,7 +50,7 @@ static class MorphologyTests {
                 var pose=SpiderPose.Leg(w,side,leg,skin);
                 foreach(V joint in new[]{pose.Knee,pose.Ankle,pose.Tip}) Check(Math.Abs(joint.X)<33 && Math.Abs(joint.Y)<53,skin.Id+" folded limb fits the silk retreat: "+joint.X+","+joint.Y);
             }
-            w=new World(1600,1000,42);w.AutoFeed=false;w.Spider=new V(700,450);V cursor=new V(770,450);
+            w=new World(1600,1000,12);w.AutoFeed=false;V cursor=new V(770,450);w.Spider=cursor+new V(-140,40);
             for(int f=0;f<600 && w.State!=Mood.Ride;f++) w.Tick(.025,cursor);
             Check(w.Hanging,skin.Id+" reaches an actual finger catch");
             for(int f=0;f<45;f++) {
@@ -65,7 +65,14 @@ static class MorphologyTests {
                 w=new World(1600,1000,42);w.AutoFeed=false;cursor=new V(800,500);double a=direction*Math.PI/4;
                 w.Spider=cursor+new V(Math.Cos(a),Math.Sin(a))*110;
                 for(int f=0;f<600 && w.State!=Mood.Ride;f++) w.Tick(.025,cursor);
-                Check(w.Hanging && Math.Abs(World.AngleDelta(w.Angle,0))<.01,"finger catch is oriented toward the grip from approach "+direction);
+                Check(w.State==Mood.Ride,"finger boarding completes from approach "+direction);
+                if(w.Hanging) {
+                    Check(w.JumpStart.X<w.FingerTip(cursor).X-18*w.BodyScale && w.JumpStart.Y>w.FingerTip(cursor).Y-12*w.BodyScale,"catch starts on the exposed tip side");
+                    Check(Math.Abs(World.AngleDelta(w.Angle,0))<.01,"finger catch is oriented toward its grip");
+                } else {
+                    Check(w.OnFinger && (w.Spider-w.FingerPoint(w.FingerPosition)).Length<.01,"other approaches touch down on the upper surface");
+                    Check(Math.Abs(World.AngleDelta(w.Angle,Math.Atan2(w.JumpEnd.Y-w.JumpStart.Y,w.JumpEnd.X-w.JumpStart.X)*180/Math.PI+90))<12,"surface landing retains its travel-facing orientation");
+                }
             }
         }
         int paired=0;foreach(var item in sexes) if(item.Value.Count==2) paired++;

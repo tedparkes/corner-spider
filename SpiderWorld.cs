@@ -195,6 +195,7 @@ namespace CornerSpider {
             if(State==Mood.WebPluck) return .2+GuestPulse*(side<0?.55:.4);
             if(State==Mood.SpeciesAct) return SpeciesReach(side);
             if(State==Mood.Dismount) return .65*DismountBrace;
+            if(SettlingOnFinger) return Math.Max(0,1-RideAge/.24);
             if(OnFinger && FingerWaveAge>=.6) { double t=Math.Max(0,Math.Min(1,(FingerWaveAge-.6)/1.4));return Math.Sin(t*Math.PI); }
             if(State==Mood.Reach) return Math.Min(1,StateTime/.22);
             if(State==Mood.Crouch) return .85;
@@ -212,6 +213,7 @@ namespace CornerSpider {
             if(State==Mood.Dismount) return 1-.08*DismountBrace;
             if(State==Mood.Crouch) return 1-.08*Math.Min(1,StateTime/.24);
             if(State==Mood.Land) return 1-.07*Math.Sin(Math.PI*Math.Min(1,StateTime/.20));
+            if(SettlingOnFinger) return 1-.07*Math.Sin(Math.PI*RideAge/.24);
             return 1-.065*NestTuck-(State==Mood.SpeciesAct && behavior.Gesture==SpeciesGesture.BarkPause?.06*GestureBlend:0);
         } }
         void PrepareJump(V dest,string purpose) {
@@ -318,7 +320,7 @@ namespace CornerSpider {
                 InspectCursor(cursor);
             }
             if(InviteTime>=InviteDelay+.7 && FingerBlend>.94 && canOffer) {
-                Face(cursor);PrepareJump(CursorLanding(cursor),"cursor");RideCooldown=25;
+                PlanFingerBoarding(cursor);PrepareJump(CursorLanding(cursor),"cursor");RideCooldown=25;
             }
             bool catchTurning=false;
             switch(State) {
@@ -343,7 +345,7 @@ namespace CornerSpider {
                 case Mood.Jump:
                     if(jumpPurpose=="cursor" && (clicked || !CursorPlay || !cursorInside || cursorSpeed>CarryTolerance*pixelScale)) { jumpPurpose="ground";InviteTime=0; }
                     JumpTime+=dt;double t=JumpProgress;Spider=JumpStart+(JumpEnd-JumpStart)*t;
-                    if(jumpPurpose=="cursor") {
+                    if(jumpPurpose=="cursor" && TipBoarding) {
                         // Finish the airborne turn with the face toward the grip.
                         // Waiting until Ride made the spider hang by its rear legs.
                         V grip=FingerTip(cursor)-JumpEnd;

@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.0-rc.5
+
+- Choose a varied upper-surface finger landing near the approach, rather than
+  making every spider grab the same tip. Briefly absorb the landing before
+  exploring, keeping the chosen position and travel-facing direction.
+- Allow a front-leg catch and dangle only from the exposed fingertip side.
+  Those approaches can also choose to land on top. Base, upper and middle
+  approaches always land on the surface; mirrored fingers follow the same rule.
+- Ease small pointer drift into the landing instead of snapping to a fixed
+  perch. Keep gentle carrying, waving, upward click departures and fast escapes.
+- Add deterministic boarding coverage and a rendered approach/jump/touchdown
+  gallery. Update hanging-leg fixtures to approach from the exposed tip side;
+  retain their foot contact, suspension and departure assertions.
+
 ## 1.0.0-rc.4
 
 - Enlarge the resident spider's web to 300% of its previous span, fitting down

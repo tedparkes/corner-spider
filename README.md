@@ -1,4 +1,4 @@
-# Corner Spider 1.0 RC4
+# Corner Spider 1.0 RC5
 
 A small jumping spider for your actual Windows desktop. It watches from corners,
 stalks occasional prey, builds a silk retreat and sometimes accepts a finger ride.
@@ -13,7 +13,7 @@ corner, with live skin, size and background changes.
 
 ![Settings with species silk preview and the original optional Cash App QR](docs/settings-banner.png)
 
-This is the **1.0.0-rc.4 release candidate**. Windows build and automated checks
+This is the **1.0.0-rc.5 release candidate**. Windows build and automated checks
 pass; the remaining hands-on release checklist is in [verification notes](docs/VERIFICATION.md).
 
 ## Download and start
@@ -54,7 +54,10 @@ Startup remains **off by default**.
 
 Approach an awake spider and hold your pointer still. By default the finger begins
 fading in after **4.5 seconds**, finishing around five seconds. Small hand jitter is
-tolerated. It may jump to the fingertip, hang, climb up, walk around and wave.
+tolerated. It chooses different landing spots along the finger's solid upper
+surface, briefly settles, then walks around and waves. From the exposed fingertip
+side it may instead catch with its front legs, dangle and climb up. Approaches
+from the base or above land on top instead of crossing the finger to hang.
 Carry it gently. A click makes it choose a spot above the finger, turn, brace and
 jump up with a short silk dragline. Near the top edge it makes a safe sideways hop.
 If it is still hanging, it climbs onto the finger before taking off. The finger

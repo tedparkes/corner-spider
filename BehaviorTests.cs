@@ -35,7 +35,7 @@ class BehaviorTests {
             BehaviorRegressionTests.Run();
             NaturalMotionTests.Run();
             PounceTests.Run();EncounterTests.Run();
-            PlayTests.Run();
+            PlayTests.Run();BoardingTests.Run();
             PatrolAttentionTests.Run();SettingsTests.Run();MorphologyTests.Run();PreyTests.Run();HammockTests.Run();DismountTests.Run();NestEntryTests.Run();
             Console.WriteLine("PASS: corners, hunting, cursor boarding, fast dismount, disabled rides, naps, 10-minute simulation.");
         } catch(Exception ex) { Console.Error.WriteLine("FAIL: "+ex.Message); Environment.Exit(1); }

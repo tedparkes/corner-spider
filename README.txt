@@ -1,6 +1,11 @@
-CORNER SPIDER 1.0 RC4 (1.0.0-rc.4)
+CORNER SPIDER 1.0 RC5 (1.0.0-rc.5)
 
-NEW: Portia's prey web is about three times wider and taller, with a larger
+NEW: Spiders choose different spots to land on the finger, settle briefly,
+then explore. Only approaches from the exposed fingertip side may catch and
+dangle; coming from the base or above lands on top. This works for all skins
+and for the mirrored finger near a screen edge.
+
+Portia's prey web is about three times wider and taller, with a larger
 resident in the center. Portia's patrols avoid this corner until its deliberate
 approach and edge-plucking sequence. Silk remains until Portia leaves after the
 meal, then fades. Small work areas fit the web to leave room for the approach.

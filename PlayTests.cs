@@ -8,10 +8,10 @@ static class PlayTests {
     static World New(int seed) { var w=new World(1280,720,seed);w.Spider=new V(600,350);w.AutoFeed=false;return w; }
     static void Advance(World w,double seconds,V point,double dt) { for(int i=0;i<Math.Ceiling(seconds/dt);i++) w.Tick(dt,point); }
         static World Board(int seed,double dt,bool roomy=false) {
-            var w=New(seed);V point=cursor;
-            if(roomy) { w.ConfigureDisplays(new[]{new Area(0,0,1600,1200,1)},0);w.Spider=new V(600,600);point=new V(650,600); }
+            var w=New(seed);V point=cursor;w.Spider=point+new V(-140,40);
+            if(roomy) { w.ConfigureDisplays(new[]{new Area(0,0,1600,1200,1)},0);point=new V(650,600);w.Spider=point+new V(-140,40); }
             for(int i=0;i<12/dt && w.State!=Mood.Ride;i++) w.Tick(dt,point);
-        Check(w.State==Mood.Ride,"five-second invitation leads to a voluntary catch");return w;
+        Check(w.State==Mood.Ride,"five-second invitation leads to voluntary boarding");return w;
     }
     public static void Run() {
         int near=0,far=0;
@@ -66,7 +66,7 @@ static class PlayTests {
         Check((w.Spider-start).Length<.001 && w.JumpDuration<=.23 && w.RideCooldown>=25,"escape never teleports with the new pointer position");
         w=Board(14,.025);w.CursorPlay=false;w.Tick(.025,cursor);Check(w.State==Mood.Jump,"disabled play releases the pet");
         foreach(V direction in new[]{new V(1,0),new V(0,1),new V(0,-1)}) {
-            w=Board(20,.025,true);V moving=new V(650,600);
+            w=Board(22,.025,true);V moving=new V(650,600);
             for(int i=0;i<48;i++) {
                 moving+=direction*6.25;w.Tick(.025,moving);
                 Check(w.Hanging && (w.Spider-w.FingerTip(moving)).Length<=54.01*w.BodyScale,"sustained gentle carrying stays attached within leg reach: step "+i+", state "+w.State+", reason "+w.LastDismount);

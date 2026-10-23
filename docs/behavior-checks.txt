@@ -3,13 +3,13 @@ PASS: 193054 regression assertions (hunt phases, jitter, rides, nest, mixed-DPI 
 PASS: 123058 natural-motion checks (bursts, paired upward reach, spatial hinges, fixed leg lengths, full-limb bounds and DPI edge clearance).
 PASS: 1204682 pounce checks / 4574 hunts (all 20 skins, both prey, 8 directions, 20-180% size, 100-200% DPI, 16/33/100 ms steps, ceiling and monitor seam). Actual long leaps: 188.2-200.0 logical pixels at 100%.
 PASS: 1931877 species/encounter checks, 48 full-length web hunts (timing, original prey limit, all skins, poses, naps, finger play, cleanup and persistence).
-PASS: 5238 play checks (distant hunts, five-second offer, suspension, finger walking/waves, click/fast departures, silk cleanup, edges and frame rates).
+PASS: 5324 play checks (distant hunts, five-second offer, suspension, finger walking/waves, click/fast departures, silk cleanup, edges and frame rates).
+PASS: 220653 finger-boarding checks (varied surface landings, side-only catches, mirrored fingers, sizes/DPI, settling, interruptions and pointer drift).
 PASS: 2116 patrol attention checks (prior greetings, return trips, retained routes, stillness/jitter, sizes/DPIs, edges and priority).
 PASS: 447 settings checks (twenty skins, finger tones and migration, 20% size, configured delay/distance/tolerance, mixed DPI and persistence).
-PASS: 1295811 species anatomy checks (20 profiles, original IDs, nine sex pairs, fixed joints, all-state bounds and alternating eye/chelicera grooming).
+PASS: 1296131 species anatomy checks (20 profiles, original IDs, nine sex pairs, fixed joints, all-state bounds and alternating eye/chelicera grooming).
 PASS: 23639 Portia prey checks (mixed spawn, species routing, single slot, full hunts, crawl/pause, held meal, size/DPI and cleanup).
 PASS: 356872 hammock checks (four corners, turn then tuck, fixed hinges, 20-180% sizes, mixed DPI, return, wake and reflow).
-PASS: 24344 planned-dismount checks (upward targets, turn/brace, catch/climb exits, frozen pad, ceiling/edges, silk, interruption and mixed DPI).
+PASS: 24335 planned-dismount checks (upward targets, turn/brace, catch/climb exits, frozen pad, ceiling/edges, silk, interruption and mixed DPI).
 PASS: 864803 end-entry checks (approach sides, axis alignment, crawl, silk occlusion, exit, four corners, size/DPI/frame steps and interruptions).
 PASS: corners, hunting, cursor boarding, fast dismount, disabled rides, naps, 10-minute simulation.
-        1 file(s) copied.

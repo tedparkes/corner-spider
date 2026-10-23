@@ -35,6 +35,32 @@ namespace CornerSpider {
             }
             SavePng(transparent,700,450,Path.Combine(folder,"finger-transparent.png"));
             RenderFingerTones(folder);
+            RenderBoardingPreview(folder);
+        }
+        static void RenderBoardingPreview(string folder) {
+            var visual=new DrawingVisual();using(var d=visual.RenderOpen()) {
+                for(int row=0;row<4;row++) {
+                    int side=row==3?-1:1;V cursor=new V(side<0?175:260,190);
+                    V offset=row==0 || row==3?new V(-140,40):row==1?new V(65,40):new V(0,-95);
+                    var w=new World(500,360,row==0 || row==3?12:2);w.AutoFeed=false;w.Scale=1.25;
+                    w.Spider=cursor+new V(offset.X*side,offset.Y)*w.Scale;
+                    string title=row==0?"Exposed tip: catch":row==1?"Base side: surface landing":row==2?"Above: surface landing":"Mirrored finger: side catch";
+                    for(int column=0;column<3;column++) {
+                        for(int i=0;i<700;i++) {
+                            w.Tick(.025,cursor);
+                            if(column==0 && w.State==Mood.Crouch || column==1 && w.State==Mood.Jump && w.JumpProgress>=.55 || column==2 && w.State==Mood.Ride && w.RideAge>=.10) break;
+                        }
+                        d.PushTransform(new TranslateTransform(column*500,row*360));d.PushClip(new RectangleGeometry(new Rect(0,0,500,360)));
+                        d.DrawRectangle(new SolidColorBrush(row%2==0?Color.FromRgb(30,42,49):Color.FromRgb(232,236,226)),null,new Rect(0,0,500,360));
+                        Color ink=row%2==0?Colors.White:Color.FromRgb(30,50,44);
+                        Text(d,title,18,12,19,ink);Text(d,column==0?"Choose and brace":column==1?"Jump to the chosen spot":w.Hanging?"Grip with front feet":"Land and settle",18,40,15,ink);
+                        PetCanvas.DrawFinger(d,w);PetCanvas.DrawSpider(d,w,"Bold");
+                        if(column<2) { V target=w.JumpEnd;d.DrawEllipse(null,new Pen(new SolidColorBrush(ink),1),new Point(target.X,target.Y),4,4); }
+                        Text(d,"Actual behavior + desktop renderer",18,330,13,ink);d.Pop();d.Pop();
+                    }
+                }
+            }
+            SavePng(visual,1500,1440,Path.Combine(folder,"finger-boarding.png"));
         }
         static void RenderFingerTones(string folder) {
             var visual=new DrawingVisual();using(var d=visual.RenderOpen()) {

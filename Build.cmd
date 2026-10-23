@@ -10,7 +10,7 @@ if not exist "%FX%\csc.exe" (
   exit /b 1
 )
 echo Building Corner Spider...
-"%FX%\csc.exe" /nologo /optimize+ /target:exe /out:BehaviorTests.exe SpiderWorld.cs SpeciesBehavior.cs WebEncounter.cs PreyBehavior.cs NestBehavior.cs PlayBehavior.cs SpiderPose.cs PalpPose.cs SkinCatalog.cs SilkProfile.cs Settings.cs BehaviorTests.cs BehaviorRegressionTests.cs NaturalMotionTests.cs PounceTests.cs EncounterTests.cs PlayTests.cs PatrolAttentionTests.cs SettingsTests.cs MorphologyTests.cs PreyTests.cs HammockTests.cs DismountTests.cs NestEntryTests.cs > build.log 2>&1
+"%FX%\csc.exe" /nologo /optimize+ /target:exe /out:BehaviorTests.exe SpiderWorld.cs SpeciesBehavior.cs WebEncounter.cs PreyBehavior.cs NestBehavior.cs PlayBehavior.cs SpiderPose.cs PalpPose.cs SkinCatalog.cs SilkProfile.cs Settings.cs BehaviorTests.cs BehaviorRegressionTests.cs NaturalMotionTests.cs PounceTests.cs EncounterTests.cs PlayTests.cs BoardingTests.cs PatrolAttentionTests.cs SettingsTests.cs MorphologyTests.cs PreyTests.cs HammockTests.cs DismountTests.cs NestEntryTests.cs > build.log 2>&1
 if errorlevel 1 goto failed
 BehaviorTests.exe >> build.log 2>&1
 if errorlevel 1 goto failed
