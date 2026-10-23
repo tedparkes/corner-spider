@@ -78,11 +78,15 @@ namespace CornerSpider {
             } else if(w.OnFinger || w.Climbing || w.State==Mood.Dismount) {
                 if(reach<.01) ankle.X*=.73; // Supporting feet curl over the finger's sides.
             }
-            if(w.State==Mood.WebPluck && w.WebStage==WebVisit.Plucking && leg==0 && side==w.GuestPluckingSide) {
-                V relative=(w.GuestFootContact-w.Spider)*(1/w.BodyScale);double angle=w.Angle*Math.PI/180;
+            if(w.State==Mood.WebPluck && w.WebStage==WebVisit.Plucking) {
+                bool plucking=leg==0 && side==w.GuestPluckingSide;
+                // The eyes follow the approaching resident. Preserve the seven
+                // world-space footholds through that small body turn.
+                V relative=((plucking?w.GuestFootContact:w.GuestSupportFoot(side,leg))-w.Spider)*(1/w.BodyScale);double angle=w.Angle*Math.PI/180;
                 V tip=new V(relative.X*Math.Cos(angle)+relative.Y*Math.Sin(angle),-relative.X*Math.Sin(angle)+relative.Y*Math.Cos(angle));
-                V3 toeDirection=Unit(new V3(side*.06,-1,-.1));V toeOffset=Project(toeDirection*(7.5*limb));
-                double z=.8+3*w.GuestPulse;
+                V3 toeDirection=leg==0?Unit(new V3(side*.06,-1,-.1)):Unit(new V3(side*(leg==3?.4:.8),leg==1?-.6:leg==2?.4:1,-.1));
+                V toeOffset=Project(toeDirection*((leg==0?7.5:5.3)*limb));
+                double z=.8+(plucking?3*w.GuestPulse:0);
                 V3 planted=new V3(tip.X-toeOffset.X,(tip.Y-toeOffset.Y-z*.258819)/.9659258,z);
                 double blend=Math.Min(1,w.StateTime/.75);blend=blend*blend*(3-2*blend);
                 ankle=Lerp(ankle,planted,blend);

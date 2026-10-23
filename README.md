@@ -1,4 +1,4 @@
-# Corner Spider 1.0 RC10
+# Corner Spider 1.0 RC11
 
 A small jumping spider for your actual Windows desktop. It watches from corners,
 stalks occasional prey, builds a silk retreat and sometimes accepts a finger ride.
@@ -7,7 +7,9 @@ See the [changelog](CHANGELOG.md) for changes and fixes by version.
 
 ![Twenty procedural spider skins](docs/skins-light.png)
 Portia's resident prey builds a larger corner web and waits at its center. Portia
-reserves that corner, then steps onto the silk near an anchored end. One foreleg
+reserves that corner, then steps onto the farthest safe point toward an anchored
+side end. She turns to face the resident before signaling and watches it throughout
+its approach. One foreleg
 plucks an existing strand while the other seven feet stay planted. After each of
 five plucks, the resident turns toward the signal, stalks closer and pauses.
 The web stays visible after the meal until Portia moves clear. The resident weaves
@@ -29,7 +31,7 @@ and matte shading. The larger preview retains each species' details.
 
 ![Settings with silk visibility and the subtle optional support button](docs/settings-banner.png)
 
-This is the **1.0.0-rc.10 release candidate**. Windows build and automated checks
+This is the **1.0.0-rc.11 release candidate**. Windows build and automated checks
 pass; the remaining hands-on release checklist is in [verification notes](docs/VERIFICATION.md).
 
 ## Download and start

@@ -1,4 +1,8 @@
-CORNER SPIDER 1.0 RC10 (1.0.0-rc.10)
+CORNER SPIDER 1.0 RC11 (1.0.0-rc.11)
+
+RC11: Portia plucks farther toward the anchored side ends. She turns toward the
+resident before signaling and follows it with her eyes/body as it approaches.
+The forefoot touches an existing anchored spoke; her other seven feet stay planted.
 
 NEW: The prey web fills the corner, with eleven attachment points along both
 desktop edges. Its deeply concave bridge curves inward from one edge to the other; the

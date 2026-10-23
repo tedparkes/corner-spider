@@ -88,8 +88,13 @@ static class GuestWebTests {
                 if(rim.Y==0) Check(Math.Min(Math.Abs(at.Y-area.Y),Math.Abs(at.Y-area.Y-area.H))<.000001,"top/bottom anchor touches the actual work-area boundary");
             }
             Check(w.GuestAnchorSpoke==GuestWebPattern.TopBridgeAnchor || w.GuestAnchorSpoke==GuestWebPattern.SideBridgeAnchor,"Portia chooses an anchored end, never the bridge middle");
-            Check(w.GuestAnchorSpoke==GuestWebPattern.TopBridgeAnchor?w.GuestPluckSpoke==14 || w.GuestPluckSpoke==15:w.GuestPluckSpoke==2 || w.GuestPluckSpoke==1,"direct leg contact uses an existing rim junction beside the chosen anchored end");
-            Check((w.GuestPatternPoint(GuestWebPattern.Rim(w.GuestPluckSpoke))-w.GuestPluckPoint).Length<.000001,"Portia plucks the endpoint of a real hub-connected spoke");
+            Check(w.GuestPluckSpoke==w.GuestAnchorSpoke,"direct leg contact uses the spoke attached to the outermost desktop anchor");
+            V spoke=w.GuestPatternPoint(GuestWebPattern.Rim(w.GuestPluckSpoke))-w.GuestCenter,along=w.GuestPluckPoint-w.GuestCenter;
+            Check(Math.Abs(spoke.X*along.Y-spoke.Y*along.X)<.000001*w.GuestScale*w.GuestScale && along.Length<spoke.Length && spoke.X*along.X+spoke.Y*along.Y>0,"Portia touches an existing hub-to-anchor strand");
+            V inward=w.GuestCenter-w.GuestPluckPosition,forefoot=w.GuestPluckPoint-w.GuestPluckPosition;
+            Check(inward.X*forefoot.X+inward.Y*forefoot.Y>20*w.GuestScale*inward.Length,"the contact lies in front of a hunter facing its prey");
+            V farther=w.GuestPluckPosition+(w.GuestAnchorSpoke==GuestWebPattern.TopBridgeAnchor?new V(Math.Sign(w.GuestInward.X),0):new V(0,Math.Sign(w.GuestInward.Y)))*w.GuestScale;
+            Check(!w.GuestOnSilk(farther),"perch uses the farthest safe end of the side, never the bridge middle");
             V contact=w.GuestPatternPoint(GuestWebPattern.Rim(w.GuestAnchorSpoke));
             Check(Math.Min(Math.Min(Math.Abs(contact.X-area.X),Math.Abs(contact.X-area.X-area.W)),Math.Min(Math.Abs(contact.Y-area.Y),Math.Abs(contact.Y-area.Y-area.H)))<.000001,
                 "chosen anchored end stays on a physical display edge after mirroring and scaling");

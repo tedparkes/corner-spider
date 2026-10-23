@@ -14,8 +14,8 @@ namespace CornerSpider {
         public double GuestWebExtent { get { return 188*GuestWebScale; } }
         public int GuestPluckSpoke { get; private set; }
         public int GuestAnchorSpoke { get; private set; }
-        public int GuestPluckingSide { get { return -1; } }
-        public V GuestPluckPoint { get { return GuestPatternPoint(GuestWebPattern.Rim(GuestPluckSpoke)); } }
+        public int GuestPluckingSide { get; private set; }
+        public V GuestPluckPoint { get; private set; }
         public V GuestFootContact { get {
             V axis=GuestCenter-GuestPluckPoint;
             return GuestPluckPoint+axis*(2.5*GuestScale*GuestPulse/Math.Max(.0001,axis.Length));
@@ -24,6 +24,8 @@ namespace CornerSpider {
         public bool GuestFadeStarted { get; private set; }
         public double NextWebVisit=100;
         V guestStop,guestDetour,guestResidentGoal;
+        readonly V[] guestSupportFeet=new V[8];
+        public V GuestSupportFoot(int side,int leg) { return guestSupportFeet[(side>0?4:0)+leg]; }
         double guestFadeAge;
         bool guestReachedDetour;
         static readonly double[] guestNodeX={0,76,183,185,156,68,0,0,108,51,127,149,108,48,39},guestNodeY={0,0,0,83,166,188,188,91,108,43,38,91,149,137,85};
@@ -113,16 +115,19 @@ namespace CornerSpider {
                 best=distance;found=true;GuestArea=area;GuestCornerIndex=corner;GuestCorner=edge;GuestCenter=center;GuestInward=inward*(1/Math.Sqrt(2));GuestScale=s;GuestWebFactor=factor;
             }
             if(!found) { NextWebVisit=Clock+120;return false; }
-            // Stand on the silk beside the nearer anchored end. Use an existing
-            // rim/spoke junction close enough for a forefoot to touch directly.
-            V topStop,topGoal,sideStop,sideGoal;int topSpoke,sideSpoke;
-            bool top=PlanPlucking(true,out topSpoke,out topStop,out topGoal);
-            bool side=PlanPlucking(false,out sideSpoke,out sideStop,out sideGoal);
+            // Use the outermost safe perch at a supported side. The contact is
+            // ahead of the hunter on the spoke leading to the actual edge anchor.
+            V topStop,topGoal,topContact,sideStop,sideGoal,sideContact;
+            bool top=PlanPlucking(true,out topStop,out topGoal,out topContact);
+            bool side=PlanPlucking(false,out sideStop,out sideGoal,out sideContact);
             if(!top && !side) { NextWebVisit=Clock+120;return false; }
             bool useTop=top && (!side || (topStop-Spider).Length<=(sideStop-Spider).Length);
             GuestAnchorSpoke=useTop?GuestWebPattern.TopBridgeAnchor:GuestWebPattern.SideBridgeAnchor;
-            GuestPluckSpoke=useTop?topSpoke:sideSpoke;
+            GuestPluckSpoke=GuestAnchorSpoke;
+            GuestPluckPoint=useTop?topContact:sideContact;
             guestStop=useTop?topStop:sideStop;guestResidentGoal=useTop?topGoal:sideGoal;
+            V look=GuestCenter-guestStop,foot=GuestPluckPoint-guestStop;
+            GuestPluckingSide=look.X*foot.Y-look.Y*foot.X>0?1:-1;
             GuestAge=GuestStageAge=GuestProgress=GuestLure=0;GuestTaps=0;
             GuestBuildTime=Between(180,240);GuestWaitTime=Between(60,120);GuestOpacity=1;
             GuestFadeStarted=false;guestFadeAge=0;
@@ -194,26 +199,28 @@ namespace CornerSpider {
             V relative=(point-GuestCorner)*(1/GuestWebScale);
             return GuestWebPattern.InsideSilk(new V(relative.X*(GuestInward.X>0?1:-1),relative.Y*(GuestInward.Y>0?1:-1)));
         }
-        bool PlanPlucking(bool top,out int spoke,out V stop,out V goal) {
-            spoke=top?14:2;stop=goal=GuestCenter;
+        bool PlanPlucking(bool top,out V stop,out V goal,out V contact) {
+            stop=goal=contact=GuestCenter;
             double s=Scale*Areas[GuestArea].Dpi;
-            foreach(int choice in top?new[]{14,15}:new[]{2,1}) {
-                V contact=GuestPatternPoint(GuestWebPattern.Rim(choice)),inward=GuestCenter-contact;inward=inward*(1/inward.Length);
-                V perch=Areas[GuestArea].Clamp(contact+inward*(38*s),SpiderPose.Radius*s);
-                // Pull a boundary-clamped perch onto the silk, while keeping
-                // the contact within the fixed-length foreleg's working reach.
-                for(int i=0;i<40 && !GuestOnSilk(perch);i++) {
-                    V local=perch-GuestCorner;
-                    if(Math.Abs(local.X)>Math.Abs(local.Y)) perch.X-=Math.Sign(GuestInward.X)*s;
-                    else perch.Y-=Math.Sign(GuestInward.Y)*s;
-                }
-                if((perch-contact).Length>55*s || !GuestOnSilk(perch)) continue;
+            V anchor=GuestPatternPoint(GuestWebPattern.Rim(top?GuestWebPattern.TopBridgeAnchor:GuestWebPattern.SideBridgeAnchor));
+            V axis=anchor-GuestCenter;
+            // Search inward from the attached end, never from the free middle
+            // of the curved bridge. Keep the same full-body desktop clearance.
+            for(double edge=GuestWebExtent;edge>SpiderPose.Radius*s;edge-=s) {
+                V perch=GuestLocal(top?edge:SpiderPose.Radius*s,top?SpiderPose.Radius*s:edge);
+                if(!GuestOnSilk(perch)) continue;
                 if((Areas[GuestArea].Clamp(perch,SpiderPose.Radius*s)-perch).Length>.000001) continue;
+                V inward=GuestCenter-perch;
+                if(inward.Length<65*s) continue;
+                V reach=perch+inward*(36*s/inward.Length)-GuestCenter;
+                double fraction=(reach.X*axis.X+reach.Y*axis.Y)/(axis.X*axis.X+axis.Y*axis.Y);
+                V touch=GuestCenter+axis*fraction,offset=touch-perch;
+                if(fraction<=0 || fraction>=1 || offset.Length>55*s || offset.X*inward.X+offset.Y*inward.Y<20*s*inward.Length) continue;
                 for(int step=0;step<18;step++) {
-                    V candidate=GuestCenter+(contact-GuestCenter)*(.45-step*.025),direction=candidate-perch;
+                    V candidate=GuestCenter+(touch-GuestCenter)*(.45-step*.025),direction=candidate-perch;
                     if(direction.Length<35*s) continue;
                     V landing=Areas[GuestArea].Clamp(candidate-direction*(25*s/direction.Length),SpiderPose.Radius*s);
-                    if((landing-candidate).Length<32*s) { spoke=choice;stop=perch;goal=candidate;return true; }
+                    if((landing-candidate).Length<32*s) { stop=perch;goal=candidate;contact=touch;return true; }
                 }
             }
             return false;
@@ -230,12 +237,24 @@ namespace CornerSpider {
             double distance=(target-Spider).Length/BodyScale;
             if(BurstMove(target,distance>400?135:distance>140?85:44,dt,true)) {
                 if(!guestReachedDetour) guestReachedDetour=true;
-                else { WebStage=WebVisit.Plucking;GuestStageAge=0;Face(GuestPluckPoint);Enter(Mood.WebPluck); }
+                else {
+                    Face(Fly);
+                    // Finish the smooth inward pivot before sending any signals.
+                    if(Math.Abs(AngleDelta(Angle,desiredAngle))>2) return;
+                    GaitBlend=0;
+                    for(int side=-1;side<=1;side+=2) for(int leg=0;leg<4;leg++) {
+                        // A slightly flexed stance leaves joint travel for the
+                        // small turn needed as the resident comes closer.
+                        V foot=SpiderPose.Leg(this,side,leg,SkinCatalog.Get(Species)).Tip*.88;double angle=Angle*Math.PI/180;
+                        guestSupportFeet[(side>0?4:0)+leg]=Spider+new V(foot.X*Math.Cos(angle)-foot.Y*Math.Sin(angle),foot.X*Math.Sin(angle)+foot.Y*Math.Cos(angle))*BodyScale;
+                    }
+                    WebStage=WebVisit.Plucking;GuestStageAge=0;Enter(Mood.WebPluck);
+                }
             }
         }
         void PluckWeb() {
             if(!GuestPrey) { Wake();return; }
-            Face(GuestPluckPoint);
+            Face(Fly);
             if(GuestLure>=1 && GuestTaps>=5 && GuestSignalPhase>=3.05) { WebStage=WebVisit.Attack;GuestStageAge=0;PrepareJump(Fly,"fly"); }
         }
     }

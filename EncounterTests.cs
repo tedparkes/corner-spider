@@ -34,6 +34,8 @@ static class EncounterTests {
                 }
                 if(w.WebStage==WebVisit.Approach && approach<0) approach=w.Clock;
                 if(w.WebStage==WebVisit.Plucking) {
+                    V watching=w.Fly-w.Spider;
+                    Check(Math.Abs(World.AngleDelta(w.Angle,Math.Atan2(watching.Y,watching.X)*180/Math.PI+90))<2,"Portia faces the resident from the first signal through every advance");
                     if(pluck<0) pluck=w.Clock;
                     Check((w.Spider-w.GuestPluckPosition).Length<2*w.GuestScale && w.GuestOnSilk(w.Spider),"Portia stands on the silk at its edge");
                     if(w.GuestLure==0) Check((w.Spider-w.Fly).Length>200*w.GuestScale,"resident remains visibly separated from the hunter standing on the edge: spoke="+w.GuestPluckSpoke+", gap="+(w.Spider-w.Fly).Length/w.GuestScale+", reach="+(w.Spider-w.GuestPluckPoint).Length/w.GuestScale);
@@ -50,7 +52,7 @@ static class EncounterTests {
                         V tip=w.Spider+new V(pose.Tip.X*Math.Cos(angle)-pose.Tip.Y*Math.Sin(angle),pose.Tip.X*Math.Sin(angle)+pose.Tip.Y*Math.Cos(angle))*w.BodyScale;
                         Check(Math.Abs((pose.Knee3-pose.Hip3).Length-SpiderPose.Femur[leg]*SkinCatalog.Get(w.Species).LimbScale(leg))<.0001,"plucking retains fixed joint lengths");
                         if(leg==0 && side==w.GuestPluckingSide) Check((tip-w.GuestFootContact).Length<.5*w.GuestScale,"plucking forefoot directly touches the existing strand, gap="+(tip-w.GuestFootContact).Length/w.GuestScale);
-                        else { int key=(side+1)*4+leg;if(!supports.ContainsKey(key)) supports[key]=tip;else Check((supports[key]-tip).Length<.1*w.GuestScale,"the seven supporting feet remain planted during repeated plucks"); }
+                        else { int key=(side+1)*4+leg;if(!supports.ContainsKey(key)) supports[key]=tip;else Check((supports[key]-tip).Length<.1*w.GuestScale,"the seven supporting feet remain planted during repeated plucks: leg="+leg+", side="+side+", drift="+(supports[key]-tip).Length/w.GuestScale); }
                     }
                     V spoke=w.GuestPluckPoint-w.GuestCenter,along=w.Fly-w.GuestCenter;
                     Check(Math.Abs(spoke.X*along.Y-spoke.Y*along.X)<.00001*w.GuestScale*w.GuestScale,"lured resident stays on the spoke connected to the chosen desktop anchor");
@@ -112,17 +114,25 @@ static class EncounterTests {
             var fitted=New(corner,1.8,1);fitted.ConfigureDisplays(new[]{new Area(0,0,orientation==0?1920:1000,orientation==0?1000:1920,1)},0);fitted.Spider=fitted.Home;
             Check(fitted.StartWebVisit() && fitted.GuestWebFactor<3,"deep-curve fixture uses a fitted web");
             attachmentChoices.Add(fitted.GuestAnchorSpoke);
-            bool plucked=false;
+            bool plucked=false;var fittedSupports=new Dictionary<int,V>();
             for(int i=0;i<8500 && fitted.Meals==0;i++) {
                 fitted.Tick(.1,away);
                 if(fitted.WebStage==WebVisit.Plucking) {
+                    V watching=fitted.Fly-fitted.Spider;
+                    Check(Math.Abs(World.AngleDelta(fitted.Angle,Math.Atan2(watching.Y,watching.X)*180/Math.PI+90))<2,"fitted-web hunter also watches the resident throughout plucking");
                     plucked=true;var area=fitted.Areas[fitted.GuestArea];
                     Check((area.Clamp(fitted.GuestPluckPosition,SpiderPose.Radius*fitted.GuestScale)-fitted.GuestPluckPosition).Length<.000001,
                         "fitted web's plucking perch leaves full body clearance at the display edge");
-                    if(fitted.GuestStageAge>1.25) {
-                        var pose=SpiderPose.Leg(fitted,fitted.GuestPluckingSide,0,SkinCatalog.Get(fitted.Species));double angle=fitted.Angle*Math.PI/180;
+                    if(fitted.GuestStageAge>1.25) for(int side=-1;side<=1;side+=2) for(int leg=0;leg<4;leg++) {
+                        var pose=SpiderPose.Leg(fitted,side,leg,SkinCatalog.Get(fitted.Species));double angle=fitted.Angle*Math.PI/180;
                         V tip=fitted.Spider+new V(pose.Tip.X*Math.Cos(angle)-pose.Tip.Y*Math.Sin(angle),pose.Tip.X*Math.Sin(angle)+pose.Tip.Y*Math.Cos(angle))*fitted.BodyScale;
-                        Check(fitted.GuestOnSilk(fitted.Spider) && (tip-fitted.GuestFootContact).Length<.5*fitted.GuestScale,"fitted webs retain an on-silk stance and direct leg contact");
+                        Check(Math.Abs((pose.Knee3-pose.Hip3).Length-SpiderPose.Femur[leg]*SkinCatalog.Get(fitted.Species).LimbScale(leg))<.0001,"fitted-web turn preserves fixed joint lengths");
+                        if(leg==0 && side==fitted.GuestPluckingSide) Check(fitted.GuestOnSilk(fitted.Spider) && (tip-fitted.GuestFootContact).Length<.5*fitted.GuestScale,"fitted webs retain an on-silk stance and direct leg contact");
+                        else {
+                            int key=(side+1)*4+leg;
+                            if(!fittedSupports.ContainsKey(key)) fittedSupports[key]=tip;
+                            else Check((fittedSupports[key]-tip).Length<.1*fitted.GuestScale,"fitted-web support feet stay planted while the body tracks the resident");
+                        }
                     }
                 }
             }

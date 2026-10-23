@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## 1.0.0-rc.11
+
+- Move Portia's plucking perch farther toward the anchored ends of the sides,
+  choosing the outermost point that stays on silk with full desktop-edge clearance.
+- Fix Portia sometimes facing away from the resident while plucking. Finish the
+  inward turn before the first signal, then track the resident throughout its approach.
+- Place the working forefoot ahead of Portia on the actual hub-to-edge anchor
+  strand; choose the appropriate left/right foreleg for each mirrored corner.
+- Settle into a slightly flexed stance and retain seven world-space footholds
+  while the body follows the resident. Preserve fixed leg lengths and direct contact.
+- Add continuous facing, anchored-spoke contact and outermost-perch regressions;
+  extend planted-foot checks to fitted landscape/portrait webs in all four corners.
+
 ## 1.0.0-rc.10
 
 - Make Portia's hunting attacks fast and nearly straight (130–190 ms, at most
