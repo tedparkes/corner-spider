@@ -3,10 +3,7 @@
 A small jumping spider for your actual Windows desktop. It watches from corners,
 stalks occasional prey, builds a silk retreat and sometimes accepts a finger ride.
 
-Built with AI assistance through repeated human feedback, implementation,
-visual review and testing. The [development history](docs/DEVELOPMENT-HISTORY.md)
-and [complete changelog](CHANGELOG.md) show how the prototype changed across
-anatomy, movement, cursor play, hunting and silk revisions.
+See the [changelog](CHANGELOG.md) for changes and fixes by version.
 
 ![Twenty procedural spider skins](docs/skins-light.png)
 Portia's resident prey builds a larger corner web and waits at its center. Portia
@@ -269,7 +266,7 @@ monitor and hands-on cursor feel should be checked on the release machine.
 
 `Package.ps1` builds and produces the portable ZIP, clean source ZIP and checksums.
 It also generates a ready-to-post RELEASE-NOTES.md containing the full changelog,
-plus standalone CHANGELOG.md and DEVELOPMENT-HISTORY.md release attachments.
+plus a standalone CHANGELOG.md release attachment.
 The included GitHub Actions workflow runs the behavior build and uploads packages;
 it does not publish a GitHub Release automatically.
 

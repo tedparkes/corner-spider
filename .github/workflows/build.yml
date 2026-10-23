@@ -27,5 +27,4 @@ jobs:
             dist/SHA256SUMS.txt
             dist/RELEASE-NOTES.md
             dist/CHANGELOG.md
-            dist/DEVELOPMENT-HISTORY.md
           if-no-files-found: error

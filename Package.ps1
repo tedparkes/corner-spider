@@ -50,15 +50,12 @@ try {
     }
     $checksums = foreach ($archive in $archives) { ((Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant() + '  ' + [IO.Path]::GetFileName($archive)) }
     $checksums | Set-Content -LiteralPath (Join-Path $output 'SHA256SUMS.txt') -Encoding ASCII
-    # Keep the first public release's development story and full history visible
-    # without requiring a download/extraction or relying on the later Git history.
-    $intro = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'docs\RELEASE-INTRO.md')).Trim()
+    # Generate release notes directly from the complete versioned changelog.
     $changelog = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'CHANGELOG.md')).Trim()
-    $releaseLog = $changelog.Replace('[development history](docs/DEVELOPMENT-HISTORY.md)','development history (attached as DEVELOPMENT-HISTORY.md)')
-    $notes = '# Corner Spider ' + $releaseVersion + "`r`n`r`n" + $intro + "`r`n`r`n<details>`r`n<summary>Full development changelog: prototype through this release</summary>`r`n`r`n" + $releaseLog + "`r`n`r`n</details>`r`n"
+    $releaseLog = ($changelog -replace '\A# Changelog\s*', '').Trim()
+    $notes = '# Corner Spider ' + $releaseVersion + "`r`n`r`n" + $releaseLog + "`r`n"
     [IO.File]::WriteAllText((Join-Path $output 'RELEASE-NOTES.md'),$notes)
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'CHANGELOG.md') -Destination (Join-Path $output 'CHANGELOG.md')
-    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'docs\DEVELOPMENT-HISTORY.md') -Destination (Join-Path $output 'DEVELOPMENT-HISTORY.md')
     # Remove only the fresh staging folder inside the explicit output directory.
     $resolvedStage = [IO.Path]::GetFullPath($stage)
     if (!$resolvedStage.StartsWith($output.TrimEnd('\')+'\',[StringComparison]::OrdinalIgnoreCase) -or !(Split-Path $resolvedStage -Leaf).StartsWith('.stage-')) { throw 'Unsafe staging path; refusing cleanup.' }

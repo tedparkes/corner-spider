@@ -31,19 +31,12 @@ tag and ZIPs unchanged; documentation previews built from RC8 are drafts.
    your own policy; no permanent policy change is part of this project.
 5. Create a draft release using that version's tag and reviewed commit. Mark
    release candidates as prereleases. Use `dist/RELEASE-NOTES.md` as its body.
-   It contains the AI-assisted development introduction and the **complete**
-   changelog, including the early prototype, inside an expandable section.
-   For the first public release, keep that full history; GitHub's automatic
-   commit summary covers only the later work because Git began at RC3.
-6. Attach the Windows ZIP, source ZIP, SHA256SUMS.txt, CHANGELOG.md and
-   DEVELOPMENT-HISTORY.md from dist. The generic GitHub source archives do not
-   contain the prebuilt executable. Both ZIPs contain CHANGELOG.md at the root
-   and DEVELOPMENT-HISTORY.md under docs.
-7. Check the draft's expanded changelog, files and links, then publish when ready.
-   Add a link to `docs/DEVELOPMENT-HISTORY.md` at the release tag in the chosen
-   public repository so readers can view its images and source-relative links.
-   Keep the story focused on public development milestones; no raw conversation,
-   private reference photos, personal paths or guessed usage/cost figures.
+   It contains the complete changelog, organized by version with changes and fixes.
+   Keep the full history in the first public release, including the early builds.
+6. Attach the Windows ZIP, source ZIP, SHA256SUMS.txt and CHANGELOG.md from dist.
+   The generic GitHub source archives do not contain the prebuilt executable.
+   Both ZIPs contain CHANGELOG.md at the root.
+7. Check the draft's changelog, files and links, then publish when ready.
 
 The portable executable is unsigned. Do not claim it is signed, security-certified
 or tested on systems that were not exercised. Code signing is a future improvement.
@@ -55,8 +48,7 @@ redistributing a fork. Keep this recipient or replace both QR and link deliberat
 
 When bumping the final version, move completed Unreleased entries into its
 changelog section, refresh docs/VERIFICATION.md and regenerate the packages and
-release body together. Maintain docs/DEVELOPMENT-HISTORY.md as further iterations
-land. The existing numbered entries and prototype history stay in the changelog.
+release body together. Keep earlier versions in the changelog.
 
 Version sources: AssemblyVersion/FileVersion and AssemblyInformationalVersion in JumpingSpider.cs, displayed app/about text,
 README files and CHANGELOG. Package.ps1 reads the version from the compiled app.

@@ -1,18 +1,10 @@
 # Changelog
 
-Corner Spider grew through repeated human feedback, AI-assisted implementation,
-Windows builds, visual review and testing. Read the
-[development history](docs/DEVELOPMENT-HISTORY.md) for the problems and decisions
-behind these revisions. This log includes the early prototype work as well as
-the numbered releases. The local Git repository began at RC3; earlier entries
-were reconstructed from preserved project files and development feedback.
-
 ## Unreleased
 
-- Document the early prototype and the iterative development process. Include
-  the complete changelog and development history in the first public release.
-- Generate a ready-to-post release body and standalone history documents with
-  each package, alongside the Windows/source ZIPs and checksums.
+- Include the complete version-by-version changelog in release notes and both
+  Windows/source packages, with a standalone CHANGELOG.md release attachment.
+- Add the initial prototype and early build changes to the changelog.
 
 ## 1.0.0-rc.8
 
@@ -111,8 +103,8 @@ were reconstructed from preserved project files and development feedback.
 - Added researched personality variations across all twenty skins, including
   foreleg displays, zigzag steps, cautious stalking and retreat preferences.
   Appearance explains each choice; research notes separate evidence from styling.
-- Added the creator's original Cash App QR and optional coffee / Monster banner,
-  enlarged QR view and explicitly clicked browser link to $tedparkes. The original
+- Added an optional Cash App QR coffee / Monster banner, enlarged QR view and
+  explicitly clicked support link. The original
   phone screenshot, payment credentials and payment software are not bundled.
 - Fixed early hunting after naps during web construction and approach resumption
   after crossing a gap between monitors. Retained long pounces for normal prey.
@@ -241,36 +233,36 @@ were reconstructed from preserved project files and development feedback.
   animation cooldowns; an interrupted route resumes when the cursor leaves.
 - Moved the mouse observer onto its own message-loop thread with explicit cleanup.
 
-## Prototype 0.1 and early Windows iterations (before 0.5.2)
+## Early builds (after 0.1, before 0.5.2)
 
-These milestones summarize the original README, preserved project work and
-development feedback. Intermediate version numbers are not assigned retroactively.
+Individual version labels were not preserved for these changes.
 
-- Started with a C# WPF transparent overlay, procedural spider, autonomous
-  hunting, cursor rides, a growing hammock, tray controls and local saves.
-  The original Linux-authored prototype explicitly lacked Windows compilation
-  and runtime verification; those were follow-up work.
-- Preserved the prototype, built it on Windows and ran its behavior checks.
-  Added regression coverage and native diagnostics for overlay transparency,
-  click-through behavior, focus, settings, cursor restoration and cleanup.
-- Expanded exploration across monitors, preferred the rightmost home screen,
-  and worked on display scaling, reflow, resume handling and persistence.
-  Replaced the generic tray symbol with a spider icon and provided a desktop
-  shortcut to the runnable build. Startup remained opt-in.
-- Added the original Regal, Bold and Zebra appearances, then repeatedly revised
-  rounded bodies, fuzz, proportions, eye placement, palps and front/back readability.
-- Reworked walking into short bursts, deliberate pauses, inquisitive turns and
-  corner perching. Revised long forelegs, paired forward/upward reaches and the
-  projected joint angles after feedback on sideways-looking bends.
-- Made hunting more readable through notice, turn, stalk, pause, crouch, jump,
-  capture and eating. Allowed prey farther away while retaining occasional
-  spawning and one prey animal at a time.
-- Developed cursor play from an attached ride into a voluntary finger offer:
-  tolerate small pointer jitter, wait nearby, reach, jump, hang, climb and ride.
-  Added gentle carrying, facing/waving, click departures and startled escapes
-  with a silk trail. Later releases refined boarding and departure further.
-- Reshaped the finger using a supplied pose reference, faded the hand end into
-  transparency, centered it over the pointer and restored the pointer on exit.
-  Personal reference photographs were kept out of the distributed artwork.
-- Improved silk visibility and cursor attention during long edge patrols.
-  Kept the Windows desktop overlay and local procedural artwork throughout.
+- Built and tested the prototype on Windows. Added regression coverage and native
+  diagnostics for transparency, click-through behavior, focus, settings, cursor
+  restoration and cleanup.
+- Added exploration across monitors and a rightmost-screen hammock preference.
+  Improved display scaling, display changes, resume handling and persistence.
+- Added a recognizable spider tray icon and desktop shortcut; startup remains opt-in.
+- Added Regal, Bold and Zebra skins. Refined body proportions, fuzz, eyes, palps
+  and front/back orientation.
+- Added quick walking bursts, deliberate pauses, inquisitive turns and corner
+  perching. Refined long forelegs, paired forward/upward reaches and joint angles.
+- Added distinct notice, turn, stalk, pause, crouch, pounce, capture and eating
+  stages. Allowed more distant prey while keeping occasional, single-prey spawning.
+- Added a voluntary finger invitation with tolerance for small pointer jitter,
+  jumping, hanging, climbing, gentle carrying and occasional facing/waving.
+- Added click departures and fast-movement escapes with a silk trail.
+- Refined the finger silhouette, centered it over the hidden pointer and faded
+  the hand end to transparency. Restore the pointer when the interaction ends.
+- Improved silk visibility and cursor attention during edge patrols.
+
+## 0.1 - Initial prototype
+
+- Added a transparent, topmost, click-through C# WPF desktop overlay.
+- Added a procedural spider with animated legs, large eyes, grooming, naps and
+  silk draglines; autonomous roaming, stalking, pouncing, eating and cursor rides.
+- Added a corner hammock that gradually gains silk.
+- Added tray controls for feeding, pause, corner, size, monitor, startup and exit.
+- Added local settings and meal-count persistence without internet services.
+- Added a first-launch compiler script and deterministic behavior checks.
+- Windows compilation and runtime testing were not completed for this prototype.
