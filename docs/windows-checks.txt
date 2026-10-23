@@ -1,0 +1,658 @@
+Corner Spider 1.0 RC3 Windows runtime checks 2026-10-22T21:18:42
+PASS: seed isolated finger-tone and Portia preferences
+FOCUS: HWND 2360294 -> 2360294, PID 17560 -> 17560, pet PID 35508.
+PASS: saved finger tone is loaded into the desktop world at startup
+PASS: saved Portia selection restores prey behavior and tray action on startup
+PASS: overlay creation preserves foreground window
+PASS: no cursor helper runs while idle
+PASS: Windows cursor-hide API acknowledged by the visibility helper
+PASS: explicit release restores cursor through Windows API and exits helper
+PASS: cursor lease can start again
+PASS: lost UI heartbeat restores cursor and exits helper
+PASS: crash-recovery fixture acquired a cursor lease
+PASS: abrupt owner termination restores cursor and leaves no guard process
+PASS: read-only mouse button hook installed on Windows
+PASS: button-down notification reaches the tick consumer
+PASS: button notification is consumed once
+PASS: ignored hook codes, releases and mouse movement do not act as clicks
+PASS: right, middle and extra button-down messages are recognized
+PASS: one overlay per connected monitor
+PASS: default hammock is on rightmost screen
+PASS: layered, click-through, nonactivating tool-window styles
+PASS: physical overlay rectangle matches \\.\DISPLAY1
+PASS: WPF pixel transform matches monitor DPI
+DISPLAY: \\.\DISPLAY1 {X=0,Y=30,Width=1920,Height=1050} DPI=96
+PASS: layered, click-through, nonactivating tool-window styles
+PASS: physical overlay rectangle matches \\.\DISPLAY2
+PASS: WPF pixel transform matches monitor DPI
+DISPLAY: \\.\DISPLAY2 {X=1920,Y=30,Width=1920,Height=1050} DPI=96
+PASS: OS hit testing passes through visible spider position
+PASS: OS hit testing passes through the illustrated finger
+PASS: pause tray handler
+PASS: resume tray handler
+PASS: feed tray handler
+PASS: home tray handler
+PASS: tray contains quick actions and a single settings entry
+PASS: settings corner selector
+PASS: live size slider updates the shared pet scale
+PASS: size slider upper limit
+PASS: size slider and preview accept 20 percent
+PASS: deep-brown finger endpoint updates world and preview
+PASS: very-pale finger endpoint updates world and preview
+PASS: intermediate finger shade updates live
+PASS: settings single-monitor option
+PASS: settings restore all-monitor roaming
+PASS: skin selection applies to pet, behavior and preview: Regal
+PASS: selected skin survives native settings reload: Regal
+PASS: skin selection applies to pet, behavior and preview: RegalMale
+PASS: selected skin survives native settings reload: RegalMale
+PASS: skin selection applies to pet, behavior and preview: BoldFemale
+PASS: selected skin survives native settings reload: BoldFemale
+PASS: skin selection applies to pet, behavior and preview: Bold
+PASS: selected skin survives native settings reload: Bold
+PASS: skin selection applies to pet, behavior and preview: Zebra
+PASS: selected skin survives native settings reload: Zebra
+PASS: skin selection applies to pet, behavior and preview: ZebraMale
+PASS: selected skin survives native settings reload: ZebraMale
+PASS: skin selection applies to pet, behavior and preview: Tan
+PASS: selected skin survives native settings reload: Tan
+PASS: skin selection applies to pet, behavior and preview: TanMale
+PASS: selected skin survives native settings reload: TanMale
+PASS: skin selection applies to pet, behavior and preview: RedBackFemale
+PASS: selected skin survives native settings reload: RedBackFemale
+PASS: skin selection applies to pet, behavior and preview: RedBack
+PASS: selected skin survives native settings reload: RedBack
+PASS: skin selection applies to pet, behavior and preview: Emerald
+PASS: selected skin survives native settings reload: Emerald
+PASS: skin selection applies to pet, behavior and preview: EmeraldMale
+PASS: selected skin survives native settings reload: EmeraldMale
+PASS: skin selection applies to pet, behavior and preview: GrayWall
+PASS: selected skin survives native settings reload: GrayWall
+PASS: skin selection applies to pet, behavior and preview: GrayWallMale
+PASS: selected skin survives native settings reload: GrayWallMale
+PASS: skin selection applies to pet, behavior and preview: PantropicalFemale
+PASS: selected skin survives native settings reload: PantropicalFemale
+PASS: skin selection applies to pet, behavior and preview: Pantropical
+PASS: selected skin survives native settings reload: Pantropical
+PASS: skin selection applies to pet, behavior and preview: ApacheFemale
+PASS: selected skin survives native settings reload: ApacheFemale
+PASS: skin selection applies to pet, behavior and preview: Apache
+PASS: selected skin survives native settings reload: Apache
+PASS: skin selection applies to pet, behavior and preview: PortiaLabiata
+PASS: selected skin survives native settings reload: PortiaLabiata
+PASS: skin selection applies to pet, behavior and preview: HyllusDiardiGreen
+PASS: selected skin survives native settings reload: HyllusDiardiGreen
+PASS: behavior sliders update actual world preferences
+PASS: distance sliders enforce a stable exit margin
+PASS: flies toggle updates world and slider
+PASS: rides toggle updates world and sliders
+PASS: diagnostics cannot alter autostart
+PASS: new settings persist through reload
+PASS: finger tone persists with other settings
+PASS: reset restores preference defaults
+PASS: preference reset preserves nest and meals
+PASS: reset restores original finger shade in world and preview
+PASS: closing settings saves slider size
+PASS: closing settings stops its preview timer
+PASS: visible, unclipped skin artwork: Regal pose 0
+PASS: skin has distinct rendered artwork: Regal
+PASS: skin has distinct geometry, not only color: Regal
+PASS: visible, unclipped skin artwork: Regal pose 1
+PASS: visible, unclipped skin artwork: Regal pose 2
+PASS: visible, unclipped skin artwork: Regal pose 3
+PASS: visible, unclipped skin artwork: RegalMale pose 0
+PASS: skin has distinct rendered artwork: RegalMale
+PASS: skin has distinct geometry, not only color: RegalMale
+PASS: visible, unclipped skin artwork: RegalMale pose 1
+PASS: visible, unclipped skin artwork: RegalMale pose 2
+PASS: visible, unclipped skin artwork: RegalMale pose 3
+PASS: visible, unclipped skin artwork: BoldFemale pose 0
+PASS: skin has distinct rendered artwork: BoldFemale
+PASS: skin has distinct geometry, not only color: BoldFemale
+PASS: visible, unclipped skin artwork: BoldFemale pose 1
+PASS: visible, unclipped skin artwork: BoldFemale pose 2
+PASS: visible, unclipped skin artwork: BoldFemale pose 3
+PASS: visible, unclipped skin artwork: Bold pose 0
+PASS: skin has distinct rendered artwork: Bold
+PASS: skin has distinct geometry, not only color: Bold
+PASS: visible, unclipped skin artwork: Bold pose 1
+PASS: visible, unclipped skin artwork: Bold pose 2
+PASS: visible, unclipped skin artwork: Bold pose 3
+PASS: visible, unclipped skin artwork: Zebra pose 0
+PASS: skin has distinct rendered artwork: Zebra
+PASS: skin has distinct geometry, not only color: Zebra
+PASS: visible, unclipped skin artwork: Zebra pose 1
+PASS: visible, unclipped skin artwork: Zebra pose 2
+PASS: visible, unclipped skin artwork: Zebra pose 3
+PASS: visible, unclipped skin artwork: ZebraMale pose 0
+PASS: skin has distinct rendered artwork: ZebraMale
+PASS: skin has distinct geometry, not only color: ZebraMale
+PASS: visible, unclipped skin artwork: ZebraMale pose 1
+PASS: visible, unclipped skin artwork: ZebraMale pose 2
+PASS: visible, unclipped skin artwork: ZebraMale pose 3
+PASS: visible, unclipped skin artwork: Tan pose 0
+PASS: skin has distinct rendered artwork: Tan
+PASS: skin has distinct geometry, not only color: Tan
+PASS: visible, unclipped skin artwork: Tan pose 1
+PASS: visible, unclipped skin artwork: Tan pose 2
+PASS: visible, unclipped skin artwork: Tan pose 3
+PASS: visible, unclipped skin artwork: TanMale pose 0
+PASS: skin has distinct rendered artwork: TanMale
+PASS: skin has distinct geometry, not only color: TanMale
+PASS: visible, unclipped skin artwork: TanMale pose 1
+PASS: visible, unclipped skin artwork: TanMale pose 2
+PASS: visible, unclipped skin artwork: TanMale pose 3
+PASS: visible, unclipped skin artwork: RedBackFemale pose 0
+PASS: skin has distinct rendered artwork: RedBackFemale
+PASS: skin has distinct geometry, not only color: RedBackFemale
+PASS: visible, unclipped skin artwork: RedBackFemale pose 1
+PASS: visible, unclipped skin artwork: RedBackFemale pose 2
+PASS: visible, unclipped skin artwork: RedBackFemale pose 3
+PASS: visible, unclipped skin artwork: RedBack pose 0
+PASS: skin has distinct rendered artwork: RedBack
+PASS: skin has distinct geometry, not only color: RedBack
+PASS: visible, unclipped skin artwork: RedBack pose 1
+PASS: visible, unclipped skin artwork: RedBack pose 2
+PASS: visible, unclipped skin artwork: RedBack pose 3
+PASS: visible, unclipped skin artwork: Emerald pose 0
+PASS: skin has distinct rendered artwork: Emerald
+PASS: skin has distinct geometry, not only color: Emerald
+PASS: visible, unclipped skin artwork: Emerald pose 1
+PASS: visible, unclipped skin artwork: Emerald pose 2
+PASS: visible, unclipped skin artwork: Emerald pose 3
+PASS: visible, unclipped skin artwork: EmeraldMale pose 0
+PASS: skin has distinct rendered artwork: EmeraldMale
+PASS: skin has distinct geometry, not only color: EmeraldMale
+PASS: visible, unclipped skin artwork: EmeraldMale pose 1
+PASS: visible, unclipped skin artwork: EmeraldMale pose 2
+PASS: visible, unclipped skin artwork: EmeraldMale pose 3
+PASS: visible, unclipped skin artwork: GrayWall pose 0
+PASS: skin has distinct rendered artwork: GrayWall
+PASS: skin has distinct geometry, not only color: GrayWall
+PASS: visible, unclipped skin artwork: GrayWall pose 1
+PASS: visible, unclipped skin artwork: GrayWall pose 2
+PASS: visible, unclipped skin artwork: GrayWall pose 3
+PASS: visible, unclipped skin artwork: GrayWallMale pose 0
+PASS: skin has distinct rendered artwork: GrayWallMale
+PASS: skin has distinct geometry, not only color: GrayWallMale
+PASS: visible, unclipped skin artwork: GrayWallMale pose 1
+PASS: visible, unclipped skin artwork: GrayWallMale pose 2
+PASS: visible, unclipped skin artwork: GrayWallMale pose 3
+PASS: visible, unclipped skin artwork: PantropicalFemale pose 0
+PASS: skin has distinct rendered artwork: PantropicalFemale
+PASS: skin has distinct geometry, not only color: PantropicalFemale
+PASS: visible, unclipped skin artwork: PantropicalFemale pose 1
+PASS: visible, unclipped skin artwork: PantropicalFemale pose 2
+PASS: visible, unclipped skin artwork: PantropicalFemale pose 3
+PASS: visible, unclipped skin artwork: Pantropical pose 0
+PASS: skin has distinct rendered artwork: Pantropical
+PASS: skin has distinct geometry, not only color: Pantropical
+PASS: visible, unclipped skin artwork: Pantropical pose 1
+PASS: visible, unclipped skin artwork: Pantropical pose 2
+PASS: visible, unclipped skin artwork: Pantropical pose 3
+PASS: visible, unclipped skin artwork: ApacheFemale pose 0
+PASS: skin has distinct rendered artwork: ApacheFemale
+PASS: skin has distinct geometry, not only color: ApacheFemale
+PASS: visible, unclipped skin artwork: ApacheFemale pose 1
+PASS: visible, unclipped skin artwork: ApacheFemale pose 2
+PASS: visible, unclipped skin artwork: ApacheFemale pose 3
+PASS: visible, unclipped skin artwork: Apache pose 0
+PASS: skin has distinct rendered artwork: Apache
+PASS: skin has distinct geometry, not only color: Apache
+PASS: visible, unclipped skin artwork: Apache pose 1
+PASS: visible, unclipped skin artwork: Apache pose 2
+PASS: visible, unclipped skin artwork: Apache pose 3
+PASS: visible, unclipped skin artwork: PortiaLabiata pose 0
+PASS: skin has distinct rendered artwork: PortiaLabiata
+PASS: skin has distinct geometry, not only color: PortiaLabiata
+PASS: visible, unclipped skin artwork: PortiaLabiata pose 1
+PASS: visible, unclipped skin artwork: PortiaLabiata pose 2
+PASS: visible, unclipped skin artwork: PortiaLabiata pose 3
+PASS: visible, unclipped skin artwork: HyllusDiardiGreen pose 0
+PASS: skin has distinct rendered artwork: HyllusDiardiGreen
+PASS: skin has distinct geometry, not only color: HyllusDiardiGreen
+PASS: visible, unclipped skin artwork: HyllusDiardiGreen pose 1
+PASS: visible, unclipped skin artwork: HyllusDiardiGreen pose 2
+PASS: visible, unclipped skin artwork: HyllusDiardiGreen pose 3
+PASS: finger tone 0 retains solid fingertip and transparent hand fade
+PASS: changing finger tone preserves the exact silhouette and alpha fade: 0
+PASS: finger shades progress from deep brown to very pale: 0
+PASS: finger tone 0.2 retains solid fingertip and transparent hand fade
+PASS: changing finger tone preserves the exact silhouette and alpha fade: 0.2
+PASS: finger shades progress from deep brown to very pale: 0.2
+PASS: finger tone 0.4 retains solid fingertip and transparent hand fade
+PASS: changing finger tone preserves the exact silhouette and alpha fade: 0.4
+PASS: finger shades progress from deep brown to very pale: 0.4
+PASS: finger tone 0.6 retains solid fingertip and transparent hand fade
+PASS: changing finger tone preserves the exact silhouette and alpha fade: 0.6
+PASS: finger shades progress from deep brown to very pale: 0.6
+PASS: finger tone 0.8 retains solid fingertip and transparent hand fade
+PASS: changing finger tone preserves the exact silhouette and alpha fade: 0.8
+PASS: finger shades progress from deep brown to very pale: 0.8
+PASS: finger tone 1 retains solid fingertip and transparent hand fade
+PASS: changing finger tone preserves the exact silhouette and alpha fade: 1
+PASS: finger shades progress from deep brown to very pale: 1
+PASS: finger palette step 0 gets lighter
+PASS: finger palette step 1 gets lighter
+PASS: finger palette step 2 gets lighter
+PASS: finger palette step 3 gets lighter
+PASS: finger palette step 4 gets lighter
+PASS: finger palette step 5 gets lighter
+PASS: finger palette step 6 gets lighter
+PASS: finger palette step 7 gets lighter
+PASS: finger palette step 8 gets lighter
+PASS: finger palette step 9 gets lighter
+PASS: finger palette step 10 gets lighter
+PASS: finger palette step 11 gets lighter
+PASS: finger palette step 12 gets lighter
+PASS: finger palette step 13 gets lighter
+PASS: finger palette step 14 gets lighter
+PASS: finger palette step 15 gets lighter
+PASS: finger palette step 16 gets lighter
+PASS: finger palette step 17 gets lighter
+PASS: finger palette step 18 gets lighter
+PASS: finger palette step 19 gets lighter
+PASS: finger palette step 20 gets lighter
+PASS: finger palette step 21 gets lighter
+PASS: finger palette step 22 gets lighter
+PASS: finger palette step 23 gets lighter
+PASS: finger palette step 24 gets lighter
+PASS: finger palette step 25 gets lighter
+PASS: finger palette step 26 gets lighter
+PASS: finger palette step 27 gets lighter
+PASS: finger palette step 28 gets lighter
+PASS: finger palette step 29 gets lighter
+PASS: finger palette step 30 gets lighter
+PASS: finger palette step 31 gets lighter
+PASS: finger palette step 32 gets lighter
+PASS: finger palette step 33 gets lighter
+PASS: finger palette step 34 gets lighter
+PASS: finger palette step 35 gets lighter
+PASS: finger palette step 36 gets lighter
+PASS: finger palette step 37 gets lighter
+PASS: finger palette step 38 gets lighter
+PASS: finger palette step 39 gets lighter
+PASS: finger palette step 40 gets lighter
+PASS: finger palette step 41 gets lighter
+PASS: finger palette step 42 gets lighter
+PASS: finger palette step 43 gets lighter
+PASS: finger palette step 44 gets lighter
+PASS: finger palette step 45 gets lighter
+PASS: finger palette step 46 gets lighter
+PASS: finger palette step 47 gets lighter
+PASS: finger palette step 48 gets lighter
+PASS: finger palette step 49 gets lighter
+PASS: finger palette step 50 gets lighter
+PASS: finger palette step 51 gets lighter
+PASS: finger palette step 52 gets lighter
+PASS: finger palette step 53 gets lighter
+PASS: finger palette step 54 gets lighter
+PASS: finger palette step 55 gets lighter
+PASS: finger palette step 56 gets lighter
+PASS: finger palette step 57 gets lighter
+PASS: finger palette step 58 gets lighter
+PASS: finger palette step 59 gets lighter
+PASS: finger palette step 60 gets lighter
+PASS: finger palette step 61 gets lighter
+PASS: finger palette step 62 gets lighter
+PASS: finger palette step 63 gets lighter
+PASS: finger palette step 64 gets lighter
+PASS: finger palette step 65 gets lighter
+PASS: finger palette step 66 gets lighter
+PASS: finger palette step 67 gets lighter
+PASS: finger palette step 68 gets lighter
+PASS: finger palette step 69 gets lighter
+PASS: finger palette step 70 gets lighter
+PASS: finger palette step 71 gets lighter
+PASS: finger palette step 72 gets lighter
+PASS: finger palette step 73 gets lighter
+PASS: finger palette step 74 gets lighter
+PASS: finger palette step 75 gets lighter
+PASS: finger palette step 76 gets lighter
+PASS: finger palette step 77 gets lighter
+PASS: finger palette step 78 gets lighter
+PASS: finger palette step 79 gets lighter
+PASS: finger palette step 80 gets lighter
+PASS: finger palette step 81 gets lighter
+PASS: finger palette step 82 gets lighter
+PASS: finger palette step 83 gets lighter
+PASS: finger palette step 84 gets lighter
+PASS: finger palette step 85 gets lighter
+PASS: finger palette step 86 gets lighter
+PASS: finger palette step 87 gets lighter
+PASS: finger palette step 88 gets lighter
+PASS: finger palette step 89 gets lighter
+PASS: finger palette step 90 gets lighter
+PASS: finger palette step 91 gets lighter
+PASS: finger palette step 92 gets lighter
+PASS: finger palette step 93 gets lighter
+PASS: finger palette step 94 gets lighter
+PASS: finger palette step 95 gets lighter
+PASS: finger palette step 96 gets lighter
+PASS: finger palette step 97 gets lighter
+PASS: finger palette step 98 gets lighter
+PASS: finger palette step 99 gets lighter
+PASS: finger palette step 100 gets lighter
+PASS: renderer rejects nonfinite tones and clamps endpoints
+PASS: Portia selection changes actual world diet and tray feeding label
+PASS: tray feeding releases one small spider for Portia
+PASS: tray feeding preserves the single prey slot
+PASS: switching skins updates future food without morphing existing prey
+PASS: other skins retain fly feeding
+PASS: spider prey is visible and unclipped at size 0.2 / DPI 1
+PASS: spider prey keeps a transparent background
+PASS: spider prey is visible and unclipped at size 0.2 / DPI 1.5
+PASS: spider prey keeps a transparent background
+PASS: spider prey is visible and unclipped at size 0.2 / DPI 2
+PASS: spider prey keeps a transparent background
+PASS: spider prey is visible and unclipped at size 1 / DPI 1
+PASS: spider prey keeps a transparent background
+PASS: spider prey is visible and unclipped at size 1 / DPI 1.5
+PASS: spider prey keeps a transparent background
+PASS: spider prey is visible and unclipped at size 1 / DPI 2
+PASS: spider prey keeps a transparent background
+PASS: spider prey is visible and unclipped at size 1.8 / DPI 1
+PASS: spider prey keeps a transparent background
+PASS: spider prey is visible and unclipped at size 1.8 / DPI 1.5
+PASS: spider prey keeps a transparent background
+PASS: spider prey is visible and unclipped at size 1.8 / DPI 2
+PASS: spider prey keeps a transparent background
+PASS: original cropped Cash App QR is embedded and displayed
+PASS: support uses the public Cash App recipient; diagnostics never open payment pages
+PASS: reject unexpected support target: http://cash.app/$tedparkes
+PASS: reject unexpected support target: https://cash.app.evil.example/$tedparkes
+PASS: reject unexpected support target: https://other@cash.app/$tedparkes
+PASS: reject unexpected support target: file:///tmp/pay
+PASS: reject unexpected support target: https://cash.app/$someoneelse
+PASS: reject unexpected support target: https://cash.app/$tedparkes?amount=100
+PASS: new behavior controls persist through native UI
+PASS: native host starts corner web encounter
+PASS: native toggle clears resident and web
+PASS: reset restores personality and web preferences
+PASS: support QR stays inside compact settings bounds
+PASS: compact settings preserve the original QR at readable size
+PASS: click-departure fixture starts with the real cursor hidden
+PASS: mouse-button notification starts planned departure with a solid launch pad
+PASS: click restores native cursor while departure is being prepared
+PASS: native world takes off toward an upper landing with silk
+PASS: planned departure cleans up its finger and silk
+PASS: native world approaches the end opening before entering
+PASS: native world crawls inside before its silk cover and sleep pose
+PASS: native world leaves through the other end on waking
+PASS: retreat has multiple visible attachments to both desktop edges: Regal / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Regal / TopLeft
+PASS: static silk reuses its retained artwork: Regal / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Regal / TopRight
+PASS: retreat preserves clear desktop outside its corner: Regal / TopRight
+PASS: static silk reuses its retained artwork: Regal / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Regal / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Regal / BottomLeft
+PASS: static silk reuses its retained artwork: Regal / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Regal / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Regal / BottomRight
+PASS: static silk reuses its retained artwork: Regal / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: RegalMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: RegalMale / TopLeft
+PASS: static silk reuses its retained artwork: RegalMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RegalMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: RegalMale / TopRight
+PASS: static silk reuses its retained artwork: RegalMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: RegalMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: RegalMale / BottomLeft
+PASS: static silk reuses its retained artwork: RegalMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RegalMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: RegalMale / BottomRight
+PASS: static silk reuses its retained artwork: RegalMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: BoldFemale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: BoldFemale / TopLeft
+PASS: static silk reuses its retained artwork: BoldFemale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: BoldFemale / TopRight
+PASS: retreat preserves clear desktop outside its corner: BoldFemale / TopRight
+PASS: static silk reuses its retained artwork: BoldFemale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: BoldFemale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: BoldFemale / BottomLeft
+PASS: static silk reuses its retained artwork: BoldFemale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: BoldFemale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: BoldFemale / BottomRight
+PASS: static silk reuses its retained artwork: BoldFemale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Bold / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Bold / TopLeft
+PASS: static silk reuses its retained artwork: Bold / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Bold / TopRight
+PASS: retreat preserves clear desktop outside its corner: Bold / TopRight
+PASS: static silk reuses its retained artwork: Bold / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Bold / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Bold / BottomLeft
+PASS: static silk reuses its retained artwork: Bold / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Bold / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Bold / BottomRight
+PASS: static silk reuses its retained artwork: Bold / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Zebra / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Zebra / TopLeft
+PASS: static silk reuses its retained artwork: Zebra / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Zebra / TopRight
+PASS: retreat preserves clear desktop outside its corner: Zebra / TopRight
+PASS: static silk reuses its retained artwork: Zebra / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Zebra / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Zebra / BottomLeft
+PASS: static silk reuses its retained artwork: Zebra / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Zebra / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Zebra / BottomRight
+PASS: static silk reuses its retained artwork: Zebra / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: ZebraMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: ZebraMale / TopLeft
+PASS: static silk reuses its retained artwork: ZebraMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: ZebraMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: ZebraMale / TopRight
+PASS: static silk reuses its retained artwork: ZebraMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: ZebraMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: ZebraMale / BottomLeft
+PASS: static silk reuses its retained artwork: ZebraMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: ZebraMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: ZebraMale / BottomRight
+PASS: static silk reuses its retained artwork: ZebraMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Tan / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Tan / TopLeft
+PASS: static silk reuses its retained artwork: Tan / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Tan / TopRight
+PASS: retreat preserves clear desktop outside its corner: Tan / TopRight
+PASS: static silk reuses its retained artwork: Tan / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Tan / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Tan / BottomLeft
+PASS: static silk reuses its retained artwork: Tan / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Tan / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Tan / BottomRight
+PASS: static silk reuses its retained artwork: Tan / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: TanMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: TanMale / TopLeft
+PASS: static silk reuses its retained artwork: TanMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: TanMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: TanMale / TopRight
+PASS: static silk reuses its retained artwork: TanMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: TanMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: TanMale / BottomLeft
+PASS: static silk reuses its retained artwork: TanMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: TanMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: TanMale / BottomRight
+PASS: static silk reuses its retained artwork: TanMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: RedBackFemale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: RedBackFemale / TopLeft
+PASS: static silk reuses its retained artwork: RedBackFemale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RedBackFemale / TopRight
+PASS: retreat preserves clear desktop outside its corner: RedBackFemale / TopRight
+PASS: static silk reuses its retained artwork: RedBackFemale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: RedBackFemale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: RedBackFemale / BottomLeft
+PASS: static silk reuses its retained artwork: RedBackFemale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RedBackFemale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: RedBackFemale / BottomRight
+PASS: static silk reuses its retained artwork: RedBackFemale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: RedBack / TopLeft
+PASS: retreat preserves clear desktop outside its corner: RedBack / TopLeft
+PASS: static silk reuses its retained artwork: RedBack / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RedBack / TopRight
+PASS: retreat preserves clear desktop outside its corner: RedBack / TopRight
+PASS: static silk reuses its retained artwork: RedBack / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: RedBack / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: RedBack / BottomLeft
+PASS: static silk reuses its retained artwork: RedBack / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RedBack / BottomRight
+PASS: retreat preserves clear desktop outside its corner: RedBack / BottomRight
+PASS: static silk reuses its retained artwork: RedBack / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Emerald / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Emerald / TopLeft
+PASS: static silk reuses its retained artwork: Emerald / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Emerald / TopRight
+PASS: retreat preserves clear desktop outside its corner: Emerald / TopRight
+PASS: static silk reuses its retained artwork: Emerald / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Emerald / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Emerald / BottomLeft
+PASS: static silk reuses its retained artwork: Emerald / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Emerald / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Emerald / BottomRight
+PASS: static silk reuses its retained artwork: Emerald / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: EmeraldMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: EmeraldMale / TopLeft
+PASS: static silk reuses its retained artwork: EmeraldMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: EmeraldMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: EmeraldMale / TopRight
+PASS: static silk reuses its retained artwork: EmeraldMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: EmeraldMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: EmeraldMale / BottomLeft
+PASS: static silk reuses its retained artwork: EmeraldMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: EmeraldMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: EmeraldMale / BottomRight
+PASS: static silk reuses its retained artwork: EmeraldMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWall / TopLeft
+PASS: retreat preserves clear desktop outside its corner: GrayWall / TopLeft
+PASS: static silk reuses its retained artwork: GrayWall / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWall / TopRight
+PASS: retreat preserves clear desktop outside its corner: GrayWall / TopRight
+PASS: static silk reuses its retained artwork: GrayWall / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWall / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: GrayWall / BottomLeft
+PASS: static silk reuses its retained artwork: GrayWall / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWall / BottomRight
+PASS: retreat preserves clear desktop outside its corner: GrayWall / BottomRight
+PASS: static silk reuses its retained artwork: GrayWall / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWallMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: GrayWallMale / TopLeft
+PASS: static silk reuses its retained artwork: GrayWallMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWallMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: GrayWallMale / TopRight
+PASS: static silk reuses its retained artwork: GrayWallMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWallMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: GrayWallMale / BottomLeft
+PASS: static silk reuses its retained artwork: GrayWallMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWallMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: GrayWallMale / BottomRight
+PASS: static silk reuses its retained artwork: GrayWallMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: PantropicalFemale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: PantropicalFemale / TopLeft
+PASS: static silk reuses its retained artwork: PantropicalFemale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: PantropicalFemale / TopRight
+PASS: retreat preserves clear desktop outside its corner: PantropicalFemale / TopRight
+PASS: static silk reuses its retained artwork: PantropicalFemale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: PantropicalFemale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: PantropicalFemale / BottomLeft
+PASS: static silk reuses its retained artwork: PantropicalFemale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: PantropicalFemale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: PantropicalFemale / BottomRight
+PASS: static silk reuses its retained artwork: PantropicalFemale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Pantropical / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Pantropical / TopLeft
+PASS: static silk reuses its retained artwork: Pantropical / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Pantropical / TopRight
+PASS: retreat preserves clear desktop outside its corner: Pantropical / TopRight
+PASS: static silk reuses its retained artwork: Pantropical / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Pantropical / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Pantropical / BottomLeft
+PASS: static silk reuses its retained artwork: Pantropical / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Pantropical / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Pantropical / BottomRight
+PASS: static silk reuses its retained artwork: Pantropical / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: ApacheFemale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: ApacheFemale / TopLeft
+PASS: static silk reuses its retained artwork: ApacheFemale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: ApacheFemale / TopRight
+PASS: retreat preserves clear desktop outside its corner: ApacheFemale / TopRight
+PASS: static silk reuses its retained artwork: ApacheFemale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: ApacheFemale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: ApacheFemale / BottomLeft
+PASS: static silk reuses its retained artwork: ApacheFemale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: ApacheFemale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: ApacheFemale / BottomRight
+PASS: static silk reuses its retained artwork: ApacheFemale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Apache / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Apache / TopLeft
+PASS: static silk reuses its retained artwork: Apache / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Apache / TopRight
+PASS: retreat preserves clear desktop outside its corner: Apache / TopRight
+PASS: static silk reuses its retained artwork: Apache / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Apache / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Apache / BottomLeft
+PASS: static silk reuses its retained artwork: Apache / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Apache / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Apache / BottomRight
+PASS: static silk reuses its retained artwork: Apache / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: PortiaLabiata / TopLeft
+PASS: retreat preserves clear desktop outside its corner: PortiaLabiata / TopLeft
+PASS: static silk reuses its retained artwork: PortiaLabiata / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: PortiaLabiata / TopRight
+PASS: retreat preserves clear desktop outside its corner: PortiaLabiata / TopRight
+PASS: static silk reuses its retained artwork: PortiaLabiata / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: PortiaLabiata / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: PortiaLabiata / BottomLeft
+PASS: static silk reuses its retained artwork: PortiaLabiata / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: PortiaLabiata / BottomRight
+PASS: retreat preserves clear desktop outside its corner: PortiaLabiata / BottomRight
+PASS: static silk reuses its retained artwork: PortiaLabiata / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: HyllusDiardiGreen / TopLeft
+PASS: retreat preserves clear desktop outside its corner: HyllusDiardiGreen / TopLeft
+PASS: static silk reuses its retained artwork: HyllusDiardiGreen / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: HyllusDiardiGreen / TopRight
+PASS: retreat preserves clear desktop outside its corner: HyllusDiardiGreen / TopRight
+PASS: static silk reuses its retained artwork: HyllusDiardiGreen / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: HyllusDiardiGreen / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: HyllusDiardiGreen / BottomLeft
+PASS: static silk reuses its retained artwork: HyllusDiardiGreen / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: HyllusDiardiGreen / BottomRight
+PASS: retreat preserves clear desktop outside its corner: HyllusDiardiGreen / BottomRight
+PASS: static silk reuses its retained artwork: HyllusDiardiGreen / BottomRight
+PASS: switching species replaces the retained silk style immediately
+PASS: saved silk progress still controls growth layers
+PASS: growing silk preserves existing threads rather than rearranging them: Regal
+PASS: growing silk preserves existing threads rather than rearranging them: RegalMale
+PASS: growing silk preserves existing threads rather than rearranging them: BoldFemale
+PASS: growing silk preserves existing threads rather than rearranging them: Bold
+PASS: growing silk preserves existing threads rather than rearranging them: Zebra
+PASS: growing silk preserves existing threads rather than rearranging them: ZebraMale
+PASS: growing silk preserves existing threads rather than rearranging them: Tan
+PASS: growing silk preserves existing threads rather than rearranging them: TanMale
+PASS: growing silk preserves existing threads rather than rearranging them: RedBackFemale
+PASS: growing silk preserves existing threads rather than rearranging them: RedBack
+PASS: growing silk preserves existing threads rather than rearranging them: Emerald
+PASS: growing silk preserves existing threads rather than rearranging them: EmeraldMale
+PASS: growing silk preserves existing threads rather than rearranging them: GrayWall
+PASS: growing silk preserves existing threads rather than rearranging them: GrayWallMale
+PASS: growing silk preserves existing threads rather than rearranging them: PantropicalFemale
+PASS: growing silk preserves existing threads rather than rearranging them: Pantropical
+PASS: growing silk preserves existing threads rather than rearranging them: ApacheFemale
+PASS: growing silk preserves existing threads rather than rearranging them: Apache
+PASS: growing silk preserves existing threads rather than rearranging them: PortiaLabiata
+PASS: growing silk preserves existing threads rather than rearranging them: HyllusDiardiGreen
+PASS: visible centered finger requests native cursor hiding
+PASS: pause releases the cursor visibility lease
+PASS: rendered overlay has transparent background and visible vector artwork
+PASS: running desktop pet walks across the real two-monitor seam
+MEASURED: 16.0 seconds, CPU=13.76% of one logical CPU, working set=554.1 MiB, private=688.9 MiB (delta 59.2).
+RESOURCES: GDI 780 -> 768, USER 37 -> 37 after 60 icon replacements.
+PASS: replacing species icons does not leak native handles
+PASS: resume path resets cursor history and dismounts
+PASS: previous-save backup exists
+PASS: exit cleanup tested with an active cursor visibility lease
+PASS: normal cleanup removes overlays and tray icon
+PASS: exit cleanup restores cursor and closes the helper
+PASS: cleanup successfully unhooks the native mouse observer
+PASS: cleanup stops the mouse observer message loop
+RESULT: PASS (0 failures). Physical mixed-DPI changes, actual sleep/unplug and hands-on cursor feel still require manual QA.

@@ -1,0 +1,16 @@
+*.exe
+*.pdb
+build.log
+behavior-tests.log
+runtime-tests.txt
+test-settings-*/
+diagnostics/
+dist/
+work/
+settings.txt
+settings.txt.bak
+settings.txt.new
+.vs/
+.codex*/
+Thumbs.db
+Desktop.ini

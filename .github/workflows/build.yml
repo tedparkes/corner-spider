@@ -1,0 +1,28 @@
+name: Windows build
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build, test and package
+        shell: powershell
+        run: .\Package.ps1
+      - name: Upload release candidates
+        uses: actions/upload-artifact@v4
+        with:
+          name: CornerSpider-Windows
+          path: |
+            dist/*.zip
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
