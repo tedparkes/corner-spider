@@ -14,7 +14,7 @@ namespace CornerSpider {
                 bool ready=panel==0?w.WebStage==WebVisit.Building && w.GuestProgress>.2:
                     panel==1?w.WebStage==WebVisit.Building && w.GuestProgress>.8:
                     panel==2?w.WebStage==WebVisit.Waiting && w.GuestStageAge>40:
-                    panel==3?w.WebStage==WebVisit.Approach && (w.Spider-w.GuestCenter).Length<170:
+                    panel==3?w.WebStage==WebVisit.Approach && (w.Spider-w.GuestPluckPosition).Length<75*w.GuestScale:
                     panel==4?w.WebStage==WebVisit.Plucking && w.GuestTaps==1 && w.GuestPulse>.5:
                     panel==5?w.WebStage==WebVisit.Plucking && w.GuestLure>.2 && w.GuestPulse>.5:
                     panel==6?w.WebStage==WebVisit.Plucking && w.GuestLure>.8 && w.GuestPulse>.5:
@@ -25,14 +25,15 @@ namespace CornerSpider {
             throw new InvalidOperationException("Encounter preview did not reach panel "+panel);
         }
         public static void RenderEncounterPreview(string folder) {
-            string[] labels={"Weaving the frame","Adding the cross threads","Waiting after construction","A quiet, angled approach","Trying a signal","Repeating the useful plucks","The resident comes closer","A short web-side ambush","Meal; the empty web fades"};
+            string[] labels={"Weaving the larger frame","Adding the cross threads","The resident waits at the center","A quiet approach to the edge","Plucking the outer anchor","Repeating the useful plucks","The resident comes closer","The web-side ambush","Meal; silk remains until departure"};
             var image=new DrawingVisual();using(var d=image.RenderOpen()) {
                 d.DrawRectangle(BPreview("#e6ebe1"),null,new Rect(0,0,1260,1210));
                 Text(d,"PORTIA / A CORNER-WEB ENCOUNTER",20,14,24,Color.FromRgb(30,50,44));
                 Text(d,"3–4 minutes of building, 1–2 minutes of waiting, then a cautious approach and web signals.",20,48,16,Color.FromRgb(30,50,44));
                 for(int i=0;i<9;i++) {
-                    World w=GuestScene(i);V center=w.GuestCenter+w.GuestInward*65;
-                    var canvas=new PetCanvas { World=w,Species="PortiaLabiata",Width=420,Height=330,Offset=center-new V(210,165) };
+                    World w=GuestScene(i);double span=w.GuestWebExtent+210*w.GuestScale,zoom=320/span;
+                    V center=w.GuestCorner+w.GuestInward*(span/Math.Sqrt(2));
+                    var canvas=new PetCanvas { World=w,Species="PortiaLabiata",Width=420,Height=330,DeviceScale=1/zoom,Offset=center-new V(210/zoom,165/zoom) };
                     canvas.Measure(new Size(420,330));canvas.Arrange(new Rect(0,0,420,330));
                     var bitmap=new RenderTargetBitmap(420,330,96,96,PixelFormats.Pbgra32);bitmap.Render(canvas);
                     d.PushTransform(new TranslateTransform(i%3*420,85+i/3*370));
@@ -40,6 +41,14 @@ namespace CornerSpider {
                     Text(d,labels[i],12,338,16,Color.FromRgb(30,50,44));d.Pop();
                 }
             }SavePng(image,1260,1210,Path.Combine(folder,"portia-web-encounter.png"));
+            var detailWorld=GuestScene(4);double detailSpan=detailWorld.GuestWebExtent+210*detailWorld.GuestScale,detailZoom=760/detailSpan;
+            V detailCenter=detailWorld.GuestCorner+detailWorld.GuestInward*(detailSpan/Math.Sqrt(2));
+            var detail=new PetCanvas { World=detailWorld,Species="PortiaLabiata",Width=800,Height=800,DeviceScale=1/detailZoom,Offset=detailCenter-new V(400/detailZoom,400/detailZoom) };
+            detail.Measure(new Size(800,800));detail.Arrange(new Rect(0,0,800,800));
+            var detailImage=new DrawingVisual();using(var d=detailImage.RenderOpen()) {
+                d.DrawRectangle(BPreview("#24313a"),null,new Rect(0,0,800,800));
+                var bitmap=new RenderTargetBitmap(800,800,96,96,PixelFormats.Pbgra32);bitmap.Render(detail);d.DrawImage(bitmap,new Rect(0,0,800,800));
+            }SavePng(detailImage,800,800,Path.Combine(folder,"portia-web-edge.png"));
             image=new DrawingVisual();using(var d=image.RenderOpen()) {
                 d.DrawRectangle(BPreview("#e6ebe1"),null,new Rect(0,0,1400,1340));Text(d,"SPECIES PERSONALITIES / SOLO DISPLAY ADAPTATIONS",20,14,24,Color.FromRgb(30,50,44));
                 for(int i=0;i<SkinCatalog.All.Length;i++) {

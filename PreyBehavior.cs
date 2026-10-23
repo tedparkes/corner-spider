@@ -3,6 +3,7 @@ using System;
 namespace CornerSpider {
     public enum PreyKind { Fly, SmallSpider }
     public partial class World {
+        public const double SmallSpiderSize=1.5;
         // Fly/HasFly retain the original single-slot API used by saves/tests.
         // Prey identity is captured separately, so feeding during Eat cannot
         // change the meal already held by the pet.
@@ -48,7 +49,7 @@ namespace CornerSpider {
             double a=PreyAngle*Math.PI/180;
             V next=Clamp(Fly+new V(Math.Sin(a),-Math.Cos(a))*(12.5*dt*s));
             double distance=(next-Fly).Length;Fly=next;PreyWalking=distance>.001;
-            PreySteps+=distance/Math.Max(.01,1.6*s);
+            PreySteps+=distance/Math.Max(.01,1.6*s*SmallSpiderSize);
         }
     }
 }

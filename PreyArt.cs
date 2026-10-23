@@ -34,7 +34,7 @@ namespace CornerSpider {
         internal static void DrawPrey(DrawingContext d,World w) {
             if(!w.HasFly) return;
             if(w.Prey==PreyKind.Fly) { DrawFly(d,w);return; }
-            double scale=w.Scale*w.Areas[w.AreaAt(w.Fly)].Dpi;
+            double scale=World.SmallSpiderSize*w.Scale*w.Areas[w.AreaAt(w.Fly)].Dpi;
             d.PushTransform(new TranslateTransform(w.Fly.X,w.Fly.Y));d.PushTransform(new ScaleTransform(scale,scale));
             d.PushTransform(new RotateTransform(w.PreyAngle));DrawSmallSpider(d,w.PreySteps,w.PreyWalking,0);d.Pop();d.Pop();d.Pop();
         }
@@ -43,7 +43,7 @@ namespace CornerSpider {
             if(w.Meal==PreyKind.Fly) { Oval(d,B("#393f32"),0,-29,2.6,2);Line(d,"#6e877a",.5,-2,-30,-5,-31);return; }
             double fade=Math.Max(0,Math.Min(1,(w.MealDuration-w.StateTime)/.8));
             d.PushOpacity(fade);d.PushTransform(new TranslateTransform(0,-30.2));
-            d.PushTransform(new RotateTransform(90+Math.Sin(w.StateTime*6)*3));d.PushTransform(new ScaleTransform(.68,.68));
+            d.PushTransform(new RotateTransform(90+Math.Sin(w.StateTime*6)*3));d.PushTransform(new ScaleTransform(.68*World.SmallSpiderSize,.68*World.SmallSpiderSize));
             DrawSmallSpider(d,0,false,.85);d.Pop();d.Pop();d.Pop();d.Pop();
         }
     }

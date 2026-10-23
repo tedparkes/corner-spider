@@ -1,15 +1,19 @@
-# Corner Spider 1.0 RC3
+# Corner Spider 1.0 RC4
 
 A small jumping spider for your actual Windows desktop. It watches from corners,
 stalks occasional prey, builds a silk retreat and sometimes accepts a finger ride.
 
 ![Twenty procedural spider skins](docs/skins-light.png)
+Portia's resident prey builds a larger corner web and waits at its center. Portia
+reserves that corner, then approaches its edge to pluck and lure the resident.
+The web stays visible after the meal until Portia moves clear.
+
 The Appearance preview includes each species' silk retreat in its upper-right
 corner, with live skin, size and background changes.
 
 ![Settings with species silk preview and the original optional Cash App QR](docs/settings-banner.png)
 
-This is the **1.0.0-rc.3 release candidate**. Windows build and automated checks
+This is the **1.0.0-rc.4 release candidate**. Windows build and automated checks
 pass; the remaining hands-on release checklist is in [verification notes](docs/VERIFICATION.md).
 
 ## Download and start
@@ -124,12 +128,20 @@ Select **Portia labiata** in Appearance, then open **Behavior** and choose
 **Invite a web-building spider**. A small resident walks its thread path while
 constructing a connected corner web over **3–4 minutes**, then waits **1–2 minutes**.
 Portia makes a cautious angled approach, tries small plucks, repeats a useful
-signal as the resident comes closer, and makes a short ambush. The empty web fades.
+signal as the resident comes closer, and makes an ambush. The empty web stays
+visible while Portia eats or rests there; its 12-second fade starts after she moves
+fully clear of the web.
 The normal, longer hunting pounce still applies to free-moving prey.
 
 Automatic encounters are occasional, require automatic prey and corner-web visits
 to be enabled, and use the same single-prey slot. A free, roomy corner is chosen
 away from Portia's hammock and current corner, including on another monitor.
+The web has three times its earlier span, fitted down when needed to keep an
+approach lane. Spider prey is 50% larger, still smaller than Portia. The resident
+waits at the central junction and follows the signal toward an outer anchor;
+Portia's front feet contact silk at that edge. Ordinary patrols and returns detour
+around the reserved footprint while the resident builds and waits.
+
 Small layouts may have no suitable corner. Portia can nap or play on your finger
 while the neighbor builds; the approach waits until Portia is available.
 Pausing freezes the sequence. A skin, size, display or home change clears the visit
@@ -141,6 +153,7 @@ in Behavior settings. Real web deception inspired this sequence, but the timing,
 generic resident and response rules are designed for the desktop.
 
 ![The full Portia web encounter](docs/portia-web-encounter.png)
+![Portia plucking from the edge while the resident waits in the middle](docs/portia-web-edge.png)
 
 ## Species personalities
 

@@ -24,9 +24,10 @@ namespace CornerSpider {
                         } else {
                             var w=new World(1200,850,42);w.AutoFeed=w.CursorPlay=false;w.SetSpecies("PortiaLabiata");w.StartWebVisit();
                             for(int f=0;f<2600 && w.WebStage==WebVisit.Building;f++) w.Tick(.1,new V(-10000,-10000));
+                            double fit=245/(w.GuestWebExtent+35*w.GuestScale);d.PushTransform(new ScaleTransform(fit,fit));
                             d.PushTransform(new TranslateTransform(-w.GuestCorner.X,-w.GuestCorner.Y));
                             d.PushTransform(new ScaleTransform(w.GuestInward.X>0?1:-1,w.GuestInward.Y>0?1:-1,w.GuestCorner.X,w.GuestCorner.Y));
-                            PetCanvas.DrawGuestWeb(d,w);PetCanvas.DrawPrey(d,w);d.Pop();d.Pop();
+                            PetCanvas.DrawGuestWeb(d,w);PetCanvas.DrawPrey(d,w);d.Pop();d.Pop();d.Pop();
                         }
                         d.Pop();Text(d,i<11?SkinCatalog.Get(ids[i]).Name:"Web resident (generic prey)",12,283,15,Color.FromRgb(30,50,44));
                         Text(d,i<11?SilkProfile.Get(ids[i]).Name:"Irregular anchored capture threads",12,304,13,Color.FromRgb(50,75,65));d.Pop();

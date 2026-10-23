@@ -95,6 +95,7 @@ namespace CornerSpider {
             // Most excursions are tiny adjustments within the current sheltered corner.
             Target=Clamp(Perch(area,corner)+new V(Between(-22,22),Between(-18,18))*Scale*Areas[area].Dpi);
             if(SpeciesTraits && behavior.HomeAffinity>0 && random.NextDouble()<behavior.HomeAffinity) Target=Home;
+            Target=SafeGuestPerch(Target);
             PlanCornerRoute(Target);
             Enter(Mood.Walk);
         }
@@ -103,7 +104,9 @@ namespace CornerSpider {
             int start=NearestCorner(area,Spider),end=NearestCorner(area,target);
             if((start+2)%4==end && (target-Perch(area,end)).Length<150*BodyScale) {
                 V a=Perch(area,(start+1)%4),b=Perch(area,(start+3)%4);
-                cornerWaypoint=(a-Spider).Length+(target-a).Length<(b-Spider).Length+(target-b).Length?a:b;
+                double margin=SpiderPose.Radius*BodyScale+12*GuestScale;
+                bool safeA=!GuestContains(a,margin),safeB=!GuestContains(b,margin);
+                if(safeA || safeB) cornerWaypoint=!safeB || (safeA && (a-Spider).Length+(target-a).Length<(b-Spider).Length+(target-b).Length)?a:b;
             }
         }
         public void UpdateHome() {
@@ -141,7 +144,7 @@ namespace CornerSpider {
             if(state!=Mood.Walk && state!=Mood.Return && state!=Mood.Stalk && state!=Mood.WebApproach) Speed=0;
             else { burstMoving=true;burstRemaining=Between(.19,.34); }
         }
-        public void GoHome(bool cancelPrey=true) { if(cancelPrey) { CancelWebVisit();HasFly=false; }ClearPlay();Target=Home;PlanCornerRoute(Home);ResetNestRoute();NextFly=Math.Max(NextFly,Clock+40);Enter(Mood.Return); }
+        public void GoHome(bool cancelPrey=true) { if(cancelPrey) { if(WebStage!=WebVisit.Fading) CancelWebVisit();HasFly=false; }ClearPlay();Target=Home;PlanCornerRoute(Home);ResetNestRoute();NextFly=Math.Max(NextFly,Clock+40);Enter(Mood.Return); }
         public void Wake() { napAfter=Clock+Between(100,170);decision=1;if(UnderNestSilk) StartNestExit();else Enter(Mood.Rest); }
         public void ResetCursor() { samples.Clear();StillTime=0;InviteTime=0;cursorValid=false;cursorNearby=false;quietInspection=false;attentionRearmAt=0;nextInspection=Clock+1; }
         void InspectCursor(V cursor) {
@@ -250,7 +253,7 @@ namespace CornerSpider {
             return destination; // Disconnected/diagonal screens are traversed by a silk hop below.
         }
         bool Move(V destination,double speed,double dt) {
-            V dest=Route(destination),d=dest-Spider;double distance=d.Length;Face(dest);
+            V dest=AvoidGuestWeb(Route(destination)),d=dest-Spider;double distance=d.Length;Face(dest);
             if((destination-Spider).Length<2*BodyScale) { Spider=destination;Speed=0;return true; }
             if(distance<.01) return false;
             double targetSpeed=Math.Min(speed*BodyScale,Math.Sqrt(2*1300*BodyScale*distance));

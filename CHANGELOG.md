@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.0.0-rc.4
+
+- Enlarge the resident spider's web to 300% of its previous span, fitting down
+  only when a small work area or large pet size needs an approach lane.
+- Enlarge spider prey by 50%, still distinctly smaller than Portia. The resident
+  waits at the central web junction while Portia approaches an outer anchor,
+  touches strands with its forelegs, and lures the resident along a connected line.
+- Reserve the occupied corner during building and waiting. Replan pending patrols
+  and route passing patrols and homeward walks around the web's footprint.
+- Keep the spent web fully visible while Portia eats or rests on it. Its 12-second
+  fade starts after the entire spider has left; calling the hunter home preserves
+  the web during departure. Settings/display cancellation still cleans up promptly.
+- Extend deterministic checks for full-size and fitted webs, central waiting,
+  plucking clearance, patrol avoidance, delayed fade and complete encounters.
+
 ## 1.0.0-rc.3
 
 - Appearance now previews the selected species' silk retreat in the upper-right

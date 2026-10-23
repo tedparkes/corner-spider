@@ -35,3 +35,10 @@ Its capture web is now an irregular network with multiple edge attachments, rath
 than concentric polygons. The same connected geometry controls thread construction,
 resident movement and Portia's encounter. Its build/wait timing is an app design
 choice; it is distinct from Portia's own sleeping platform.
+
+For readability, the resident's web is now three times its earlier linear span
+(564 logical pixels across at 100% pet size), fitted down only when the selected
+work area needs room for Portia's approach. This is a display choice, not a
+biological size claim. The resident waits at the central junction; Portia plucks
+an outer anchor and draws the resident along their connecting strand. Ordinary
+patrols reserve this corner, and spent silk remains until the hunter moves clear.

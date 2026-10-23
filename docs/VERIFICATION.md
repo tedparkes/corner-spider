@@ -1,112 +1,64 @@
-# Verification for 1.0.0-rc.3
+# Verification for 1.0.0-rc.4
 
-## RC3 preview and repository checks
+Local Windows checks, October 22, 2026. The previous RC3 working project and
+release packages were preserved. No public GitHub release was published.
 
-Windows build and all behavior suites pass. The final native run passes **651
-assertions, zero failures**, including settings, preview timer shutdown, native
-handle stress, nonactivation, click-through, both real monitors and exit cleanup.
-See [native output](windows-checks.txt) and [behavior output](behavior-checks.txt).
+## Behavior checked
 
-Inspected the actual WPF Appearance window at normal and compact sizes, plus
-selected-species previews on light/dark backgrounds and at 20%/180% size. The silk
-stays attached to the top/right edges; changing the species updates its style.
-The miniature shows a mature retreat independently of saved nest progress.
+The Windows build and all deterministic suites pass. The encounter suite passes
+1,931,877 assertions across 48 complete web hunts, with 20%, 100% and 180% pet
+sizes, multiple simulated DPIs, four corner orientations and varied frame steps.
+Existing prey-slot, interruption, naps, finger play, monitor-gap crossing and
+settings persistence checks still pass. See [behavior output](behavior-checks.txt).
 
-An earlier RC3 check failed its native-handle limit. The small preview initially
-allocated full desktop-sized silk images; it now uses the same frozen vector
-layers without those render targets, and releases its artwork when disposed.
-The unchanged final resource check passed (GDI 780 to 768; USER 37 to 37). This
-does not establish that the earlier count difference was solely caused by the
-preview allocation, or prove long-term leak-free operation.
+New checks cover:
 
-The render-heavy diagnostic sample measured 13.76% of one logical CPU, 554.1 MiB
-working set and 688.9 MiB private memory, up 59.2 MiB during the 16-second sample.
-It generates many full-resolution galleries and is not representative of an
-ordinary pet session. The normal-pet figures in the RC2 baseline below are older
-measurements, not a fresh RC3 measurement.
+- Three times the earlier web span on roomy displays; fitting down on smaller
+  work areas while leaving an approach lane. Every junction remains on its screen.
+- Waiting at the central junction, clear separation from the edge-plucking hunter,
+  and complete capture of exactly one resident.
+- Excluding the whole pet footprint from passive webs during ordinary patrols and
+  homeward travel, including routes that would cross the web and already-pending
+  patrols into the chosen corner.
+- Preserving all silk during the meal and while the hunter remains on the web.
+  A stationary hunter holds the web beyond the former fade duration. Calling it
+  home preserves the web underfoot; departure eventually permits complete cleanup.
 
-The source repository includes the license, build workflow, issue template,
-release guide and public documentation. Prior releases and the pre-edit RC2
-working project were preserved. No public GitHub release was published.
+The former check that expected cleanup within 14 seconds of capture was replaced
+with checks matching the requested departure-triggered fade. Existing capture,
+continuity, exclusivity and interruption checks were retained.
 
-Manual follow-up: open Settings > Appearance, choose Portia, Zebra and Hyllus,
-then try the size, angle and background controls. Check the silk at the top right
-and the spider at the center. Physical mixed-DPI changes, actual sleep/unplug,
-hands-on cursor feel, phone QR scanning and a long resource soak remain manual.
+## Windows and visual checks
 
-## RC2 baseline (historical)
+The native run passes **651 assertions, zero failures**, covering transparency,
+nonactivation, OS click-through, both actual monitor overlays, seam crossing,
+settings, prey rendering at size/DPI combinations, cursor restoration, timer and
+native resource cleanup. See [native output](windows-checks.txt).
 
-The following sections record the earlier RC2 verification and performance.
+Inspected the rendered nine-stage encounter and a larger edge-plucking view.
+The resident is visibly smaller than Portia, rests at the central junction, and
+has room to approach along the strand. Portia's contacting front feet are linked
+to the outer anchor. The meal view retains the complete web.
 
-Local Windows checks, October 22, 2026. The complete RC1 working project was
-archived before editing; prior release ZIPs remain intact. No startup preference
-was changed and no public release was published.
+The render-heavy native diagnostic's final 16-second sample measured 12.47% of
+one logical CPU, 259.1 MiB working set and 360.8 MiB private memory (208.4 MiB below
+the sample start, after bulk image generation). GDI handles fell 768 to 636 and
+USER handles changed 37 to 38. This is a short diagnostic workload, not a normal
+pet-session benchmark or a long-term leak test.
 
-## Silk changes checked
+## Packages and manual follow-up
 
-- All twenty skins in all four corners: the rendered retreat has multiple visible
-  attachments along both adjoining desktop edges, while the opposite corner stays
-  fully transparent.
-- Repeated drawing reuses retained artwork. A skin change replaces the current
-  silk layers immediately. Growth changes the layer density without retaining
-  an ever-growing set of old images.
-- Pixel comparisons for every skin confirm that increasing silk progress retains
-  existing thread coverage. Secondary weave and entrance rims have independent
-  deterministic seeds, so added fibers no longer rearrange earlier ones.
-- Native settings, transparency, focus preservation, OS click-through, both real
-  monitor overlays, seam crossing, cursor restoration and exit cleanup pass.
-- Inspected light/dark galleries of all eleven species' retreat styles and the
-  generic web resident, the four-corner gallery, and the Portia encounter sequence.
-  Existing end-entry/waking behavior remains in place.
+Package.ps1 builds and checksums the Windows and source bundles. The separate
+release verification report records extracted-source builds, matching portable
+bytes and rendered artwork, and the local Git commit/tag. Hosted GitHub CI remains
+untested until the repository is published and its workflow runs.
 
-The RC2 native run passed **651 assertions, zero failures**. The linked native
-output above is now the RC3 run. No existing check was weakened, including
-the overall transparent-background check.
+To try the change, select Portia in Appearance, then choose Behavior > Invite a
+web-building spider. Allow 3-4 minutes for building and another 1-2 minutes for the
+quiet wait. Check that ordinary patrols avoid the corner, then watch the approach,
+pluck, capture, meal and departure before the silk fades. Automated full hunts use
+simulated time; the whole sequence has not been watched in real time on this build.
 
-## Behavior and build
-
-The baseline and updated Windows .NET Framework builds pass. The complete suite
-includes 1,481,284 species/encounter assertions and 48 complete simulated web
-hunts using the new connected thread layout; 1,204,682 pounce assertions across
-4,574 ordinary hunts; and 1,295,811 anatomy assertions. Existing corner, cursor,
-settings, hammock, display reflow and end-entry regressions also pass. See
-[behavior output](behavior-checks.txt).
-
-Full web encounters were tested by advancing simulation time, rather than watching
-every encounter for its entire real-time duration. Both physical monitors were
-96 DPI; the mixed-DPI sizes/layouts were simulated.
-
-## Resources and packaging
-
-A separate normal-pet run took two consecutive 15-second samples: 3.33% and 3.44%
-of one logical CPU, 142.43–142.55 MiB working set, and 145.93–145.96 MiB private
-memory. Both samples remained responsive; handles fell from 607 to 606. Normal
-quit returned exit code 0 and left no pet process.
-
-The heavier native diagnostic workload includes many full-resolution silk caches
-and preview images. Its subsequent 16-second sample measured 11.32% of one logical
-CPU, 383.8 MiB working set and 454.7 MiB private memory (5.8 MiB above the sample's
-start). GDI handles fell 797→686 and USER handles changed 37→38 after 60 icon
-replacements. Native handle and helper/hook cleanup checks passed. These short
-samples do not establish long-term leak-free operation.
-
-Package.ps1 verifies every archive entry against staged bytes and writes SHA-256
-checksums. Release acceptance rebuilds a fresh source extraction, renders the
-portable executable's silk/skin/prey/encounter previews and compares them with the
-documented images, then runs its native checks. The separate release verification
-report records package acceptance. The Desktop shortcut points to the latest
-working build. The executable remains unsigned; hosted CI is untested.
-
-## Short manual checklist
-
-1. Change between Regal, Tan, Pantropical, Portia and Hyllus. Check the attachment
-   bundles against your usual wallpaper, and watch entry and waking from both ends.
-2. Try all four corners and your preferred sizes. Confirm the silk looks connected
-   to the screen edges and leaves the spider visible inside.
-3. With Portia selected, invite a web-building spider in Behavior settings. Watch
-   the full build/wait/pluck sequence, then try finger play and normal desktop clicks.
-
-Hands-on cursor feel, physical mixed-DPI changes, actual sleep/unplug, phone QR
-scanning and a long resource soak remain manual checks. The native and simulated
-checks above do not substitute for those physical tests. No display or sleep
-settings were changed.
+Physical mixed-DPI changes, actual sleep/unplug, hands-on cursor feel, phone QR
+scanning and a long resource soak remain manual checks. Both connected monitors
+used for native verification are 96 DPI; mixed-DPI layouts were simulated.

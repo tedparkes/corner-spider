@@ -1,6 +1,11 @@
-CORNER SPIDER 1.0 RC3 (1.0.0-rc.3)
+CORNER SPIDER 1.0 RC4 (1.0.0-rc.4)
 
-NEW: Settings > Appearance shows the selected species' web in the upper-right
+NEW: Portia's prey web is about three times wider and taller, with a larger
+resident in the center. Portia's patrols avoid this corner until its deliberate
+approach and edge-plucking sequence. Silk remains until Portia leaves after the
+meal, then fades. Small work areas fit the web to leave room for the approach.
+
+Settings > Appearance shows the selected species' web in the upper-right
 corner of the skin preview. Skin, size and background changes update it live.
 
 The sleeping retreat has a connected support mesh and stronger attachments
