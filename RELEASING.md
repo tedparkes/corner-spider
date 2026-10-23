@@ -12,7 +12,7 @@ by the local packaging script or build workflow.
    ```text
    git remote add origin YOUR_REPOSITORY_URL
    git push -u origin main
-   git push origin v1.0.0-rc.6
+   git push origin v1.0.0-rc.7
    ```
 
    The prepared local repository already has the release tag. For a newly
@@ -25,7 +25,7 @@ by the local packaging script or build workflow.
 4. Run: `powershell -NoProfile -File .\Package.ps1`
    If local script policy blocks execution, use a PowerShell session permitted by
    your own policy; no permanent policy change is part of this project.
-5. Create a draft release tagged v1.0.0-rc.6 (mark it as a prerelease), targeting the reviewed commit. Use the
+5. Create a draft release tagged v1.0.0-rc.7 (mark it as a prerelease), targeting the reviewed commit. Use the
    notes in CHANGELOG.md. Attach the Windows ZIP, source ZIP and SHA256SUMS.txt from
    dist. The generic GitHub source archives do not contain the prebuilt executable.
 6. Check the draft's files and links, then publish when ready.
@@ -34,7 +34,7 @@ The portable executable is unsigned. Do not claim it is signed, security-certifi
 or tested on systems that were not exercised. Code signing is a future improvement.
 
 Before final 1.0, complete the manual checklist and update the informational
-version from 1.0.0-rc.6 to 1.0.0. Retest the exact release contents. The optional
+version from 1.0.0-rc.7 to 1.0.0. Retest the exact release contents. The optional
 support QR intentionally identifies the creator; review docs/SUPPORT.md before
 redistributing a fork. Keep this recipient or replace both QR and link deliberately.
 

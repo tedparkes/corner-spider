@@ -12,7 +12,7 @@ namespace CornerSpider {
         public double GuestWebFactor { get; private set; }
         public double GuestWebScale { get { return GuestScale*GuestWebFactor; } }
         public double GuestWebExtent { get { return 188*GuestWebScale; } }
-        public V GuestPluckPoint { get { return GuestNode(4); } }
+        public V GuestPluckPoint { get { return GuestPatternPoint(GuestWebPattern.Rim(0)); } }
         public V GuestPluckPosition { get { return guestStop; } }
         public bool GuestFadeStarted { get; private set; }
         public double NextWebVisit=100;
@@ -95,7 +95,8 @@ namespace CornerSpider {
                 double factor=Math.Min(3,(Math.Min(a.W,a.H)/s-220)/188);
                 double extent=188*s*factor;
                 if(InGuestBox(Home,edge,inward,extent,150*HomeScale) || InGuestBox(Spider,edge,inward,extent,SpiderPose.Radius*BodyScale+12*s)) continue;
-                V center=edge+inward*(108*s*factor);
+                V hub=GuestWebPattern.Hub;
+                V center=edge+new V(inward.X*hub.X,inward.Y*hub.Y)*(s*factor);
                 if((center-Home).Length<320*Math.Max(s,HomeScale)) continue;
                 // Rank the corner itself, so enlarging its inward web does not
                 // unexpectedly prefer a distant corner over an adjacent monitor.

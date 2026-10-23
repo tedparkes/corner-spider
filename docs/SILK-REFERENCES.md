@@ -31,10 +31,14 @@ reproductive state and available attachment surfaces can matter as much as speci
 The app's variations should not be used to identify a real spider.
 
 The little web resident remains a **generic prey spider**, not a named species.
-Its capture web uses a recognizable orb-style illustration: five desktop-edge
-attachments, an uneven outer frame, sixteen radial spokes and a continuous curved
-capture spiral winding toward the hub. Slightly varied spacing and inward sag
-avoid the former crossed-line network. This is an artistic choice for the generic
+Its capture web uses a corner-shaped radial illustration: eleven direct
+attachments spread along both desktop edges, an outer bridge bowed inward
+between the furthest anchors, sixteen radial spokes and a continuous curved
+capture spiral winding toward the hub. Silk stays inside the triangle supported
+by those edges. The user-supplied [corner-web reference gallery](https://www.istockphoto.com/photos/spider-web-corner)
+informed the edge-to-edge silhouette; no stock images are bundled or traced.
+Slightly varied spacing and inward sag avoid the former crossed-line network.
+This is an artistic choice for the generic
 resident, not a claim about a specific prey species. The same curved geometry
 controls silk construction and the builder's movement. The 3-4 minute build and
 1-2 minute wait remain app design choices; this is separate from Portia's own

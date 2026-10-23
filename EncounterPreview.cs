@@ -59,9 +59,19 @@ namespace CornerSpider {
                     d.PushTransform(new TranslateTransform(-resting.GuestCorner.X,-resting.GuestCorner.Y));
                     d.PushTransform(new ScaleTransform(resting.GuestInward.X>0?1:-1,resting.GuestInward.Y>0?1:-1,resting.GuestCorner.X,resting.GuestCorner.Y));
                     PetCanvas.DrawGuestWeb(d,resting);PetCanvas.DrawPrey(d,resting);d.Pop();d.Pop();d.Pop();d.Pop();
-                    Text(d,"Edge anchors, radial spokes and curved silk",20,607,17,dark?Colors.White:Color.FromRgb(30,50,44));d.Pop();
+                    Text(d,"Silk fixed along both desktop edges",20,607,17,dark?Colors.White:Color.FromRgb(30,50,44));d.Pop();
                 }
             }SavePng(contrast,1200,650,Path.Combine(folder,"prey-web-light-dark.png"));
+            var corners=new DrawingVisual();using(var d=corners.RenderOpen()) {
+                d.DrawRectangle(BPreview("#e6ebe1"),null,new Rect(0,0,800,850));
+                Text(d,"RESIDENT WEB / ATTACHED TO BOTH EDGES",20,12,22,Color.FromRgb(30,50,44));
+                for(int i=0;i<4;i++) {
+                    d.PushTransform(new TranslateTransform(i%2*400+20,50+i/2*400));
+                    d.DrawRectangle(BPreview("#24313a"),null,new Rect(0,0,360,360));
+                    DrawGuestAtCorner(d,resting,i,360,true);
+                    Text(d,Settings.Corners[i],0,367,16,Color.FromRgb(30,50,44));d.Pop();
+                }
+            }SavePng(corners,800,850,Path.Combine(folder,"prey-web-corners.png"));
             image=new DrawingVisual();using(var d=image.RenderOpen()) {
                 d.DrawRectangle(BPreview("#e6ebe1"),null,new Rect(0,0,1400,1340));Text(d,"SPECIES PERSONALITIES / SOLO DISPLAY ADAPTATIONS",20,14,24,Color.FromRgb(30,50,44));
                 for(int i=0;i<SkinCatalog.All.Length;i++) {
@@ -73,6 +83,15 @@ namespace CornerSpider {
                     Text(d,skin.Name,12,202,14,Color.FromRgb(30,50,44));Text(d,w.Personality.Title,12,222,12,Color.FromRgb(60,80,70));d.Pop();d.Pop();
                 }
             }SavePng(image,1400,1340,Path.Combine(folder,"species-personalities.png"));
+        }
+        static void DrawGuestAtCorner(DrawingContext d,World w,int corner,double size,bool prey) {
+            bool right=corner==1 || corner==3,bottom=corner>=2;
+            double zoom=size/w.GuestWebExtent;
+            d.PushTransform(new TranslateTransform(right?size:0,bottom?size:0));
+            d.PushTransform(new ScaleTransform((right?-1:1)*zoom,(bottom?-1:1)*zoom));
+            d.PushTransform(new TranslateTransform(-w.GuestCorner.X,-w.GuestCorner.Y));
+            d.PushTransform(new ScaleTransform(w.GuestInward.X>0?1:-1,w.GuestInward.Y>0?1:-1,w.GuestCorner.X,w.GuestCorner.Y));
+            PetCanvas.DrawGuestWeb(d,w);if(prey) PetCanvas.DrawPrey(d,w);d.Pop();d.Pop();d.Pop();d.Pop();
         }
         static void CheckEncounterSettings(PetHost host,string folder) {
             host.World.GoHome();host.SetSpecies("PortiaLabiata");var panel=new PetSettingsWindow(host);
@@ -117,6 +136,20 @@ namespace CornerSpider {
             int builds=PetCanvas.GuestSilkBuilds(w);
             for(int i=0;i<=360;i++) { w.GuestProgress=i/360.0;using(var d=visual.RenderOpen()) { PetCanvas.DrawGuestWeb(d,w); } }
             Check(PetCanvas.GuestSilkBuilds(w)-builds<=14,"full construction batches image updates instead of allocating a bitmap per strand or frame");
+            w.GuestProgress=w.GuestOpacity=1;
+            for(int corner=0;corner<4;corner++) {
+                var edges=new DrawingVisual();using(var d=edges.RenderOpen()) {
+                    d.PushTransform(new TranslateTransform(16,16));DrawGuestAtCorner(d,w,corner,360,false);d.Pop();
+                }
+                var rendered=new RenderTargetBitmap(392,392,96,96,PixelFormats.Pbgra32);rendered.Render(edges);
+                byte[] edgePixels=new byte[392*392*4];rendered.CopyPixels(edgePixels,392*4,0);
+                bool right=corner==1 || corner==3,bottom=corner>=2;int horizontal=0,vertical=0;
+                for(int j=20;j<372;j++) for(int k=-1;k<=1;k++) {
+                    if(edgePixels[(((bottom?376:16)+k)*392+j)*4+3]>8) horizontal++;
+                    if(edgePixels[(j*392+(right?376:16)+k)*4+3]>8) vertical++;
+                }
+                Check(horizontal>=12 && vertical>=12,"rendered silk touches both desktop edges in "+Settings.Corners[corner]);
+            }
         }
     }
 }

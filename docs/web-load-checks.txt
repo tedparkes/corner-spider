@@ -1,11 +1,14 @@
-Completed web (cached at display resolution)
-PASS: full orb web on real transparent overlays, forced 30 fps redraws.
-Seconds=16.0 CPU(one logical core)=12.48% WorkingMiB=169.9 PrivateMiB=205.7 PrivateDeltaMiB=1.7
-GDI=116 -> 116 USER=34 -> 34
+Corner Spider 1.0.0-rc.7; one active 3840 x 2160 display at 192 DPI (200%).
+Short forced-30-fps samples; not an idle benchmark or long-term leak test.
+
+Completed corner web
+PASS: completed orb web on real transparent overlays, forced 30 fps redraws.
+Seconds=16.0 CPU(one logical core)=21.86% WorkingMiB=199.4 PrivateMiB=282.1 PrivateDeltaMiB=2.1
+GDI=91 -> 91 USER=32 -> 32
 Disposed=True Overlays=0 CursorHelper=0
 
-Construction (batched image updates and retained fresh silk)
+Active construction
 PASS: building orb web on real transparent overlays, forced 30 fps redraws.
-Seconds=16.0 CPU(one logical core)=9.45% WorkingMiB=169.7 PrivateMiB=204.3 PrivateDeltaMiB=1.8
-GDI=116 -> 116 USER=34 -> 34
+Seconds=16.0 CPU(one logical core)=18.80% WorkingMiB=196.9 PrivateMiB=279.8 PrivateDeltaMiB=0.7
+GDI=91 -> 91 USER=32 -> 32
 Disposed=True Overlays=0 CursorHelper=0

@@ -1,7 +1,8 @@
-CORNER SPIDER 1.0 RC6 (1.0.0-rc.6)
+CORNER SPIDER 1.0 RC7 (1.0.0-rc.7)
 
-NEW: The web-building prey now weaves a recognizable orb-style spiderweb:
-edge anchors, radial spokes and curved spiral silk around a central hub.
+NEW: The prey web fills the corner, with eleven attachment points along both
+desktop edges. Its curved outer bridge runs from one edge to the other; the
+radial spokes and spiral silk stay inside that supported span.
 Its movement follows the strands it is building. Portia still approaches the
 edge, plucks a connected spoke and lures the resident away from the center.
 

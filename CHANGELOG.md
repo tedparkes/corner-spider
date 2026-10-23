@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.0-rc.7
+
+- Reshape the resident prey web into a supported corner web with eleven direct
+  attachments along the two desktop edges. Join the open rim continuously from
+  one edge to the other, bowed inward within the supported span.
+- Move the resident hub and Portia's plucking contact with the shared artwork;
+  retain progressive weaving, corner reservation, hunting and departure fading.
+- Check frame connectivity, physical edge contact, supported bounds, all four
+  mirrored corners and native rendering. Add a four-corner preview.
+
 ## 1.0.0-rc.6
 
 - Replace the resident prey's crossed-line capture mesh with an orb-style web:

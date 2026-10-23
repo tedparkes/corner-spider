@@ -16,7 +16,7 @@ namespace CornerSpider {
     }
     public static class GuestWebPattern {
         public const int Spokes=16,Turns=9;
-        public static readonly V Hub=new V(108,108);
+        public static readonly V Hub=new V(34,36);
         static readonly V[] rim=MakeRim();
         static readonly GuestStrand[] strands=MakeStrands();
         static readonly double[] starts=new double[strands.Length],travel=new double[strands.Length],lengths=new double[strands.Length];
@@ -35,13 +35,15 @@ namespace CornerSpider {
             total=sum;
         }
         static V[] MakeRim() {
-            var points=new V[Spokes];double phase=Math.Atan2(58,48);
-            for(int i=0;i<Spokes;i++) {
-                double angle=phase+i*Math.PI*2/Spokes+.035*Math.Sin(i*2.1);
-                double radius=74+3.8*Math.Sin(i*1.73)+1.8*Math.Cos(i*2.3);
-                points[i]=Hub+new V(Math.Cos(angle),Math.Sin(angle))*radius;
-            }
-            points[0]=new V(156,166);return points;
+            // The frame is held by both desktop edges, like silk across a
+            // window corner. Its open rim bows inward between the two furthest
+            // edge anchors; no part bulges past that supported span. Eleven
+            // radial endpoints attach directly to an edge instead of leaving
+            // a round orb suspended from a handful of distant guy lines.
+            return new[]{new V(88,94),new V(66,117),new V(40,146),new V(0,188),
+                new V(0,126),new V(0,83),new V(0,48),new V(0,18),new V(0,0),
+                new V(22,0),new V(54,0),new V(92,0),new V(136,0),new V(183,0),
+                new V(143,36),new V(116,65)};
         }
         static GuestStrand Line(V a,V b,int kind) { return new GuestStrand(a,a+(b-a)*(1.0/3),a+(b-a)*(2.0/3),b,kind); }
         static GuestStrand Scallop(V a,V b,int kind,double slack) {
@@ -50,11 +52,9 @@ namespace CornerSpider {
         }
         static GuestStrand[] MakeStrands() {
             var list=new List<GuestStrand>();
-            foreach(V anchor in new[]{new V(0,0),new V(76,0),new V(183,0),new V(0,188),new V(0,91)}) {
-                int nearest=0;for(int i=1;i<Spokes;i++) if((rim[i]-anchor).Length<(rim[nearest]-anchor).Length) nearest=i;
-                list.Add(Line(anchor,rim[nearest],0));
-            }
-            for(int i=0;i<Spokes;i++) list.Add(Scallop(Rim(i),Rim(i+1),0,.018));
+            // Lay the continuous edge-to-edge bridge first, then close its
+            // frame along the two real edges before adding spokes and silk.
+            for(int i=13;i<13+Spokes;i++) list.Add(Scallop(Rim(i),Rim(i+1),0,.018));
             for(int i=0;i<Spokes;i++) list.Add(i%2==0?Line(Hub,Rim(i),1):Line(Rim(i),Hub,1));
             // A continuous, inward winding capture spiral. Each join lies on
             // an actual spoke, with modest spacing variation and inward sag.
@@ -62,7 +62,7 @@ namespace CornerSpider {
             for(int i=0;i<count;i++) {
                 double r0=SpiralRadius(i,count),r1=SpiralRadius(i+1,count);
                 V a=Hub+(Rim(i)-Hub)*r0,b=Hub+(Rim(i+1)-Hub)*r1;
-                list.Add(Scallop(a,b,2,.045+.012*Math.Sin(i*1.8)));
+                list.Add(Scallop(a,b,2,.065+.012*Math.Sin(i*1.8)));
             }
             list.Add(Line(list[list.Count-1].D,Hub,1));return list.ToArray();
         }

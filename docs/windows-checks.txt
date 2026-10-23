@@ -1,6 +1,6 @@
-Corner Spider 1.0 RC6 Windows runtime checks 2026-10-22T23:45:05
+Corner Spider 1.0 RC7 Windows runtime checks 2026-10-23T09:15:20
 PASS: seed isolated finger-tone and Portia preferences
-FOCUS: captured foreground window/process before and after overlay creation.
+FOCUS: foreground preserved; raw process and window identifiers omitted.
 PASS: saved finger tone is loaded into the desktop world at startup
 PASS: saved Portia selection restores prey behavior and tray action on startup
 PASS: overlay creation preserves foreground window
@@ -21,11 +21,7 @@ PASS: default hammock is on rightmost screen
 PASS: layered, click-through, nonactivating tool-window styles
 PASS: physical overlay rectangle matches \\.\DISPLAY1
 PASS: WPF pixel transform matches monitor DPI
-DISPLAY: \\.\DISPLAY1 {X=0,Y=30,Width=1920,Height=1050} DPI=96
-PASS: layered, click-through, nonactivating tool-window styles
-PASS: physical overlay rectangle matches \\.\DISPLAY2
-PASS: WPF pixel transform matches monitor DPI
-DISPLAY: \\.\DISPLAY2 {X=1920,Y=30,Width=1920,Height=1050} DPI=96
+DISPLAY: \\.\DISPLAY1 {X=0,Y=60,Width=3840,Height=2100} DPI=192
 PASS: OS hit testing passes through visible spider position
 PASS: OS hit testing passes through the illustrated finger
 PASS: pause tray handler
@@ -377,6 +373,10 @@ PASS: construction progress replaces the single retained silk layer
 PASS: rendered orb has clearly visible spoke and capture silk
 PASS: rendered orb preserves transparency outside the reserved corner
 PASS: full construction batches image updates instead of allocating a bitmap per strand or frame
+PASS: rendered silk touches both desktop edges in TopLeft
+PASS: rendered silk touches both desktop edges in TopRight
+PASS: rendered silk touches both desktop edges in BottomLeft
+PASS: rendered silk touches both desktop edges in BottomRight
 PASS: click-departure fixture starts with the real cursor hidden
 PASS: mouse-button notification starts planned departure with a solid launch pad
 PASS: click restores native cursor while departure is being prepared
@@ -650,9 +650,8 @@ PASS: growing silk preserves existing threads rather than rearranging them: Hyll
 PASS: visible centered finger requests native cursor hiding
 PASS: pause releases the cursor visibility lease
 PASS: rendered overlay has transparent background and visible vector artwork
-PASS: running desktop pet walks across the real two-monitor seam
-MEASURED: 16.0 seconds, CPU=11.30% of one logical CPU, working set=430.1 MiB, private=527.7 MiB (delta -52.5).
-RESOURCES: GDI 760 -> 708, USER 37 -> 38 after 60 icon replacements.
+MEASURED: 16.1 seconds, CPU=6.22% of one logical CPU, working set=611.9 MiB, private=705.2 MiB (delta 20.2).
+RESOURCES: GDI 784 -> 768, USER 33 -> 33 after 60 icon replacements.
 PASS: replacing species icons does not leak native handles
 PASS: resume path resets cursor history and dismounts
 PASS: previous-save backup exists

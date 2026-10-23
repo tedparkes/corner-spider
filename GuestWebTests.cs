@@ -3,8 +3,27 @@ using CornerSpider;
 
 static class GuestWebTests {
     static int checks;
-    static void Check(bool ok,string why) { checks++;if(!ok) throw new Exception("Orb web: "+why); }
+    static void Check(bool ok,string why) { checks++;if(!ok) throw new Exception("Corner web: "+why); }
     public static void Run() {
+        int topAnchors=0,sideAnchors=0;
+        for(int i=0;i<GuestWebPattern.Spokes;i++) {
+            V rim=GuestWebPattern.Rim(i);if(rim.Y==0) topAnchors++;if(rim.X==0) sideAnchors++;
+            int ties=0;
+            for(int j=0;j<GuestWebPattern.Count;j++) {
+                var frame=GuestWebPattern.Strand(j);if(frame.Kind!=0) continue;
+                if((frame.A-rim).Length<.000001 || (frame.D-rim).Length<.000001) ties++;
+            }
+            Check(ties==2,"every spoke meets two connected frame spans; no floating rim endpoints");
+        }
+        Check(topAnchors>=5 && sideAnchors>=5,"multiple direct attachments spread along each actual desktop edge");
+        var bridge=GuestWebPattern.Strand(0);Check(bridge.A.Y==0 && bridge.A.X>=180,"outer bridge begins on the top edge");
+        bool reachesSide=false;
+        for(int i=0;i<GuestWebPattern.Spokes;i++) {
+            var frame=GuestWebPattern.Strand(i);
+            Check((frame.D-GuestWebPattern.Strand((i+1)%GuestWebPattern.Spokes).A).Length<.000001,"foundation is a continuous closed frame");
+            if(frame.D.X==0 && frame.D.Y>=185) reachesSide=true;
+        }
+        Check(reachesSide,"outer bridge finishes on the adjoining side edge");
         int anchors=0,curved=0,spiral=0;V previous=new V();bool first=true;
         for(int i=0;i<GuestWebPattern.Count;i++) {
             var strand=GuestWebPattern.Strand(i);
@@ -22,6 +41,7 @@ static class GuestWebTests {
             if((strand.Point(.5)-(strand.A+strand.D)*.5).Length>.1) curved++;
             for(int j=0;j<=20;j++) {
                 V p=strand.Point(j/20.0);Check(World.Finite(p.X) && p.X>=0 && p.X<=188 && p.Y>=0 && p.Y<=188,"curves stay inside the existing reserved footprint");
+                Check(p.X/183+p.Y/188<=1.000001,"silk stays behind the edge-to-edge support span, without an unsupported outward bulge");
                 var partial=strand.Prefix(j/20.0);Check((partial.D-p).Length<.000001,"growing silk ends exactly at the builder's curve position");
             }
         }
@@ -38,6 +58,13 @@ static class GuestWebTests {
             double s=size*dpi;var w=new World(2400*s,1600*s,corner);w.ConfigureDisplays(new[]{new Area(0,0,2400*s,1600*s,dpi)},0);w.SetScale(size);
             w.Corner=Settings.Corners[corner];w.UpdateHome();w.Spider=w.Home;w.SetSpecies("PortiaLabiata");w.AutoFeed=w.CursorPlay=false;
             Check(w.StartWebVisit(),"real corner encounter starts at all sizes and DPIs");
+            Check((w.GuestCenter-w.GuestPatternPoint(GuestWebPattern.Hub)).Length<.000001,"resident perch follows the visible hub after mirroring and scaling");
+            var area=w.Areas[w.GuestArea];
+            for(int i=0;i<GuestWebPattern.Spokes;i++) {
+                V rim=GuestWebPattern.Rim(i),at=w.GuestPatternPoint(rim);
+                if(rim.X==0) Check(Math.Min(Math.Abs(at.X-area.X),Math.Abs(at.X-area.X-area.W))<.000001,"side anchor touches the actual work-area boundary");
+                if(rim.Y==0) Check(Math.Min(Math.Abs(at.Y-area.Y),Math.Abs(at.Y-area.Y-area.H))<.000001,"top/bottom anchor touches the actual work-area boundary");
+            }
             Check((w.GuestPatternPoint(GuestWebPattern.Rim(0))-w.GuestPluckPoint).Length<.000001,"Portia plucks the endpoint of a real hub-connected spoke");
             V last=w.Fly;
             while(w.WebStage==WebVisit.Building) {
@@ -48,6 +75,6 @@ static class GuestWebTests {
             }
             Check((w.Fly-w.GuestCenter).Length<.000001,"construction finishes at the resident's central perch");
         }
-        Console.WriteLine("PASS: "+checks+" orb-web checks (connected spiral, curved spans, true spoke junctions, shared construction path, bounds, sizes/DPI and plucking anchor).");
+        Console.WriteLine("PASS: "+checks+" corner-web checks (connected spiral, curved spans, true spoke junctions, shared construction path, bounds, sizes/DPI and plucking anchor).");
     }
 }
