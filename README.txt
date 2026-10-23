@@ -109,3 +109,6 @@ credentials are collected. This release candidate has not been published.
 Before public 1.0, complete the hands-on checklist in docs\VERIFICATION.md.
 See README.md for fuller instructions, docs\VERIFICATION.md for tests and limits,
 and ROADMAP.md for future ideas.
+
+The complete CHANGELOG.md and docs\DEVELOPMENT-HISTORY.md record the repeated
+feedback, implementation and testing behind this AI-assisted project.

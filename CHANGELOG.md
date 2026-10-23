@@ -1,5 +1,19 @@
 # Changelog
 
+Corner Spider grew through repeated human feedback, AI-assisted implementation,
+Windows builds, visual review and testing. Read the
+[development history](docs/DEVELOPMENT-HISTORY.md) for the problems and decisions
+behind these revisions. This log includes the early prototype work as well as
+the numbered releases. The local Git repository began at RC3; earlier entries
+were reconstructed from preserved project files and development feedback.
+
+## Unreleased
+
+- Document the early prototype and the iterative development process. Include
+  the complete changelog and development history in the first public release.
+- Generate a ready-to-post release body and standalone history documents with
+  each package, alongside the Windows/source ZIPs and checksums.
+
 ## 1.0.0-rc.8
 
 - Give the resident web's open edge a smooth, gently concave arc toward the
@@ -226,3 +240,37 @@
 - Patrols and trips home respond to nearby cursors independently of greeting
   animation cooldowns; an interrupted route resumes when the cursor leaves.
 - Moved the mouse observer onto its own message-loop thread with explicit cleanup.
+
+## Prototype 0.1 and early Windows iterations (before 0.5.2)
+
+These milestones summarize the original README, preserved project work and
+development feedback. Intermediate version numbers are not assigned retroactively.
+
+- Started with a C# WPF transparent overlay, procedural spider, autonomous
+  hunting, cursor rides, a growing hammock, tray controls and local saves.
+  The original Linux-authored prototype explicitly lacked Windows compilation
+  and runtime verification; those were follow-up work.
+- Preserved the prototype, built it on Windows and ran its behavior checks.
+  Added regression coverage and native diagnostics for overlay transparency,
+  click-through behavior, focus, settings, cursor restoration and cleanup.
+- Expanded exploration across monitors, preferred the rightmost home screen,
+  and worked on display scaling, reflow, resume handling and persistence.
+  Replaced the generic tray symbol with a spider icon and provided a desktop
+  shortcut to the runnable build. Startup remained opt-in.
+- Added the original Regal, Bold and Zebra appearances, then repeatedly revised
+  rounded bodies, fuzz, proportions, eye placement, palps and front/back readability.
+- Reworked walking into short bursts, deliberate pauses, inquisitive turns and
+  corner perching. Revised long forelegs, paired forward/upward reaches and the
+  projected joint angles after feedback on sideways-looking bends.
+- Made hunting more readable through notice, turn, stalk, pause, crouch, jump,
+  capture and eating. Allowed prey farther away while retaining occasional
+  spawning and one prey animal at a time.
+- Developed cursor play from an attached ride into a voluntary finger offer:
+  tolerate small pointer jitter, wait nearby, reach, jump, hang, climb and ride.
+  Added gentle carrying, facing/waving, click departures and startled escapes
+  with a silk trail. Later releases refined boarding and departure further.
+- Reshaped the finger using a supplied pose reference, faded the hand end into
+  transparency, centered it over the pointer and restored the pointer on exit.
+  Personal reference photographs were kept out of the distributed artwork.
+- Improved silk visibility and cursor attention during long edge patrols.
+  Kept the Windows desktop overlay and local procedural artwork throughout.
