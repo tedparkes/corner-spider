@@ -24,6 +24,15 @@ static class GuestWebTests {
             if(frame.D.X==0 && frame.D.Y>=185) reachesSide=true;
         }
         Check(reachesSide,"outer bridge finishes on the adjoining side edge");
+        for(int i=0;i<5;i++) {
+            var a=GuestWebPattern.Strand(i);var b=GuestWebPattern.Strand(i+1);
+            V incoming=a.D-a.C,outgoing=b.B-b.A;
+            Check(Math.Abs(incoming.X*outgoing.Y-incoming.Y*outgoing.X)<.000001 && incoming.X*outgoing.X+incoming.Y*outgoing.Y>0,
+                "outer edge has a continuous tangent through each spoke join, without pointed scallops");
+        }
+        V openMiddle=GuestWebPattern.Rim(0),chord=new V(-183,188);
+        double inset=Math.Abs((openMiddle.X-183)*chord.Y-openMiddle.Y*chord.X)/chord.Length;
+        Check(inset>8 && inset<15,"outer edge has a visible but gentle inward bow between fixed anchors");
         int anchors=0,curved=0,spiral=0;V previous=new V();bool first=true;
         for(int i=0;i<GuestWebPattern.Count;i++) {
             var strand=GuestWebPattern.Strand(i);

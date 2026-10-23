@@ -2,8 +2,8 @@ CORNER BEHAVIOR: 90.3% near a corner; 90.0% stationary (8 seeds, 80 simulated mi
 PASS: 193054 regression assertions (hunt phases, jitter, rides, nest, mixed-DPI geometry, unplug, 40-minute simulation, persistence).
 PASS: 123058 natural-motion checks (bursts, paired upward reach, spatial hinges, fixed leg lengths, full-limb bounds and DPI edge clearance).
 PASS: 1204682 pounce checks / 4574 hunts (all 20 skins, both prey, 8 directions, 20-180% size, 100-200% DPI, 16/33/100 ms steps, ceiling and monitor seam). Actual long leaps: 188.2-200.0 logical pixels at 100%.
-PASS: 1963020 species/encounter checks, 48 full-length web hunts (timing, original prey limit, all skins, poses, naps, finger play, cleanup and persistence).
-PASS: 183042 corner-web checks (connected spiral, curved spans, true spoke junctions, shared construction path, bounds, sizes/DPI and plucking anchor).
+PASS: 1965690 species/encounter checks, 48 full-length web hunts (timing, original prey limit, all skins, poses, naps, finger play, cleanup and persistence).
+PASS: 183049 corner-web checks (connected spiral, curved spans, true spoke junctions, shared construction path, bounds, sizes/DPI and plucking anchor).
 PASS: 5324 play checks (distant hunts, five-second offer, suspension, finger walking/waves, click/fast departures, silk cleanup, edges and frame rates).
 PASS: 220653 finger-boarding checks (varied surface landings, side-only catches, mirrored fingers, sizes/DPI, settling, interruptions and pointer drift).
 PASS: 2116 patrol attention checks (prior greetings, return trips, retained routes, stillness/jitter, sizes/DPIs, edges and priority).

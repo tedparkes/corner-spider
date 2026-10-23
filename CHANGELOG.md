@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0-rc.8
+
+- Give the resident web's open edge a smooth, gently concave arc toward the
+  corner. Keep both desktop anchors fixed and preserve smooth tangents where
+  spokes meet the edge. The builder follows that same continuous arc.
+- Keep the resident, plucking contact and capture silk attached to the revised
+  frame. Verify curve continuity, inward bow, complete hunts and WPF rendering.
+
 ## 1.0.0-rc.7
 
 - Reshape the resident prey web into a supported corner web with eleven direct

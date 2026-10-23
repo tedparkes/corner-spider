@@ -1,0 +1,12 @@
+Corner Spider RC8 targeted WPF web checks
+PASS: completed orb web reuses one generated silk image across 180 redraws
+PASS: departure fade reuses the web artwork without rebuilding geometry
+PASS: construction progress replaces the single retained silk layer
+PASS: rendered orb has clearly visible spoke and capture silk
+PASS: rendered orb preserves transparency outside the reserved corner
+PASS: full construction batches image updates instead of allocating a bitmap per strand or frame
+PASS: rendered silk touches both desktop edges in TopLeft
+PASS: rendered silk touches both desktop edges in TopRight
+PASS: rendered silk touches both desktop edges in BottomLeft
+PASS: rendered silk touches both desktop edges in BottomRight
+RESULT: PASS (0 failures).
