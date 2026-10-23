@@ -41,6 +41,14 @@ namespace CornerSpider {
         }
         static void CheckSilkArt(string folder) {
             var canvas=new PetCanvas();var w=new World(360,360,42);w.AutoFeed=w.CursorPlay=false;w.Web=1;
+            var original=SilkBitmap(canvas,w,"Regal");int initialBuilds=canvas.NestBuilds;
+            byte[] full=new byte[360*360*4];original.CopyPixels(full,1440,0);long fullAlpha=0;for(int i=3;i<full.Length;i+=4) fullAlpha+=full[i];
+            foreach(double visibility in new[]{.5,0,1}) {
+                w.WebVisibility=visibility;byte[] pixels=new byte[full.Length];SilkBitmap(canvas,w,"Regal").CopyPixels(pixels,1440,0);
+                long alpha=0;bool identical=true;for(int i=3;i<pixels.Length;i+=4) { alpha+=pixels[i];if(pixels[i]!=full[i]) identical=false; }
+                Check(visibility==0?alpha==0:visibility==1?identical:alpha>0 && alpha<fullAlpha,"hammock opacity fades and restores its original alpha: "+visibility);
+                Check(canvas.NestBuilds==initialBuilds && w.Web==1,"opacity changes retain cached art and nest progress");
+            }
             foreach(var skin in SkinCatalog.All) foreach(string corner in Settings.Corners) {
                 w.Corner=corner;w.UpdateHome();RenderTargetBitmap bitmap=SilkBitmap(canvas,w,skin.Id);
                 byte[] pixels=new byte[360*360*4];bitmap.CopyPixels(pixels,1440,0);

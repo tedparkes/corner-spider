@@ -13,7 +13,7 @@ using Forms=System.Windows.Forms;
 [assembly:System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.8")]
 [assembly:System.Reflection.AssemblyVersion("1.0.0.0")]
 [assembly:System.Reflection.AssemblyFileVersion("1.0.0.0")]
-[assembly:System.Reflection.AssemblyInformationalVersion("1.0.0-rc.9")]
+[assembly:System.Reflection.AssemblyInformationalVersion("1.0.0-rc.10")]
 [assembly:System.Reflection.AssemblyTitle("Corner Spider")]
 [assembly:System.Reflection.AssemblyProduct("Corner Spider")]
 [assembly:System.Reflection.AssemblyDescription("A local jumping-spider companion for the Windows desktop.")]
@@ -104,7 +104,7 @@ namespace CornerSpider {
         bool previousHasFly,previousFinger,previousSilk,previousGuest;
         V previousGuestCenter;
         int previousWeb=-1;
-        double previousScale;
+        double previousScale,previousWebVisibility=-1;
         string previousSpecies="";
         bool suspended,sessionLocked;
         public bool TestMode;
@@ -118,7 +118,7 @@ namespace CornerSpider {
             World.Scale=Settings.Scale;World.Web=Settings.Web;World.Meals=Settings.Meals;World.Corner=Settings.Corner;World.AutoFeed=Settings.AutoFeed;World.CursorPlay=Settings.CursorPlay;
             World.SpeciesTraits=Settings.SpeciesTraits;World.WebVisits=Settings.WebVisits;
             World.FlyInterval=Settings.FlyInterval;World.InviteDelay=Settings.InviteDelay;World.CarryTolerance=Settings.CarryTolerance;
-            World.FingerTone=Settings.FingerTone;
+            World.FingerTone=Settings.FingerTone;World.WebVisibility=Settings.WebVisibility;
             World.AttentionDistance=Settings.AttentionDistance;World.DismissDistance=Settings.DismissDistance;World.NextFly=Math.Min(35,World.FlyInterval);
             BuildTray();RefreshDisplays();World.Spider=World.Home;
             timer.Interval=TimeSpan.FromMilliseconds(33);timer.Tick+=OnTick;
@@ -186,7 +186,7 @@ namespace CornerSpider {
             CursorVisibility.Update(!Paused && !suspended && !sessionLocked && World.CursorPlay && World.FingerActive && World.FingerBlend>=.65 && (World.Cursor-World.FingerOrigin).Length<12*World.BodyScale && !Menu.Visible && (SettingsWindow==null || !SettingsWindow.IsVisible));
             V spider=new V(World.Spider.X,World.Spider.Y-World.Lift);
             int web=(int)(World.Web*30);
-            bool all=web!=previousWeb || (World.Home-previousHome).Length>0 || World.Scale!=previousScale || Settings.Species!=previousSpecies || World.State==Mood.Jump || World.FingerBlend>0 || previousFinger || World.SilkOpacity>0 || previousSilk;
+            bool all=World.WebVisibility!=previousWebVisibility || web!=previousWeb || (World.Home-previousHome).Length>0 || World.Scale!=previousScale || Settings.Species!=previousSpecies || World.State==Mood.Jump || World.FingerBlend>0 || previousFinger || World.SilkOpacity>0 || previousSilk;
             double margin=130;
             foreach(var area in World.Areas) margin=Math.Max(margin,SpiderPose.Radius*World.Scale*area.Dpi+8);
             foreach(var w in Windows) {
@@ -199,7 +199,7 @@ namespace CornerSpider {
                 if(previousHasFly) animate|=visible.Contains(new Point(previousFly.X,previousFly.Y));
                 w.Canvas.Species=Settings.Species;if(all || animate) w.Canvas.InvalidateVisual();
             }
-            previousSpider=spider;previousFly=World.Fly;previousHasFly=World.HasFly;previousHome=World.Home;previousWeb=web;previousScale=World.Scale;previousSpecies=Settings.Species;
+            previousSpider=spider;previousFly=World.Fly;previousHasFly=World.HasFly;previousHome=World.Home;previousWeb=web;previousScale=World.Scale;previousWebVisibility=World.WebVisibility;previousSpecies=Settings.Species;
             previousGuest=World.GuestOpacity>0;previousGuestCenter=World.GuestCenter;
             previousFinger=World.FingerBlend>0;previousSilk=World.SilkOpacity>0;
         }
@@ -208,7 +208,7 @@ namespace CornerSpider {
             Settings.SpeciesTraits=World.SpeciesTraits;Settings.WebVisits=World.WebVisits;
             Settings.AutoFeed=World.AutoFeed;Settings.CursorPlay=World.CursorPlay;
             Settings.FlyInterval=World.FlyInterval;Settings.InviteDelay=World.InviteDelay;Settings.CarryTolerance=World.CarryTolerance;
-            Settings.FingerTone=World.FingerTone;
+            Settings.FingerTone=World.FingerTone;Settings.WebVisibility=World.WebVisibility;
             Settings.AttentionDistance=World.AttentionDistance;Settings.DismissDistance=World.DismissDistance;Settings.Save(Folder);
         }
         Forms.ToolStripMenuItem Item(string id,string text,Action action) {
@@ -262,7 +262,7 @@ namespace CornerSpider {
             }
         }
         void BuildTray() {
-            Menu=new Forms.ContextMenuStrip();Menu.Opening+=delegate { CursorVisibility.Release(); };Menu.Items.Add(new Forms.ToolStripMenuItem("CORNER SPIDER  1.0 RC9") { Enabled=false });
+            Menu=new Forms.ContextMenuStrip();Menu.Opening+=delegate { CursorVisibility.Release(); };Menu.Items.Add(new Forms.ToolStripMenuItem("CORNER SPIDER  1.0 RC10") { Enabled=false });
             var status=new Forms.ToolStripMenuItem { Enabled=false };Menu.Items.Add(status);
             Menu.Opening+=delegate { status.Text=(World.GuestStatus.Length>0?World.GuestStatus:World.State.ToString())+"  |  "+World.Meals+" prey caught"+(Settings.LastError.Length>0?"  |  Save failed":""); };
             Menu.Items.Add(new Forms.ToolStripSeparator());

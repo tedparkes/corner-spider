@@ -30,11 +30,19 @@ static class PounceTests {
                     Check(flight>=57*3 && flight<=57*4,"all skins leap 3-4 times the old distance: "+w.Species+" / "+flight.ToString("F1")+" size="+w.Scale+" dt="+dt+" start="+w.JumpStart.X+","+w.JumpStart.Y+" end="+w.JumpEnd.X+","+w.JumpEnd.Y+" prey="+w.Fly.X+","+w.Fly.Y);
                     shortest=Math.Min(shortest,flight);longest=Math.Max(longest,flight);
                 } else Check(flight<115,"already nearby prey does not provoke an artificial long leap");
-                Check(w.JumpDuration>=.20 && w.JumpDuration<=.36,"pounce stays brisk");
+                Check(w.HuntsSpiders?w.JumpDuration>=.13 && w.JumpDuration<=.19:w.JumpDuration>=.20 && w.JumpDuration<=.36,"Portia attacks directly and quickly; other species keep their original hop");
+                double oldTime=w.JumpTime;w.JumpTime=w.JumpDuration*.5;
+                if(!ceiling || w.Spider.Y-w.Areas[w.AreaAt(w.Spider)].Y>100*w.BodyScale) Check(w.HuntsSpiders?Math.Abs(w.Lift/takeoffScale-5)<.001:w.Lift/takeoffScale>=30,"midflight lift is five pixels for Portia and unchanged for other jumpers");
+                w.JumpTime=oldTime;
                 Check((w.JumpEnd-target).Length<=30*takeoffScale,"forward legs arrive at prey");
                 Check(w.SilkOpacity==1 && (w.SilkStart-w.JumpStart).Length<.001,"takeoff anchors its safety line");
             }
+            if(w.State==Mood.Struggle) {
+                Check(small && w.HoldingMeal && !w.HasFly && w.Meals==1,"brief struggle holds exactly the captured spider");
+                Check(w.CaptureStruggle>=0 && w.CaptureStruggle<=1 && (w.Spider-w.JumpEnd).Length<.001,"capture struggle remains bounded at its landing");
+            }
             if(w.State==Mood.Jump) {
+                if(w.HuntsSpiders) Check(w.Lift<=5*takeoffScale+.001,"every Portia attack frame stays nearly direct");
                 Check(Math.Abs(w.BodyScale-takeoffScale)<.0001,"flight retains takeoff scale across a DPI seam");
                 Check((w.Fly-target).Length<.001,"lined-up prey stays put until contact");
                 if(ceiling) Check(w.Spider.Y-w.Lift-SpiderPose.Radius*w.BodyScale>=w.Areas[w.AreaAt(w.Spider)].Y-.001,"whole airborne pose stays below the desktop ceiling");
@@ -44,6 +52,8 @@ static class PounceTests {
         Check(w.Meal==(small?PreyKind.SmallSpider:PreyKind.Fly),"captured meal keeps its identity");
         Check(jumps==1,"one deliberate pounce completes the hunt");
         foreach(Mood phase in new[]{Mood.Notice,Mood.Stalk,Mood.Aim,Mood.Reach,Mood.Crouch,Mood.Jump,Mood.Land}) Check(seen.Contains(phase),"retains readable "+phase+" phase");
+        Check(seen.Contains(Mood.Struggle)==small,"only spider prey gets a short capture struggle");
+        Check(w.CaptureStruggle==0,"struggle settles before eating");
         hunts++;
     }
     public static void Run() {
@@ -67,6 +77,14 @@ static class PounceTests {
             seam.Spider=new V(-350*size,700);FeedAt(seam,true,new V(50*size,700));Hunt(seam,dt,true,true,true);
             Check(seam.JumpStart.X<0 && seam.JumpEnd.X>0,"long pounce crosses an adjacent mixed-DPI seam");
         }
+        // Private launch is used only to verify the species-specific path excludes travel and finger boarding.
+        var jump=typeof(World).GetMethod("Jump",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic);
+        foreach(string purpose in new[]{"ground","cursor","transit","release"}) {
+            var ordinary=New("PortiaLabiata",1,1);jump.Invoke(ordinary,new object[]{ordinary.Spider+new V(200,0),purpose});ordinary.JumpTime=ordinary.JumpDuration/2;
+            Check(ordinary.Lift>=30 && ordinary.JumpDuration>=.20,"Portia keeps the normal arc for "+purpose);
+        }
+        var switched=New("PortiaLabiata",1,1);jump.Invoke(switched,new object[]{switched.Spider+new V(200,0),"fly"});switched.JumpTime=switched.JumpDuration/2;switched.SetSpecies("Bold");
+        Check(Math.Abs(switched.Lift-5)<.001 && switched.JumpDuration<.2,"midair species change does not reshape an attack");
         Console.WriteLine("PASS: "+checks+" pounce checks / "+hunts+" hunts (all 20 skins, both prey, 8 directions, 20-180% size, 100-200% DPI, 16/33/100 ms steps, ceiling and monitor seam). Actual long leaps: "+shortest.ToString("F1")+"-"+longest.ToString("F1")+" logical pixels at 100%.");
     }
 }

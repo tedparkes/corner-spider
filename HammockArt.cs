@@ -139,6 +139,8 @@ namespace CornerSpider {
             if(w.UnderNestSilk) DrawHammock(d,w,true,species);
         }
         public void DrawHammock(DrawingContext d,World w,bool front,string species=null,bool vectorPreview=false) {
+            if(w.WebVisibility<=0) return;
+            d.PushOpacity(w.WebVisibility);
             species=species??Species;
             var a=w.Areas[w.HomeArea];double scale=w.HomeScale;
             double edgeX=Math.Abs((w.Corner.EndsWith("Right")?a.X+a.W:a.X)-w.Home.X)/scale;
@@ -156,7 +158,7 @@ namespace CornerSpider {
                 if(!front && nestBackImage.Image==null) nestBackImage=CacheArt(nestBack);
                 CachedArt art=front?nestFrontImage:nestBackImage;d.DrawImage(art.Image,art.Bounds);
             }
-            d.Pop();d.Pop();
+            d.Pop();d.Pop();d.Pop();
         }
     }
 }

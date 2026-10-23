@@ -1,6 +1,6 @@
-Corner Spider 1.0 RC7 Windows runtime checks 2026-10-23T09:15:20
+Corner Spider 1.0 RC10 Windows runtime checks 2026-10-23T14:22:33
 PASS: seed isolated finger-tone and Portia preferences
-FOCUS: foreground preserved; raw process and window identifiers omitted.
+FOCUS: foreground handle remained unchanged (process identifiers omitted from public log).
 PASS: saved finger tone is loaded into the desktop world at startup
 PASS: saved Portia selection restores prey behavior and tray action on startup
 PASS: overlay creation preserves foreground window
@@ -36,6 +36,9 @@ PASS: size slider and preview accept 20 percent
 PASS: deep-brown finger endpoint updates world and preview
 PASS: very-pale finger endpoint updates world and preview
 PASS: intermediate finger shade updates live
+PASS: web slider can hide silk in world and preview
+PASS: 100 percent retains original silk strength
+PASS: web visibility applies live to world and preview
 PASS: settings single-monitor option
 PASS: settings restore all-monitor roaming
 PASS: skin selection applies to pet, behavior and preview: Regal
@@ -85,9 +88,11 @@ PASS: rides toggle updates world and sliders
 PASS: diagnostics cannot alter autostart
 PASS: new settings persist through reload
 PASS: finger tone persists with other settings
+PASS: web visibility persists through native UI
 PASS: reset restores preference defaults
 PASS: preference reset preserves nest and meals
 PASS: reset restores original finger shade in world and preview
+PASS: reset restores original silk strength without resetting progress
 PASS: closing settings saves slider size
 PASS: closing settings stops its preview timer
 PASS: visible, unclipped skin artwork: Regal pose 0
@@ -353,7 +358,7 @@ PASS: spider prey is visible and unclipped at size 1.8 / DPI 1.5
 PASS: spider prey keeps a transparent background
 PASS: spider prey is visible and unclipped at size 1.8 / DPI 2
 PASS: spider prey keeps a transparent background
-PASS: original cropped Cash App QR is embedded and displayed
+PASS: support starts as a quiet text button and retains the original QR
 PASS: support uses the public Cash App recipient; diagnostics never open payment pages
 PASS: reject unexpected support target: http://cash.app/$tedparkes
 PASS: reject unexpected support target: https://cash.app.evil.example/$tedparkes
@@ -365,8 +370,14 @@ PASS: new behavior controls persist through native UI
 PASS: native host starts corner web encounter
 PASS: native toggle clears resident and web
 PASS: reset restores personality and web preferences
-PASS: support QR stays inside compact settings bounds
-PASS: compact settings preserve the original QR at readable size
+PASS: support button stays inside compact settings bounds
+PASS: button opens a dismissible QR and link flyout without launching a browser
+PASS: flyout displays the original recognizable QR at scanning size
+PASS: flyout close button works
+PASS: closing settings also closes its flyout
+PASS: resident web obeys visibility without affecting its construction: 1
+PASS: resident web obeys visibility without affecting its construction: 0.5
+PASS: resident web obeys visibility without affecting its construction: 0
 PASS: completed orb web reuses one generated silk image across 180 redraws
 PASS: departure fade reuses the web artwork without rebuilding geometry
 PASS: construction progress replaces the single retained silk layer
@@ -377,6 +388,8 @@ PASS: rendered silk touches both desktop edges in TopLeft
 PASS: rendered silk touches both desktop edges in TopRight
 PASS: rendered silk touches both desktop edges in BottomLeft
 PASS: rendered silk touches both desktop edges in BottomRight
+PASS: repeated plucks reuse the retained web image while only the contacted spoke ripples
+PASS: plucking adds no tether strands outside the existing concave web
 PASS: click-departure fixture starts with the real cursor hidden
 PASS: mouse-button notification starts planned departure with a solid launch pad
 PASS: click restores native cursor while departure is being prepared
@@ -385,6 +398,12 @@ PASS: planned departure cleans up its finger and silk
 PASS: native world approaches the end opening before entering
 PASS: native world crawls inside before its silk cover and sleep pose
 PASS: native world leaves through the other end on waking
+PASS: hammock opacity fades and restores its original alpha: 0.5
+PASS: opacity changes retain cached art and nest progress
+PASS: hammock opacity fades and restores its original alpha: 0
+PASS: opacity changes retain cached art and nest progress
+PASS: hammock opacity fades and restores its original alpha: 1
+PASS: opacity changes retain cached art and nest progress
 PASS: retreat has multiple visible attachments to both desktop edges: Regal / TopLeft
 PASS: retreat preserves clear desktop outside its corner: Regal / TopLeft
 PASS: static silk reuses its retained artwork: Regal / TopLeft
@@ -650,8 +669,8 @@ PASS: growing silk preserves existing threads rather than rearranging them: Hyll
 PASS: visible centered finger requests native cursor hiding
 PASS: pause releases the cursor visibility lease
 PASS: rendered overlay has transparent background and visible vector artwork
-MEASURED: 16.1 seconds, CPU=6.22% of one logical CPU, working set=611.9 MiB, private=705.2 MiB (delta 20.2).
-RESOURCES: GDI 784 -> 768, USER 33 -> 33 after 60 icon replacements.
+MEASURED: 16.1 seconds, CPU=8.37% of one logical CPU, working set=589.5 MiB, private=630.7 MiB (delta -57.2).
+RESOURCES: GDI 779 -> 781, USER 45 -> 42 after 60 icon replacements.
 PASS: replacing species icons does not leak native handles
 PASS: resume path resets cursor history and dismounts
 PASS: previous-save backup exists
@@ -661,3 +680,4 @@ PASS: exit cleanup restores cursor and closes the helper
 PASS: cleanup successfully unhooks the native mouse observer
 PASS: cleanup stops the mouse observer message loop
 RESULT: PASS (0 failures). Physical mixed-DPI changes, actual sleep/unplug and hands-on cursor feel still require manual QA.
+PASS: separate QR decoder read the actual flyout capture as https://cash.app/$tedparkes?qr=1

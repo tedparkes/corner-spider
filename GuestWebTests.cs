@@ -63,6 +63,7 @@ static class GuestWebTests {
             for(int j=0;j<=20;j++) {
                 V p=strand.Point(j/20.0);Check(World.Finite(p.X) && p.X>=0 && p.X<=188 && p.Y>=0 && p.Y<=188,"curves stay inside the existing reserved footprint");
                 Check(p.X/183+p.Y/188<=1.000001,"silk stays behind the edge-to-edge support span, without an unsupported outward bulge");
+                if(i<6) Check(GuestWebPattern.InsideSilk(p),"perch boundary agrees with every point of the visible concave rim");
                 var partial=strand.Prefix(j/20.0);Check((partial.D-p).Length<.000001,"growing silk ends exactly at the builder's curve position");
             }
         }
@@ -86,11 +87,13 @@ static class GuestWebTests {
                 if(rim.X==0) Check(Math.Min(Math.Abs(at.X-area.X),Math.Abs(at.X-area.X-area.W))<.000001,"side anchor touches the actual work-area boundary");
                 if(rim.Y==0) Check(Math.Min(Math.Abs(at.Y-area.Y),Math.Abs(at.Y-area.Y-area.H))<.000001,"top/bottom anchor touches the actual work-area boundary");
             }
-            Check(w.GuestPluckSpoke==GuestWebPattern.TopBridgeAnchor || w.GuestPluckSpoke==GuestWebPattern.SideBridgeAnchor,"Portia chooses an outer desktop anchor, never the floating bridge middle");
+            Check(w.GuestAnchorSpoke==GuestWebPattern.TopBridgeAnchor || w.GuestAnchorSpoke==GuestWebPattern.SideBridgeAnchor,"Portia chooses an anchored end, never the bridge middle");
+            Check(w.GuestAnchorSpoke==GuestWebPattern.TopBridgeAnchor?w.GuestPluckSpoke==14 || w.GuestPluckSpoke==15:w.GuestPluckSpoke==2 || w.GuestPluckSpoke==1,"direct leg contact uses an existing rim junction beside the chosen anchored end");
             Check((w.GuestPatternPoint(GuestWebPattern.Rim(w.GuestPluckSpoke))-w.GuestPluckPoint).Length<.000001,"Portia plucks the endpoint of a real hub-connected spoke");
-            V contact=w.GuestPluckPoint;
+            V contact=w.GuestPatternPoint(GuestWebPattern.Rim(w.GuestAnchorSpoke));
             Check(Math.Min(Math.Min(Math.Abs(contact.X-area.X),Math.Abs(contact.X-area.X-area.W)),Math.Min(Math.Abs(contact.Y-area.Y),Math.Abs(contact.Y-area.Y-area.H)))<.000001,
-                "chosen plucking contact stays on a physical display edge after mirroring and scaling");
+                "chosen anchored end stays on a physical display edge after mirroring and scaling");
+            Check(w.GuestOnSilk(w.GuestPluckPosition) && (w.GuestPluckPoint-w.GuestPluckPosition).Length<=55*w.GuestScale,"planned perch is on the silk within foreleg reach of the contacted junction");
             V last=w.Fly;
             while(w.WebStage==WebVisit.Building) {
                 w.Tick(.1,new V(-10000,-10000));

@@ -1,12 +1,128 @@
-Corner Spider RC9 targeted WPF web checks
+Selected RC10 WPF silk checks from the passing full native run.
+PASS: web slider can hide silk in world and preview
+PASS: 100 percent retains original silk strength
+PASS: reset restores original silk strength without resetting progress
+PASS: resident web obeys visibility without affecting its construction: 1
+PASS: resident web obeys visibility without affecting its construction: 0.5
+PASS: resident web obeys visibility without affecting its construction: 0
 PASS: completed orb web reuses one generated silk image across 180 redraws
 PASS: departure fade reuses the web artwork without rebuilding geometry
 PASS: construction progress replaces the single retained silk layer
 PASS: rendered orb has clearly visible spoke and capture silk
-PASS: rendered orb preserves transparency outside the reserved corner
-PASS: full construction batches image updates instead of allocating a bitmap per strand or frame
 PASS: rendered silk touches both desktop edges in TopLeft
 PASS: rendered silk touches both desktop edges in TopRight
 PASS: rendered silk touches both desktop edges in BottomLeft
 PASS: rendered silk touches both desktop edges in BottomRight
-RESULT: PASS (0 failures).
+PASS: plucking adds no tether strands outside the existing concave web
+PASS: native world takes off toward an upper landing with silk
+PASS: planned departure cleans up its finger and silk
+PASS: native world crawls inside before its silk cover and sleep pose
+PASS: hammock opacity fades and restores its original alpha: 0.5
+PASS: opacity changes retain cached art and nest progress
+PASS: hammock opacity fades and restores its original alpha: 0
+PASS: opacity changes retain cached art and nest progress
+PASS: hammock opacity fades and restores its original alpha: 1
+PASS: opacity changes retain cached art and nest progress
+PASS: static silk reuses its retained artwork: Regal / TopLeft
+PASS: static silk reuses its retained artwork: Regal / TopRight
+PASS: static silk reuses its retained artwork: Regal / BottomLeft
+PASS: static silk reuses its retained artwork: Regal / BottomRight
+PASS: static silk reuses its retained artwork: RegalMale / TopLeft
+PASS: static silk reuses its retained artwork: RegalMale / TopRight
+PASS: static silk reuses its retained artwork: RegalMale / BottomLeft
+PASS: static silk reuses its retained artwork: RegalMale / BottomRight
+PASS: static silk reuses its retained artwork: BoldFemale / TopLeft
+PASS: static silk reuses its retained artwork: BoldFemale / TopRight
+PASS: static silk reuses its retained artwork: BoldFemale / BottomLeft
+PASS: static silk reuses its retained artwork: BoldFemale / BottomRight
+PASS: static silk reuses its retained artwork: Bold / TopLeft
+PASS: static silk reuses its retained artwork: Bold / TopRight
+PASS: static silk reuses its retained artwork: Bold / BottomLeft
+PASS: static silk reuses its retained artwork: Bold / BottomRight
+PASS: static silk reuses its retained artwork: Zebra / TopLeft
+PASS: static silk reuses its retained artwork: Zebra / TopRight
+PASS: static silk reuses its retained artwork: Zebra / BottomLeft
+PASS: static silk reuses its retained artwork: Zebra / BottomRight
+PASS: static silk reuses its retained artwork: ZebraMale / TopLeft
+PASS: static silk reuses its retained artwork: ZebraMale / TopRight
+PASS: static silk reuses its retained artwork: ZebraMale / BottomLeft
+PASS: static silk reuses its retained artwork: ZebraMale / BottomRight
+PASS: static silk reuses its retained artwork: Tan / TopLeft
+PASS: static silk reuses its retained artwork: Tan / TopRight
+PASS: static silk reuses its retained artwork: Tan / BottomLeft
+PASS: static silk reuses its retained artwork: Tan / BottomRight
+PASS: static silk reuses its retained artwork: TanMale / TopLeft
+PASS: static silk reuses its retained artwork: TanMale / TopRight
+PASS: static silk reuses its retained artwork: TanMale / BottomLeft
+PASS: static silk reuses its retained artwork: TanMale / BottomRight
+PASS: static silk reuses its retained artwork: RedBackFemale / TopLeft
+PASS: static silk reuses its retained artwork: RedBackFemale / TopRight
+PASS: static silk reuses its retained artwork: RedBackFemale / BottomLeft
+PASS: static silk reuses its retained artwork: RedBackFemale / BottomRight
+PASS: static silk reuses its retained artwork: RedBack / TopLeft
+PASS: static silk reuses its retained artwork: RedBack / TopRight
+PASS: static silk reuses its retained artwork: RedBack / BottomLeft
+PASS: static silk reuses its retained artwork: RedBack / BottomRight
+PASS: static silk reuses its retained artwork: Emerald / TopLeft
+PASS: static silk reuses its retained artwork: Emerald / TopRight
+PASS: static silk reuses its retained artwork: Emerald / BottomLeft
+PASS: static silk reuses its retained artwork: Emerald / BottomRight
+PASS: static silk reuses its retained artwork: EmeraldMale / TopLeft
+PASS: static silk reuses its retained artwork: EmeraldMale / TopRight
+PASS: static silk reuses its retained artwork: EmeraldMale / BottomLeft
+PASS: static silk reuses its retained artwork: EmeraldMale / BottomRight
+PASS: static silk reuses its retained artwork: GrayWall / TopLeft
+PASS: static silk reuses its retained artwork: GrayWall / TopRight
+PASS: static silk reuses its retained artwork: GrayWall / BottomLeft
+PASS: static silk reuses its retained artwork: GrayWall / BottomRight
+PASS: static silk reuses its retained artwork: GrayWallMale / TopLeft
+PASS: static silk reuses its retained artwork: GrayWallMale / TopRight
+PASS: static silk reuses its retained artwork: GrayWallMale / BottomLeft
+PASS: static silk reuses its retained artwork: GrayWallMale / BottomRight
+PASS: static silk reuses its retained artwork: PantropicalFemale / TopLeft
+PASS: static silk reuses its retained artwork: PantropicalFemale / TopRight
+PASS: static silk reuses its retained artwork: PantropicalFemale / BottomLeft
+PASS: static silk reuses its retained artwork: PantropicalFemale / BottomRight
+PASS: static silk reuses its retained artwork: Pantropical / TopLeft
+PASS: static silk reuses its retained artwork: Pantropical / TopRight
+PASS: static silk reuses its retained artwork: Pantropical / BottomLeft
+PASS: static silk reuses its retained artwork: Pantropical / BottomRight
+PASS: static silk reuses its retained artwork: ApacheFemale / TopLeft
+PASS: static silk reuses its retained artwork: ApacheFemale / TopRight
+PASS: static silk reuses its retained artwork: ApacheFemale / BottomLeft
+PASS: static silk reuses its retained artwork: ApacheFemale / BottomRight
+PASS: static silk reuses its retained artwork: Apache / TopLeft
+PASS: static silk reuses its retained artwork: Apache / TopRight
+PASS: static silk reuses its retained artwork: Apache / BottomLeft
+PASS: static silk reuses its retained artwork: Apache / BottomRight
+PASS: static silk reuses its retained artwork: PortiaLabiata / TopLeft
+PASS: static silk reuses its retained artwork: PortiaLabiata / TopRight
+PASS: static silk reuses its retained artwork: PortiaLabiata / BottomLeft
+PASS: static silk reuses its retained artwork: PortiaLabiata / BottomRight
+PASS: static silk reuses its retained artwork: HyllusDiardiGreen / TopLeft
+PASS: static silk reuses its retained artwork: HyllusDiardiGreen / TopRight
+PASS: static silk reuses its retained artwork: HyllusDiardiGreen / BottomLeft
+PASS: static silk reuses its retained artwork: HyllusDiardiGreen / BottomRight
+PASS: switching species replaces the retained silk style immediately
+PASS: saved silk progress still controls growth layers
+PASS: growing silk preserves existing threads rather than rearranging them: Regal
+PASS: growing silk preserves existing threads rather than rearranging them: RegalMale
+PASS: growing silk preserves existing threads rather than rearranging them: BoldFemale
+PASS: growing silk preserves existing threads rather than rearranging them: Bold
+PASS: growing silk preserves existing threads rather than rearranging them: Zebra
+PASS: growing silk preserves existing threads rather than rearranging them: ZebraMale
+PASS: growing silk preserves existing threads rather than rearranging them: Tan
+PASS: growing silk preserves existing threads rather than rearranging them: TanMale
+PASS: growing silk preserves existing threads rather than rearranging them: RedBackFemale
+PASS: growing silk preserves existing threads rather than rearranging them: RedBack
+PASS: growing silk preserves existing threads rather than rearranging them: Emerald
+PASS: growing silk preserves existing threads rather than rearranging them: EmeraldMale
+PASS: growing silk preserves existing threads rather than rearranging them: GrayWall
+PASS: growing silk preserves existing threads rather than rearranging them: GrayWallMale
+PASS: growing silk preserves existing threads rather than rearranging them: PantropicalFemale
+PASS: growing silk preserves existing threads rather than rearranging them: Pantropical
+PASS: growing silk preserves existing threads rather than rearranging them: ApacheFemale
+PASS: growing silk preserves existing threads rather than rearranging them: Apache
+PASS: growing silk preserves existing threads rather than rearranging them: PortiaLabiata
+PASS: growing silk preserves existing threads rather than rearranging them: HyllusDiardiGreen
+RESULT: PASS (full native run: zero failures).

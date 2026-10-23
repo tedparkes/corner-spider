@@ -7,7 +7,7 @@ namespace CornerSpider {
         public string Corner="TopRight",Species="Regal",HomeMonitor="";
         public bool AutoFeed=true,CursorPlay=true,AllMonitors=true,SpeciesTraits=true,WebVisits=true;
         public double Scale=1,Web=.15;
-        public double FingerTone=World.DefaultFingerTone;
+        public double FingerTone=World.DefaultFingerTone,WebVisibility=1;
         public double FlyInterval=100,InviteDelay=4.5,CarryTolerance=850,AttentionDistance=185,DismissDistance=230;
         public int Meals;
         public static readonly string[] SpeciesNames=SkinCatalog.Names;
@@ -27,6 +27,7 @@ namespace CornerSpider {
                 if(k=="corner" && Array.IndexOf(Corners,v)>=0) Corner=v;
                 if(k=="species" && Array.IndexOf(SpeciesNames,v)>=0) Species=v;
                 if(k=="scale" && double.TryParse(v,NumberStyles.Float,CultureInfo.InvariantCulture,out n) && World.Finite(n)) Scale=Math.Max(.2,Math.Min(1.8,n));
+                if(k=="webVisibility" && double.TryParse(v,NumberStyles.Float,CultureInfo.InvariantCulture,out n) && World.Finite(n)) WebVisibility=Math.Max(0,Math.Min(1,n));
                 if(k=="fingerTone" && double.TryParse(v,NumberStyles.Float,CultureInfo.InvariantCulture,out n) && World.Finite(n)) FingerTone=Math.Max(0,Math.Min(1,n));
                 if(k=="flyInterval" && double.TryParse(v,NumberStyles.Float,CultureInfo.InvariantCulture,out n) && World.Finite(n)) FlyInterval=Math.Max(30,Math.Min(300,n));
                 if(k=="inviteDelay" && double.TryParse(v,NumberStyles.Float,CultureInfo.InvariantCulture,out n) && World.Finite(n)) InviteDelay=Math.Max(2,Math.Min(10,n));
@@ -48,7 +49,7 @@ namespace CornerSpider {
         public bool Save(string folder) {
             try {
                 Directory.CreateDirectory(folder);string path=Path.Combine(folder,"settings.txt"),temp=path+".new";
-                File.WriteAllLines(temp,new string[]{"version=5","speciesTraits="+SpeciesTraits.ToString().ToLowerInvariant(),"webVisits="+WebVisits.ToString().ToLowerInvariant(),"corner="+Corner,"species="+Species,"homeMonitor="+HomeMonitor,"allMonitors="+AllMonitors.ToString().ToLowerInvariant(),"scale="+Scale.ToString(CultureInfo.InvariantCulture),"fingerTone="+FingerTone.ToString(CultureInfo.InvariantCulture),"web="+Web.ToString(CultureInfo.InvariantCulture),"flies="+AutoFeed.ToString().ToLowerInvariant(),"rides="+CursorPlay.ToString().ToLowerInvariant(),"meals="+Meals,"flyInterval="+FlyInterval.ToString(CultureInfo.InvariantCulture),"inviteDelay="+InviteDelay.ToString(CultureInfo.InvariantCulture),"carryTolerance="+CarryTolerance.ToString(CultureInfo.InvariantCulture),"attentionDistance="+AttentionDistance.ToString(CultureInfo.InvariantCulture),"dismissDistance="+DismissDistance.ToString(CultureInfo.InvariantCulture)});
+                File.WriteAllLines(temp,new string[]{"version=6","webVisibility="+WebVisibility.ToString(CultureInfo.InvariantCulture),"speciesTraits="+SpeciesTraits.ToString().ToLowerInvariant(),"webVisits="+WebVisits.ToString().ToLowerInvariant(),"corner="+Corner,"species="+Species,"homeMonitor="+HomeMonitor,"allMonitors="+AllMonitors.ToString().ToLowerInvariant(),"scale="+Scale.ToString(CultureInfo.InvariantCulture),"fingerTone="+FingerTone.ToString(CultureInfo.InvariantCulture),"web="+Web.ToString(CultureInfo.InvariantCulture),"flies="+AutoFeed.ToString().ToLowerInvariant(),"rides="+CursorPlay.ToString().ToLowerInvariant(),"meals="+Meals,"flyInterval="+FlyInterval.ToString(CultureInfo.InvariantCulture),"inviteDelay="+InviteDelay.ToString(CultureInfo.InvariantCulture),"carryTolerance="+CarryTolerance.ToString(CultureInfo.InvariantCulture),"attentionDistance="+AttentionDistance.ToString(CultureInfo.InvariantCulture),"dismissDistance="+DismissDistance.ToString(CultureInfo.InvariantCulture)});
                 if(File.Exists(path)) File.Replace(temp,path,path+".bak");else File.Move(temp,path);
                 LastError="";return true;
             } catch(IOException ex) { LastError=ex.Message;return false; }

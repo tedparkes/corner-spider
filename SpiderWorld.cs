@@ -20,7 +20,7 @@ namespace CornerSpider {
             return new V(Math.Max(X+mx,Math.Min(X+W-mx,p.X)),Math.Max(Y+my,Math.Min(Y+H-my,p.Y)));
         }
     }
-    public enum Mood { Rest, Walk, Groom, Return, Sleep, Notice, Stalk, Aim, Crouch, Jump, Land, Eat, Ride, Inspect, Reach, Dismount, EnterNest, ExitNest, WebApproach, WebPluck, SpeciesAct }
+    public enum Mood { Rest, Walk, Groom, Return, Sleep, Notice, Stalk, Aim, Crouch, Jump, Land, Eat, Ride, Inspect, Reach, Dismount, EnterNest, ExitNest, WebApproach, WebPluck, SpeciesAct, Struggle }
     public partial class World {
         public V Spider,Home,Target,Fly,Cursor,LastCursor,JumpStart,JumpEnd;
         public Mood State=Mood.Rest;
@@ -33,6 +33,7 @@ namespace CornerSpider {
         public double FlyInterval=100,InviteDelay=4.5,CarryTolerance=850,AttentionDistance=185,DismissDistance=230;
         public const double DefaultFingerTone=.8;
         public double FingerTone=DefaultFingerTone;
+        public double WebVisibility=1;
         public double AttentionRadius { get { return AttentionDistance*pixelScale; } }
         public double DismissRadius { get { return Math.Max(AttentionDistance+20,DismissDistance)*pixelScale; } }
         public bool HasFly,AutoFeed=true,CursorPlay=true;
@@ -43,6 +44,7 @@ namespace CornerSpider {
         struct Sample { public V P; public double T; public Sample(V p,double t) { P=p;T=t; } }
         readonly Queue<Sample> samples=new Queue<Sample>();
         string jumpPurpose="ground";
+        bool directAttack,holdingMeal;
         double decision=12,napAfter=100,desiredAngle,rideDuration=8,pixelScale=1,jumpScale=1,jumpStartAngle;
         bool cursorValid;
         bool cursorNearby,burstMoving=true;
@@ -178,21 +180,27 @@ namespace CornerSpider {
             Fly=best;HasFly=true;FlyAge=0;FlyPhase=Between(0,6.28);NextFly=Clock+Between(.7,1.3)*FlyInterval;
             BeginPrey(kind);
             if(UnderNestSilk) { StartNestExit();napAfter=Clock+Between(100,170); }
-            else if(State!=Mood.Ride && State!=Mood.Jump && State!=Mood.Crouch && State!=Mood.Reach && State!=Mood.Eat && State!=Mood.Dismount) Enter(Mood.Notice);
+            else if(State!=Mood.Ride && State!=Mood.Jump && State!=Mood.Crouch && State!=Mood.Reach && State!=Mood.Eat && State!=Mood.Struggle && State!=Mood.Land && State!=Mood.Dismount) Enter(Mood.Notice);
         }
         public double JumpProgress { get { return Math.Max(0,Math.Min(1,JumpTime/JumpDuration)); } }
+        public bool HoldingMeal { get { return State==Mood.Eat || State==Mood.Struggle || (State==Mood.Land && holdingMeal); } }
+        public const double StruggleDuration=1.35;
+        public double CaptureStruggle { get { return State==Mood.Struggle?Math.Sin(Math.PI*Math.Min(1,StateTime/StruggleDuration))*(1-.45*StateTime/StruggleDuration):0; } }
         public double Lift { get {
             if(State!=Mood.Jump) return 0;
             double height=jumpPurpose=="release"?46:30;
             if(jumpPurpose=="fly") height+=Math.Min(12,(JumpEnd-JumpStart).Length/jumpScale*.05);
-            double lift=4*JumpProgress*(1-JumpProgress)*(height+Scared*12)*jumpScale;
+            // Snapshot at takeoff: changing skins in flight cannot change its path.
+            if(directAttack) height=5;
+            double lift=4*JumpProgress*(1-JumpProgress)*(height+(directAttack?0:Scared*12))*jumpScale;
             // Hunting and upward departures must keep the whole pose below the ceiling.
             if(jumpPurpose=="release" || jumpPurpose=="fly") lift=Math.Min(lift,Math.Max(0,Spider.Y-Areas[AreaAt(Spider)].Y-SpiderPose.Radius*jumpScale));
             return lift;
         } }
         public static double InspectionPhase(double time) { return Math.Max(0,Math.Min(1,(time-.12)/1.32)); }
         public double FrontReach(int side) {
-            if(State==Mood.WebPluck) return .2+GuestPulse*(side<0?.55:.4);
+            if(State==Mood.Struggle) return .8;
+            if(State==Mood.WebPluck) return 0; // One planted foreleg handles direct silk contact in SpiderPose.
             if(State==Mood.SpeciesAct) return SpeciesReach(side);
             if(State==Mood.Dismount) return .65*DismountBrace;
             if(SettlingOnFinger) return Math.Max(0,1-RideAge/.24);
@@ -210,6 +218,7 @@ namespace CornerSpider {
             return 0;
         }
         public double Squash { get {
+            if(State==Mood.Struggle) return 1-.035*CaptureStruggle;
             if(State==Mood.Dismount) return 1-.08*DismountBrace;
             if(State==Mood.Crouch) return 1-.08*Math.Min(1,StateTime/.24);
             if(State==Mood.Land) return 1-.07*Math.Sin(Math.PI*Math.Min(1,StateTime/.20));
@@ -224,8 +233,10 @@ namespace CornerSpider {
         }
         void Jump(V dest,string purpose) {
             JumpStart=Spider;JumpEnd=Clamp(dest);JumpTime=0;jumpScale=BodyScale;jumpPurpose=purpose;jumpStartAngle=Angle;
+            directAttack=purpose=="fly" && HuntsSpiders;holdingMeal=false;
             SilkStart=Spider;SilkOpacity=1;
             JumpDuration=Math.Max(.20,Math.Min(.32,.18+(JumpEnd-Spider).Length/(1200*BodyScale)));
+            if(directAttack) JumpDuration=Math.Max(.13,Math.Min(.19,.10+(JumpEnd-Spider).Length/(2600*BodyScale)));
             if(purpose=="release") JumpDuration=Math.Max(.32,Math.Min(.42,.22+(JumpEnd-Spider).Length/(1000*BodyScale)));
             Face(JumpEnd);Enter(Mood.Jump);
         }
@@ -353,12 +364,13 @@ namespace CornerSpider {
                         desiredAngle=jumpStartAngle+AngleDelta(jumpStartAngle,catchAngle)*t*t*(3-2*t);catchTurning=true;
                     }
                     if(t>=1) {
-                        if(jumpPurpose=="fly" && HasFly && (Spider-Fly).Length<35*s) { Meal=Prey;HasFly=false;if(WebStage==WebVisit.Attack) FinishWebVisit();if(Meals<int.MaxValue) Meals++;Enter(Mood.Land); }
+                        if(jumpPurpose=="fly" && HasFly && (Spider-Fly).Length<35*s) { Meal=Prey;HasFly=false;holdingMeal=true;if(WebStage==WebVisit.Attack) FinishWebVisit();if(Meals<int.MaxValue) Meals++;Enter(Mood.Land); }
                         else if(jumpPurpose=="cursor" && CursorPlay && cursorInside && (Spider-CursorLanding(cursor)).Length<40*s && cursorSpeed<350*pixelScale) { BeginRide(); }
                         else { if(jumpPurpose!="transit") jumpPurpose="ground";Enter(Mood.Land); }
                     }break;
                 case Mood.Land:
-                    if(StateTime>=.20) { if(jumpPurpose=="fly") Enter(Mood.Eat);else if(jumpPurpose=="transit") Enter(WebStage==WebVisit.Approach?Mood.WebApproach:(Target-Home).Length<1?Mood.Return:Mood.Walk);else { decision=Between(2,5);Enter(Mood.Rest); } }break;
+                    if(StateTime>=.20) { if(jumpPurpose=="fly") Enter(directAttack && Meal==PreyKind.SmallSpider?Mood.Struggle:Mood.Eat);else if(jumpPurpose=="transit") Enter(WebStage==WebVisit.Approach?Mood.WebApproach:(Target-Home).Length<1?Mood.Return:Mood.Walk);else { decision=Between(2,5);Enter(Mood.Rest); } }break;
+                case Mood.Struggle: if(StateTime>=StruggleDuration) Enter(Mood.Eat);break;
                 case Mood.Ride:
                     Carry(dt,cursor,cursorSpeed,cursorInside,clicked);break;
                 case Mood.Dismount:

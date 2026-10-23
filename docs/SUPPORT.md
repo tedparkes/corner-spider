@@ -7,8 +7,10 @@ pixels. The surrounding phone screenshot is not distributed. The QR decodes to:
 `https://cash.app/$tedparkes?qr=1`
 
 The settings link uses that same recipient. The QR is bundled and embedded, with
-no remote image request. Clicking the code displays a larger copy. Clicking the
-recipient opens the default browser; nothing opens automatically. There is no
+no remote image request. The small "Buy me a coffee / Monster" button opens a
+flyout containing the original QR at 272 pixels and the recipient link. Close,
+Escape, an outside click or closing settings dismisses the flyout. Clicking the
+recipient link opens the default browser; nothing opens automatically. There is no
 payment SDK, account connection, login form, stored financial data or automatic
 payment. Donations are optional and do not unlock features.
 
@@ -27,6 +29,6 @@ or imply endorsement. A fork should deliberately review the recipient. If changi
 it, replace the QR, PaymentUrl, CashTag and corresponding validation/tests together.
 
 Validation: the supplied original and crop decode identically. Local checks decoded
-the crop at 112/128/144/168/320/420/545 pixels, and decoded the actual normal and
-compact WPF settings captures to the same address. Phone scanning and a real
+the crop at 112/128/144/168/320/420/545 pixels in earlier releases. RC10 also
+decodes the actual WPF flyout capture to the same address. Phone scanning and a real
 donation remain manual checks. Diagnostic modes never open payment pages.

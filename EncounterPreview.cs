@@ -16,16 +16,16 @@ namespace CornerSpider {
                     panel==2?w.WebStage==WebVisit.Waiting && w.GuestStageAge>40:
                     panel==3?w.WebStage==WebVisit.Approach && (w.Spider-w.GuestPluckPosition).Length<75*w.GuestScale:
                     panel==4?w.WebStage==WebVisit.Plucking && w.GuestTaps==1 && w.GuestPulse>.5:
-                    panel==5?w.WebStage==WebVisit.Plucking && w.GuestLure>.2 && w.GuestPulse>.5:
-                    panel==6?w.WebStage==WebVisit.Plucking && w.GuestLure>.8 && w.GuestPulse>.5:
+                    panel==5?w.WebStage==WebVisit.Plucking && w.GuestLure>.2 && w.PreyWalking:
+                    panel==6?w.WebStage==WebVisit.Plucking && w.GuestLure>.8 && w.PreyWalking:
                     panel==7?w.WebStage==WebVisit.Attack && w.State==Mood.Jump && w.JumpProgress>.2:
-                    w.WebStage==WebVisit.Fading && w.State==Mood.Eat;
+                    w.WebStage==WebVisit.Fading && w.State==Mood.Struggle && w.StateTime>.4;
                 if(ready) return w;
             }
             throw new InvalidOperationException("Encounter preview did not reach panel "+panel);
         }
         public static void RenderEncounterPreview(string folder) {
-            string[] labels={"Anchors, frame and radial spokes","Weaving the curved capture spiral","The resident waits at the center","A quiet approach to the edge","Plucking the outer anchor","Repeating the useful plucks","The resident comes closer","The web-side ambush","Meal; silk remains until departure"};
+            string[] labels={"Anchors, frame and radial spokes","Weaving the curved capture spiral","The resident waits at the center","Stepping onto the anchored edge","One foreleg plucks the silk","The prey advances, then listens","Another pluck draws it closer","The web-side ambush","A brief struggle; silk stays until departure"};
             var image=new DrawingVisual();using(var d=image.RenderOpen()) {
                 d.DrawRectangle(BPreview("#e6ebe1"),null,new Rect(0,0,1260,1210));
                 Text(d,"PORTIA / A CORNER-WEB ENCOUNTER",20,14,24,Color.FromRgb(30,50,44));
@@ -95,7 +95,8 @@ namespace CornerSpider {
         }
         static void CheckEncounterSettings(PetHost host,string folder) {
             host.World.GoHome();host.SetSpecies("PortiaLabiata");var panel=new PetSettingsWindow(host);
-            Check(panel.SupportQrButton!=null && SupportBanner.Qr.PixelWidth==545,"original cropped Cash App QR is embedded and displayed");
+            var popup=(System.Windows.Controls.Primitives.Popup)panel.SupportButton.Tag;
+            Check(panel.SupportButton.Content is string && !popup.IsOpen && SupportBanner.Qr.PixelWidth==545,"support starts as a quiet text button and retains the original QR");
             Check(SupportBanner.ValidPaymentLink(SupportBanner.PaymentUrl) && !SupportBanner.OpenPayment(true),"support uses the public Cash App recipient; diagnostics never open payment pages");
             foreach(string bad in new[]{"http://cash.app/$tedparkes","https://cash.app.evil.example/$tedparkes","https://other@cash.app/$tedparkes","file:///tmp/pay","https://cash.app/$someoneelse","https://cash.app/$tedparkes?amount=100"}) Check(!SupportBanner.ValidPaymentLink(bad),"reject unexpected support target: "+bad);
             panel.TraitsCheck.IsChecked=false;panel.WebVisitsCheck.IsChecked=false;host.Save();var s=Settings.Load(host.Folder);
@@ -107,13 +108,29 @@ namespace CornerSpider {
             panel.ShowActivated=false;panel.ShowInTaskbar=false;panel.Show();panel.UpdateLayout();
             var root=(FrameworkElement)panel.Content;SavePng(panel,(int)panel.ActualWidth,(int)panel.ActualHeight,Path.Combine(folder,"settings-banner.png"));
             panel.Width=720;panel.Height=520;panel.UpdateLayout();SavePng(panel,(int)panel.ActualWidth,(int)panel.ActualHeight,Path.Combine(folder,"settings-compact.png"));
-            var qrBounds=panel.SupportQrButton.TransformToAncestor(root).TransformBounds(new Rect(new Point(),panel.SupportQrButton.RenderSize));
-            Check(qrBounds.Left>=0 && qrBounds.Right<=root.ActualWidth && qrBounds.Bottom<=root.ActualHeight,"support QR stays inside compact settings bounds");
-            Check(panel.SupportQrButton.ActualWidth>=112 && panel.SupportQrButton.ActualHeight>=112,"compact settings preserve the original QR at readable size");panel.Close();
+            var buttonBounds=panel.SupportButton.TransformToAncestor(root).TransformBounds(new Rect(new Point(),panel.SupportButton.RenderSize));
+            Check(buttonBounds.Left>=0 && buttonBounds.Right<=root.ActualWidth && buttonBounds.Bottom<=root.ActualHeight,"support button stays inside compact settings bounds");
+            panel.SupportButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));panel.UpdateLayout();
+            var flyout=(FrameworkElement)popup.Child;flyout.Measure(new Size(400,600));flyout.Arrange(new Rect(new Point(),flyout.DesiredSize));flyout.UpdateLayout();
+            Check(popup.IsOpen && !popup.StaysOpen,"button opens a dismissible QR and link flyout without launching a browser");
+            SavePng(flyout,(int)Math.Ceiling(flyout.ActualWidth),(int)Math.Ceiling(flyout.ActualHeight),Path.Combine(folder,"support-flyout.png"));
+            var contents=(StackPanel)((Border)popup.Child).Child;var image=(Image)contents.Children[2];
+            Check(image.ActualWidth==272 && image.Source==SupportBanner.Qr,"flyout displays the original recognizable QR at scanning size");
+            ((Button)contents.Children[contents.Children.Count-1]).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(!popup.IsOpen,"flyout close button works");
+            panel.SupportButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));panel.Close();Check(!popup.IsOpen,"closing settings also closes its flyout");
             CheckGuestSilkRendering();RenderEncounterPreview(folder);
         }
         static void CheckGuestSilkRendering() {
             var w=GuestScene(2);var visual=new DrawingVisual();
+            long previous=long.MaxValue;
+            foreach(double visibility in new[]{1,.5,0}) {
+                w.WebVisibility=visibility;var opacityVisual=new DrawingVisual();
+                using(var d=opacityVisual.RenderOpen()) DrawGuestAtCorner(d,w,0,360,false);
+                var opacityBitmap=new RenderTargetBitmap(360,360,96,96,PixelFormats.Pbgra32);opacityBitmap.Render(opacityVisual);byte[] opacityPixels=new byte[360*360*4];opacityBitmap.CopyPixels(opacityPixels,1440,0);
+                long alpha=0;for(int i=3;i<opacityPixels.Length;i+=4) alpha+=opacityPixels[i];
+                Check(visibility==0?alpha==0:alpha>0 && alpha<previous,"resident web obeys visibility without affecting its construction: "+visibility);previous=alpha;
+            }
+            w.WebVisibility=1;
             using(var d=visual.RenderOpen()) { PetCanvas.DrawGuestWeb(d,w); }
             int count=PetCanvas.GuestSilkBuilds(w);
             for(int i=0;i<180;i++) using(var d=visual.RenderOpen()) { PetCanvas.DrawGuestWeb(d,w); }
@@ -150,6 +167,27 @@ namespace CornerSpider {
                 }
                 Check(horizontal>=12 && vertical>=12,"rendered silk touches both desktop edges in "+Settings.Corners[corner]);
             }
+            var plucking=GuestScene(4);var pluckVisual=new DrawingVisual();
+            for(int frame=0;frame<180;frame++) {
+                plucking.GuestStageAge=1.25+frame/30.0;
+                using(var d=pluckVisual.RenderOpen()) { d.PushTransform(new TranslateTransform(16,16));DrawGuestAtCorner(d,plucking,0,360,false);d.Pop(); }
+            }
+            Check(PetCanvas.GuestSilkBuilds(plucking)==1,"repeated plucks reuse the retained web image while only the contacted spoke ripples");
+            plucking.GuestStageAge=1.575;
+            using(var d=pluckVisual.RenderOpen()) { d.PushTransform(new TranslateTransform(16,16));DrawGuestAtCorner(d,plucking,0,360,false);d.Pop(); }
+            var pluckBitmap=new RenderTargetBitmap(392,392,96,96,PixelFormats.Pbgra32);pluckBitmap.Render(pluckVisual);
+            byte[] pluckPixels=new byte[392*392*4];pluckBitmap.CopyPixels(pluckPixels,392*4,0);int unsupported=0;
+            // Compare to the unchanged RC9 artwork: this checks newly drawn
+            // plucking lines rather than imposing a different web silhouette.
+            plucking.State=Mood.Rest;using(var d=pluckVisual.RenderOpen()) { d.PushTransform(new TranslateTransform(16,16));DrawGuestAtCorner(d,plucking,0,360,false);d.Pop(); }
+            var baselineBitmap=new RenderTargetBitmap(392,392,96,96,PixelFormats.Pbgra32);baselineBitmap.Render(pluckVisual);
+            byte[] baseline=new byte[392*392*4];baselineBitmap.CopyPixels(baseline,392*4,0);
+            for(int y=20;y<372;y++) for(int x=20;x<372;x++) if(pluckPixels[(y*392+x)*4+3]>baseline[(y*392+x)*4+3]+8) {
+                // Allow the existing thin rim two rendered pixels of antialiasing.
+                V insideProbe=new V((x-18)*188/360.0,(y-18)*188/360.0);
+                if(!GuestWebPattern.InsideSilk(insideProbe)) unsupported++;
+            }
+            Check(unsupported==0,"plucking adds no tether strands outside the existing concave web");
         }
     }
 }

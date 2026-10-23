@@ -32,7 +32,7 @@ namespace CornerSpider {
                 using(var icon=PetHost.MakeIcon("Bold")) using(var file=File.Create(Path.Combine(folder,"CornerSpider.ico"))) icon.Save(file);
                 return 0;
             }
-            log=new StringBuilder();log.AppendLine("Corner Spider 1.0 RC9 Windows runtime checks "+DateTime.Now.ToString("s"));
+            log=new StringBuilder();log.AppendLine("Corner Spider 1.0 RC10 Windows runtime checks "+DateTime.Now.ToString("s"));
             string testSettings=Path.Combine(folder,"settings");Check(new Settings { FingerTone=.37,Species="PortiaLabiata" }.Save(testSettings),"seed isolated finger-tone and Portia preferences");
             IntPtr foreground=Native.GetForegroundWindow();var host=new PetHost(testSettings,true);
             IntPtr afterCreation=Native.GetForegroundWindow();uint foregroundPid,afterCreationPid;
@@ -80,6 +80,9 @@ namespace CornerSpider {
                         settingsPanel.FingerToneSlider.Value=0;Check(host.World.FingerTone==0 && settingsPanel.FingerPreview.Tone==0,"deep-brown finger endpoint updates world and preview");
                         settingsPanel.FingerToneSlider.Value=100;Check(host.World.FingerTone==1 && settingsPanel.FingerPreview.Tone==1,"very-pale finger endpoint updates world and preview");
                         settingsPanel.FingerToneSlider.Value=37;Check(host.World.FingerTone==.37 && settingsPanel.FingerPreview.Tone==.37,"intermediate finger shade updates live");
+                        settingsPanel.WebSlider.Value=0;Check(host.World.WebVisibility==0 && settingsPanel.Preview.WebVisibility==0,"web slider can hide silk in world and preview");
+                        settingsPanel.WebSlider.Value=100;Check(host.World.WebVisibility==1 && settingsPanel.Preview.WebVisibility==1,"100 percent retains original silk strength");
+                        settingsPanel.WebSlider.Value=45;Check(host.World.WebVisibility==.45 && settingsPanel.Preview.WebVisibility==.45,"web visibility applies live to world and preview");
                         settingsPanel.AllMonitorsCheck.IsChecked=false;Check(host.Windows.Count==1,"settings single-monitor option");settingsPanel.AllMonitorsCheck.IsChecked=true;Check(host.Windows.Count==Forms.Screen.AllScreens.Length,"settings restore all-monitor roaming");
                         foreach(var skin in SkinCatalog.All) {
                             settingsPanel.SpeciesSelector.SelectedItem=skin;Check(host.Settings.Species==skin.Id && host.World.Species==skin.Id && settingsPanel.Preview.Species==skin.Id,"skin selection applies to pet, behavior and preview: "+skin.Id);
@@ -93,10 +96,12 @@ namespace CornerSpider {
                         Check(!settingsPanel.StartupCheck.IsEnabled && !host.SetStartup(true),"diagnostics cannot alter autostart");
                         host.Save();var saved=Settings.Load(host.Folder);Check(saved.Species==((SkinProfile)settingsPanel.SpeciesSelector.SelectedItem).Id && saved.AllMonitors && saved.Scale==.2 && saved.InviteDelay==10 && saved.DismissDistance==420,"new settings persist through reload");
                         Check(saved.FingerTone==.37,"finger tone persists with other settings");
+                        Check(saved.WebVisibility==.45,"web visibility persists through native UI");
                         double web=host.World.Web;int meals=host.World.Meals;settingsPanel.ResetPreferences();
                         Check(host.World.Scale==1 && host.World.InviteDelay==4.5 && host.World.AttentionDistance==185 && host.World.DismissDistance==230 && host.World.AutoFeed && host.World.CursorPlay && host.Settings.Species=="Regal","reset restores preference defaults");
                         Check(host.World.Web==web && host.World.Meals==meals,"preference reset preserves nest and meals");
                         Check(host.World.FingerTone==World.DefaultFingerTone && settingsPanel.FingerPreview.Tone==World.DefaultFingerTone,"reset restores original finger shade in world and preview");
+                        Check(host.World.WebVisibility==1 && settingsPanel.Preview.WebVisibility==1,"reset restores original silk strength without resetting progress");
                         CaptureSettings(host,folder);settingsPanel.SizeSlider.Value=125;settingsPanel.Close();
                         Check(Settings.Load(host.Folder).Scale==1.25,"closing settings saves slider size");
                         Check(settingsPanel.IsClosed && !settingsPanel.Preview.Running,"closing settings stops its preview timer");host.World.SetScale(1);

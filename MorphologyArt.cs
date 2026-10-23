@@ -7,7 +7,7 @@ namespace CornerSpider {
     public partial class PetCanvas {
         static readonly Dictionary<string,DrawingGroup> palpTips=new Dictionary<string,DrawingGroup>();
         static Point BodyEdge(SkinProfile skin,double a,double outset) {
-            double irregular=skin.Shape=="Tufted"?1+.045*Math.Cos(a*6):1;
+            double irregular=skin.Shape=="Tufted"?1+.11*Math.Cos(a*6):1;
             return new Point(Math.Cos(a)*(14*(1+skin.BodyTaper*Math.Sin(a))*irregular+outset),22+Math.Sin(a)*(17+outset));
         }
         static Geometry BodyShape(SkinProfile skin) {
@@ -17,16 +17,17 @@ namespace CornerSpider {
             }shape.Freeze();return shape;
         }
         static void BodyFringe(DrawingContext d,SkinProfile skin) {
-            var random=new Random(174);for(int i=0;i<220;i++) {
-                double a=i*Math.PI*2/220,len=.4+random.NextDouble()*1.2;
-                if(skin.Shape=="Tufted") len*=1+2.2*Math.Pow(Math.Max(0,Math.Cos(a*7)),8);
+            int count=(int)(220*skin.CoatDensity);var random=new Random(174);for(int i=0;i<count;i++) {
+                double a=i*Math.PI*2/count,len=(.4+random.NextDouble()*1.2)*skin.HairLength;
+                if(skin.Shape=="Tufted") len+=3.2*Math.Pow(Math.Max(0,Math.Cos(a*7)),12);
                 Point start=BodyEdge(skin,a,-.3),end=BodyEdge(skin,a,len);
                 d.DrawLine(P(i%9==0?skin.Hair:"#90"+skin.Body.Substring(1),.17),start,end);
             }
         }
         static void ExtraMarkings(DrawingContext d,SkinProfile skin) {
             if(skin.Pattern=="RedStripe" || skin.Pattern=="ApacheStripe") {
-                Curve(d,"#24221f",6,new Point(0,6),new Point(-1,18),new Point(1,27),new Point(0,38));
+                if(skin.Pattern=="RedStripe") Curve(d,"#24221f",4.8,new Point(0,21),new Point(-.5,26),new Point(.5,33),new Point(0,37));
+                else { Curve(d,"#24221f",5,new Point(0,7),new Point(-1,18),new Point(1,27),new Point(0,37));for(int i=0;i<7;i++) TuftSpot(d,(i%2==0?-1:1)*1.8,10+i*4,1.5,1.7,"#24221f",i+70); }
             } else if(skin.Pattern=="WallMale") {
                 for(int side=-1;side<=1;side+=2) Curve(d,skin.Mark,3.6,new Point(side*10,6),new Point(side*15,16),new Point(side*11,31),new Point(side*3,38));
             } else if(skin.Pattern=="StripeFemale") {
@@ -47,17 +48,29 @@ namespace CornerSpider {
             }
         }
         static void HeadDetails(DrawingContext d,SkinProfile skin) {
+            if(skin.Pattern=="WallMale") Line(d,skin.Mark,2.3,0,6,0,-19);
+            if(skin.Pattern=="Regal" && !skin.Male) for(int side=-1;side<=1;side+=2) for(int tuft=0;tuft<2;tuft++) for(int hair=0;hair<15;hair++) {
+                double x=side*(tuft==0?11:8),y=tuft==0?-7:0;Line(d,skin.Hair,.18,x+(hair-7)*.08,y,x+(hair-7)*.14,y-1.7-(hair%4)*.3);
+            }
             if(skin.Pattern=="Tan" && skin.Male) Line(d,"#c38a50",2.1,-12,-23.7,12,-23.7);
-            if(skin.Pattern=="WallMale") Line(d,skin.Mark,3,0,6,0,-19);
+            if(skin.Pattern=="Wall" || skin.Pattern=="WallMale") Line(d,skin.Male?skin.Mark:"#b4804f",1.7,-11,-24,11,-24);
             if(skin.Pattern=="StripeFemale") { Line(d,"#b99868",2,0,5,0,-13);Oval(d,B("#493e30"),0,-17,12,6); }
             if(skin.Pattern=="Portia") {
                 for(int side=-1;side<=1;side+=2) {
-                    Curve(d,skin.BodyShade,1,new Point(0,-5),new Point(side*8,-9),new Point(side*10,-10),new Point(side*13,-11));
+                    Curve(d,"#70372a24",.55,new Point(0,-5),new Point(side*8,-9),new Point(side*10,-10),new Point(side*13,-11));
                     for(int i=0;i<38;i++) Line(d,skin.Palps,.22,side*(i*.30),-24.6,side*(i*.32),-26.2-(i%5)*.2);
                 }
             }
             if(skin.Pattern=="Hyllus") for(int side=-1;side<=1;side+=2) for(int i=0;i<25;i++)
                 Line(d,i%4==0?skin.Hair:skin.HeadShade,.19,side*(12+i*.04),-8+(i%5)*.22,side*(15+i*.08),-12-(i%7)*.4);
+        }
+        static Brush SurfaceShade(SkinProfile skin,string bright,string dark) {
+            if(skin.Shape!="Flat") return Glow(bright,dark);
+            // A broad matte plateau reads as a low bark/wall spider, instead of
+            // the rounded highlight used by the robust, furry species.
+            var brush=new LinearGradientBrush();brush.StartPoint=new Point(0,0);brush.EndPoint=new Point(1,.3);
+            Color light=(Color)ColorConverter.ConvertFromString(bright),shade=(Color)ColorConverter.ConvertFromString(dark);
+            brush.GradientStops.Add(new GradientStop(shade,0));brush.GradientStops.Add(new GradientStop(light,.15));brush.GradientStops.Add(new GradientStop(light,.82));brush.GradientStops.Add(new GradientStop(shade,1));brush.Freeze();return brush;
         }
         static DrawingGroup PalpTip(SkinProfile skin) {
             DrawingGroup g;if(palpTips.TryGetValue(skin.Id,out g)) return g;

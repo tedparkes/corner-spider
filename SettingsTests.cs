@@ -12,6 +12,9 @@ static class SettingsTests {
         foreach(string value in new[]{"NaN","Infinity","-Infinity","invalid",""}) {
             var invalidTone=new Settings();invalidTone.Parse(new[]{"fingerTone="+value});Check(invalidTone.FingerTone==World.DefaultFingerTone,"invalid finger tone keeps safe default");
         }
+        var visibility=new Settings();Check(visibility.WebVisibility==1,"existing saves default to original silk visibility");
+        foreach(string badValue in new[]{"NaN","Infinity","-Infinity","oops"}) { visibility.Parse(new[]{"webVisibility="+badValue});Check(visibility.WebVisibility==1,"invalid visibility keeps default"); }
+        visibility.Parse(new[]{"webVisibility=-1"});Check(visibility.WebVisibility==0,"visibility lower bound");visibility.Parse(new[]{"webVisibility=2"});Check(visibility.WebVisibility==1,"visibility upper bound");
         var clippedTone=new Settings();clippedTone.Parse(new[]{"fingerTone=-4"});Check(clippedTone.FingerTone==0,"dark end clamps");clippedTone.Parse(new[]{"fingerTone=4"});Check(clippedTone.FingerTone==1,"pale end clamps");
         foreach(var skin in SkinCatalog.All) { Check(ids.Add(skin.Id),"unique skin ID");var s=new Settings();s.Parse(new[]{"species="+skin.Id});Check(s.Species==skin.Id,"every skin can be loaded"); }
         foreach(double size in new[]{.2,.35,.7,1,1.8}) foreach(double dpi in new[]{1,1.5,2}) foreach(double delay in new[]{2,4.5,10}) {
@@ -49,6 +52,7 @@ static class SettingsTests {
         try {
             parsed.Species="Emerald";Check(parsed.Save(folder),"save new preferences");var loaded=Settings.Load(folder);Check(loaded.Scale==.2 && loaded.InviteDelay==10 && loaded.AttentionDistance==400 && loaded.DismissDistance==420 && loaded.Species=="Emerald" && loaded.FlyInterval==300 && loaded.CarryTolerance==1500,"all new preferences survive restart");
             foreach(var skin in SkinCatalog.All) { parsed.Species=skin.Id;Check(parsed.Save(folder),"save species "+skin.Id);Check(Settings.Load(folder).Species==skin.Id,"reload species "+skin.Id); }
+            foreach(double opacity in new[]{0,.25,.75,1}) { parsed.WebVisibility=opacity;Check(parsed.Save(folder),"save web visibility");loaded=Settings.Load(folder);Check(loaded.WebVisibility==opacity,"web visibility survives reload"); }
             parsed.Species="Emerald";
             foreach(double tone in new[]{0,.01,.37,.8,.99,1}) { parsed.FingerTone=tone;Check(parsed.Save(folder),"save finger shade");loaded=Settings.Load(folder);Check(loaded.FingerTone==tone && loaded.Species=="Emerald" && loaded.Scale==.2,"exact finger shade survives reload alongside existing preferences"); }
         }

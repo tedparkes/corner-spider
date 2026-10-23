@@ -57,6 +57,12 @@ namespace CornerSpider {
         // so construction, artwork and plucking use the same smooth curve.
         static V BridgeControl { get { return new V(91.5,94)*.30; } }
         static V BridgePoint(double t) { double u=1-t;return new V(183,0)*(u*u)+BridgeControl*(2*u*t)+new V(0,188)*(t*t); }
+        public static bool InsideSilk(V point) {
+            if(point.X<0 || point.Y<0 || point.Y>188) return false;
+            double b=2*BridgeControl.Y,a=188-b;
+            double t=point.Y==0?0:2*point.Y/(b+Math.Sqrt(b*b+4*a*point.Y));
+            return point.X<=BridgePoint(t).X+.000001;
+        }
         static V BridgeTangent(double t) { return (BridgeControl-new V(183,0))*(2*(1-t))+(new V(0,188)-BridgeControl)*(2*t); }
         static GuestStrand Bridge(double start,double end) {
             V a=BridgePoint(start),b=BridgePoint(end);double span=(end-start)/3;

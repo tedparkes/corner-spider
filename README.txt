@@ -1,10 +1,16 @@
-CORNER SPIDER 1.0 RC9 (1.0.0-rc.9)
+CORNER SPIDER 1.0 RC10 (1.0.0-rc.10)
 
 NEW: The prey web fills the corner, with eleven attachment points along both
 desktop edges. Its deeply concave bridge curves inward from one edge to the other; the
 radial spokes and spiral silk stay inside that supported span.
-Its movement follows the strands it is building. Portia still approaches the
-desktop attachment, plucks a connected spoke and lures the resident from the center.
+Its movement follows the strands it is building. Portia steps onto the edge near
+an anchor and plucks the strand directly with one foreleg, without connecting
+tethers. Each of five plucks makes the resident turn, stalk closer and pause.
+Portia attacks quickly along a nearly straight path, then briefly struggles with
+the caught spider before eating. Ordinary travel and finger jumps keep their arcs.
+
+All twenty skins received a species-reference critique. Portia is more angular
+and fine-legged; flat bark/wall species have shorter coats. See docs\SKIN-REVIEW.md.
 
 Spiders choose different spots to land on the finger, settle briefly,
 then explore. Only approaches from the exposed fingertip side may catch and
@@ -18,6 +24,8 @@ meal, then fades. Small work areas fit the web to leave room for the approach.
 
 Settings > Appearance shows the selected species' web in the upper-right
 corner of the skin preview. Skin, size and background changes update it live.
+The saved Web visibility slider controls all silk: 100% is the original look,
+0% is invisible. Lowering it does not reset nest progress.
 
 The sleeping retreat has a connected support mesh and stronger attachments
 to both desktop edges. Silk appearance varies with species, and growth keeps
@@ -26,8 +34,9 @@ anchored capture web. Saved nest progress and end-entry behavior are preserved.
 See docs\SILK-REFERENCES.md for evidence and artistic choices.
 
 Also included: Portia corner-web encounters, species personalities, and an optional
-"Buy me a coffee / Monster" banner using the original Cash App QR. Click the QR
-to enlarge it; the recipient is $tedparkes. No payment is needed to use the pet.
+"Buy me a coffee / Monster" button. It opens a flyout containing the original
+Cash App QR and the $tedparkes link. Only clicking the link opens your browser.
+Close it with Close, Escape or an outside click. Support is optional.
 
 Select Portia, then Settings > Behavior > Invite a web-building spider. It builds
 for 3-4 minutes, waits 1-2 minutes, then Portia approaches, plucks and ambushes.

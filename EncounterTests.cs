@@ -15,12 +15,13 @@ static class EncounterTests {
         var attachmentChoices=new HashSet<int>();
         foreach(double size in new[]{.2,1,1.8}) foreach(double dt in new[]{.033,.1}) for(int seed=0;seed<8;seed++) {
             var w=New(seed,size,new[]{1,1.5,2}[seed%3]);Check(w.StartWebVisit(),"Portia can invite a web builder");
-            attachmentChoices.Add(w.GuestPluckSpoke);
+            attachmentChoices.Add(w.GuestAnchorSpoke);
             Check(w.GuestBuildTime>=180 && w.GuestBuildTime<=240 && w.GuestWaitTime>=60 && w.GuestWaitTime<=120,"real build and post-build wait durations");
             Check((w.GuestCenter-w.Home).Length>320*w.HomeScale,"guest web is separate from the hammock");
             Check(Math.Abs(w.GuestWebFactor-3)<.001 && Math.Abs((w.GuestNode(2)-w.GuestNode(0)).Length/w.GuestScale-549)<.001,"roomy displays use three times the original web span");
             V fly=w.Fly;w.SpawnFly();w.SpawnSmallSpider();w.Feed();Check(w.Prey==PreyKind.SmallSpider && (w.Fly-fly).Length==0 && !w.StartWebVisit(),"web resident exclusively occupies the prey slot");
-            var seen=new HashSet<WebVisit>();double approach=-1,pluck=-1;bool ignoredProbe=false;V lastFly=w.Fly;
+            var seen=new HashSet<WebVisit>();var advances=new HashSet<int>();var pauses=new HashSet<int>();
+            double approach=-1,pluck=-1,lastLure=0;V lastFly=w.Fly;var supports=new Dictionary<int,V>();
             for(int frame=0;frame<850/dt && w.Meals==0;frame++) {
                 w.Tick(dt,away);seen.Add(w.WebStage);
                 Check(w.InsideAny(w.Spider) && w.InsideAny(w.Fly) && World.Finite(w.GuestProgress),"pet and builder remain finite on the desktop");
@@ -34,17 +35,31 @@ static class EncounterTests {
                 if(w.WebStage==WebVisit.Approach && approach<0) approach=w.Clock;
                 if(w.WebStage==WebVisit.Plucking) {
                     if(pluck<0) pluck=w.Clock;
-                    Check((w.Spider-w.GuestPluckPosition).Length<2*w.GuestScale && (w.Spider-w.GuestPluckPoint).Length>45*w.GuestScale,"Portia holds an edge plucking position with room for its body");
-                    if(w.GuestLure==0) Check((w.Spider-w.Fly).Length>250*w.GuestScale,"central resident and edge-plucking Portia are visibly separated");
-                    if(w.GuestTaps>0 && w.GuestTaps<4) { Check(w.GuestLure==0,"initial probes do not immediately summon resident");ignoredProbe=true; }
-                    if(w.GuestLure>0) Check(w.GuestTaps>=4,"resident responds only after exploratory signals");
+                    Check((w.Spider-w.GuestPluckPosition).Length<2*w.GuestScale && w.GuestOnSilk(w.Spider),"Portia stands on the silk at its edge");
+                    if(w.GuestLure==0) Check((w.Spider-w.Fly).Length>200*w.GuestScale,"resident remains visibly separated from the hunter standing on the edge: spoke="+w.GuestPluckSpoke+", gap="+(w.Spider-w.Fly).Length/w.GuestScale+", reach="+(w.Spider-w.GuestPluckPoint).Length/w.GuestScale);
+                    Check(w.GuestLure>=lastLure-.000001 && w.GuestTaps<=5,"five signals produce steady, forward-only stalking progress");lastLure=w.GuestLure;
+                    if(w.GuestTaps==0) Check(w.GuestLure==0 && !w.PreyWalking,"resident waits for the first actual pluck");
+                    if(w.PreyWalking) { Check(w.GuestTaps>=1,"each advance follows a signal");advances.Add(w.GuestTaps); }
+                    if(w.GuestTaps>0 && w.GuestSignalPhase>1.15 && w.GuestSignalPhase<1.25) {
+                        V toward=w.GuestPluckPoint-w.Fly;
+                        Check(Math.Abs(World.AngleDelta(w.PreyAngle,Math.Atan2(toward.Y,toward.X)*180/Math.PI+90))<5,"prey turns toward the apparent prey signal before taking its next stalking step");
+                    }
+                    if(w.GuestTaps>0 && w.GuestSignalPhase>2.8 && !w.PreyWalking) pauses.Add(w.GuestTaps);
+                    if(w.GuestStageAge>1.25) for(int side=-1;side<=1;side+=2) for(int leg=0;leg<4;leg++) {
+                        var pose=SpiderPose.Leg(w,side,leg,SkinCatalog.Get(w.Species));double angle=w.Angle*Math.PI/180;
+                        V tip=w.Spider+new V(pose.Tip.X*Math.Cos(angle)-pose.Tip.Y*Math.Sin(angle),pose.Tip.X*Math.Sin(angle)+pose.Tip.Y*Math.Cos(angle))*w.BodyScale;
+                        Check(Math.Abs((pose.Knee3-pose.Hip3).Length-SpiderPose.Femur[leg]*SkinCatalog.Get(w.Species).LimbScale(leg))<.0001,"plucking retains fixed joint lengths");
+                        if(leg==0 && side==w.GuestPluckingSide) Check((tip-w.GuestFootContact).Length<.5*w.GuestScale,"plucking forefoot directly touches the existing strand, gap="+(tip-w.GuestFootContact).Length/w.GuestScale);
+                        else { int key=(side+1)*4+leg;if(!supports.ContainsKey(key)) supports[key]=tip;else Check((supports[key]-tip).Length<.1*w.GuestScale,"the seven supporting feet remain planted during repeated plucks"); }
+                    }
                     V spoke=w.GuestPluckPoint-w.GuestCenter,along=w.Fly-w.GuestCenter;
                     Check(Math.Abs(spoke.X*along.Y-spoke.Y*along.X)<.00001*w.GuestScale*w.GuestScale,"lured resident stays on the spoke connected to the chosen desktop anchor");
                 }
             }
             Check(w.Meals==1 && w.Meal==PreyKind.SmallSpider && !w.HasFly,"complete web encounter captures exactly one resident, seed "+seed+" size "+size+" state "+w.State+" visit "+w.WebStage);
             foreach(WebVisit state in new[]{WebVisit.Building,WebVisit.Waiting,WebVisit.Approach,WebVisit.Plucking,WebVisit.Attack,WebVisit.Fading}) Check(seen.Contains(state),"full encounter includes "+state);
-            Check(approach>=w.GuestBuildTime+w.GuestWaitTime && pluck>approach && ignoredProbe && w.GuestTaps>=8,"quiet wait, approach and signal trial sequence are distinct");
+            Check(approach>=w.GuestBuildTime+w.GuestWaitTime && pluck>approach && w.GuestTaps==5,"quiet wait, approach and five distinct plucks precede capture");
+            Check(advances.Count==5 && pauses.Count==5,"the prey advances and pauses after every pluck");
             Check(w.GuestOpacity==1 && !w.GuestFadeStarted,"capture retains the entire occupied web");
             for(int i=0;i<150/dt && w.WebStage!=WebVisit.None;i++) {
                 bool started=w.GuestFadeStarted;w.Tick(dt,away);
@@ -96,7 +111,7 @@ static class EncounterTests {
         for(int orientation=0;orientation<2;orientation++) for(int corner=0;corner<4;corner++) {
             var fitted=New(corner,1.8,1);fitted.ConfigureDisplays(new[]{new Area(0,0,orientation==0?1920:1000,orientation==0?1000:1920,1)},0);fitted.Spider=fitted.Home;
             Check(fitted.StartWebVisit() && fitted.GuestWebFactor<3,"deep-curve fixture uses a fitted web");
-            attachmentChoices.Add(fitted.GuestPluckSpoke);
+            attachmentChoices.Add(fitted.GuestAnchorSpoke);
             bool plucked=false;
             for(int i=0;i<8500 && fitted.Meals==0;i++) {
                 fitted.Tick(.1,away);
@@ -104,6 +119,11 @@ static class EncounterTests {
                     plucked=true;var area=fitted.Areas[fitted.GuestArea];
                     Check((area.Clamp(fitted.GuestPluckPosition,SpiderPose.Radius*fitted.GuestScale)-fitted.GuestPluckPosition).Length<.000001,
                         "fitted web's plucking perch leaves full body clearance at the display edge");
+                    if(fitted.GuestStageAge>1.25) {
+                        var pose=SpiderPose.Leg(fitted,fitted.GuestPluckingSide,0,SkinCatalog.Get(fitted.Species));double angle=fitted.Angle*Math.PI/180;
+                        V tip=fitted.Spider+new V(pose.Tip.X*Math.Cos(angle)-pose.Tip.Y*Math.Sin(angle),pose.Tip.X*Math.Sin(angle)+pose.Tip.Y*Math.Cos(angle))*fitted.BodyScale;
+                        Check(fitted.GuestOnSilk(fitted.Spider) && (tip-fitted.GuestFootContact).Length<.5*fitted.GuestScale,"fitted webs retain an on-silk stance and direct leg contact");
+                    }
                 }
             }
             Check(plucked && fitted.Meals==1,"deep curved web remains reachable through a complete fitted encounter in corner "+corner+

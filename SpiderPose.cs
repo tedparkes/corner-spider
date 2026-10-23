@@ -45,7 +45,6 @@ namespace CornerSpider {
                 // in narrow, nearly parallel sagittal planes on either side of the face.
                 V3 display=new V3(side*21,-46,25);
                 if(w.State==Mood.Inspect) display=new V3(side*21,-43,29+Math.Sin(w.StateTime*7)*.7);
-                if(w.State==Mood.WebPluck) display=new V3(side*18,-45,1+w.GuestPulse*8);
                 if(w.State==Mood.SpeciesAct && w.Personality.Gesture==SpeciesGesture.SilkTap) display=new V3(side*18,-41,2+Math.Max(0,Math.Sin(w.StateTime*11+side))*6);
                 if(w.State==Mood.Crouch) display=new V3(side*22,-46,12);
                 if(w.State==Mood.Jump) display=new V3(side*(22+2*w.JumpProgress),-48,14);
@@ -57,6 +56,11 @@ namespace CornerSpider {
                 ankle=new V3(side*(leg==1?29:leg==2?32:22),ankleY[leg]+(leg==3?7*(1-w.JumpProgress):3),5);
             }
             if(w.State==Mood.Land && leg>0) ankle.X+=side*2*(1-Math.Min(1,w.StateTime/.20));
+            if(w.State==Mood.Struggle) {
+                double effort=w.CaptureStruggle;
+                if(leg==0) ankle=Lerp(ankle,new V3(side*(15+Math.Sin(w.StateTime*19+side)*2*effort),-30+Math.Sin(w.StateTime*15)*effort,5+effort*2),1);
+                else ankle.X+=side*1.3*effort;
+            }
             // Resting feet fold alongside the body; the spatial hinge solver
             // still preserves every segment length and the forelegs' joint plane.
             if(tuck>0) ankle=Lerp(ankle,new V3(side*(leg==0?15:leg==1?18:leg==2?20:14),leg==0?-29:leg==1?-12:leg==2?10:25,1.5),tuck);
@@ -73,6 +77,15 @@ namespace CornerSpider {
                 } else ankle=Lerp(p.Hip3,ankle,.63)+new V3(0,3,2);
             } else if(w.OnFinger || w.Climbing || w.State==Mood.Dismount) {
                 if(reach<.01) ankle.X*=.73; // Supporting feet curl over the finger's sides.
+            }
+            if(w.State==Mood.WebPluck && w.WebStage==WebVisit.Plucking && leg==0 && side==w.GuestPluckingSide) {
+                V relative=(w.GuestFootContact-w.Spider)*(1/w.BodyScale);double angle=w.Angle*Math.PI/180;
+                V tip=new V(relative.X*Math.Cos(angle)+relative.Y*Math.Sin(angle),-relative.X*Math.Sin(angle)+relative.Y*Math.Cos(angle));
+                V3 toeDirection=Unit(new V3(side*.06,-1,-.1));V toeOffset=Project(toeDirection*(7.5*limb));
+                double z=.8+3*w.GuestPulse;
+                V3 planted=new V3(tip.X-toeOffset.X,(tip.Y-toeOffset.Y-z*.258819)/.9659258,z);
+                double blend=Math.Min(1,w.StateTime/.75);blend=blend*blend*(3-2*blend);
+                ankle=Lerp(ankle,planted,blend);
             }
             double a=Femur[leg]*limb,b=Lower[leg]*limb;
             V3 delta=ankle-p.Hip3;

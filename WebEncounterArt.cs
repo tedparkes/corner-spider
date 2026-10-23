@@ -32,7 +32,7 @@ namespace CornerSpider {
             d.DrawGeometry(null,P("#edf5fff7",width/factor),g);d.Pop();
         }
         internal static void DrawGuestWeb(DrawingContext d,World w) {
-            if(w.GuestOpacity<=0) return;
+            if(w.GuestOpacity<=0 || w.WebVisibility<=0) return;
             int active=GuestWebPattern.Active(w.GuestProgress);
             double fraction=GuestWebPattern.Fraction(active,w.GuestProgress);
             int complete=active+(fraction>=1?1:0);
@@ -67,7 +67,7 @@ namespace CornerSpider {
                     for(int i=cache.Complete;i<complete;i++) GuestCurve(layer,GuestWebPattern.Strand(i),w.GuestWebFactor);
                 }fresh.Freeze();cache.FreshSilk=fresh;cache.FreshComplete=complete;
             }
-            d.PushOpacity(w.GuestOpacity*.9);
+            d.PushOpacity(w.GuestOpacity*.9*w.WebVisibility);
             d.PushTransform(new TranslateTransform(w.GuestCorner.X,w.GuestCorner.Y));
             d.PushTransform(new ScaleTransform((w.GuestInward.X>0?1:-1)*w.GuestWebScale,(w.GuestInward.Y>0?1:-1)*w.GuestWebScale));
             if(cache.Image!=null) d.DrawImage(cache.Image,cache.Bounds);
@@ -80,15 +80,6 @@ namespace CornerSpider {
                 V sway=new V(-axis.Y,axis.X)*(w.GuestPulse*Math.Sin(w.GuestStageAge*32)*1.5*w.GuestScale/axis.Length);
                 d.PushOpacity(w.GuestPulse*.6);
                 SilkCurve(d,.35*w.GuestScale,GuestPoint(center),GuestPoint(center+axis*.33+sway),GuestPoint(center+axis*.67-sway),GuestPoint(anchorPoint));d.Pop();
-                // Short tension strands connect the actual contacting feet to the
-                // outer web anchor. Their motion follows the articulated forelegs.
-                double angle=w.Angle*Math.PI/180;var skin=SkinCatalog.Get(w.Species);
-                for(int side=-1;side<=1;side+=2) {
-                    V foot=SpiderPose.Leg(w,side,0,skin).Tip;
-                    V tip=w.Spider+new V(foot.X*Math.Cos(angle)-foot.Y*Math.Sin(angle),foot.X*Math.Sin(angle)+foot.Y*Math.Cos(angle))*w.BodyScale;
-                    V anchor=w.GuestPluckPoint,mid=(anchor+tip)*.5;
-                    SilkCurve(d,.45*w.GuestScale,new Point(anchor.X,anchor.Y),new Point(mid.X,mid.Y),new Point(mid.X,mid.Y),new Point(tip.X,tip.Y));
-                }
             }
             d.Pop();
         }

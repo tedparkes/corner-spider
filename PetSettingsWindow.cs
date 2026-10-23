@@ -10,10 +10,10 @@ namespace CornerSpider {
         readonly PetHost host;
         readonly DispatcherTimer saveTimer=new DispatcherTimer { Interval=TimeSpan.FromMilliseconds(500) };
         readonly DispatcherTimer encounterTimer=new DispatcherTimer { Interval=TimeSpan.FromMilliseconds(500) };
-        public readonly Slider SizeSlider,FingerToneSlider,FlySlider,InviteSlider,ToleranceSlider,AttentionSlider,DismissSlider;
+        public readonly Slider SizeSlider,WebSlider,FingerToneSlider,FlySlider,InviteSlider,ToleranceSlider,AttentionSlider,DismissSlider;
         public readonly ComboBox SpeciesSelector,CornerSelector,MonitorSelector;
         public readonly CheckBox FliesCheck,RidesCheck,AllMonitorsCheck,StartupCheck,TraitsCheck,WebVisitsCheck;
-        public readonly Button WebVisitButton,SupportQrButton;
+        public readonly Button WebVisitButton,SupportButton;
         public readonly SettingsPreview Preview=new SettingsPreview();
         public readonly FingerPreview FingerPreview=new FingerPreview();
         public readonly TabControl Tabs=new TabControl();
@@ -52,7 +52,7 @@ namespace CornerSpider {
             var header=new Grid();header.ColumnDefinitions.Add(new ColumnDefinition());header.ColumnDefinitions.Add(new ColumnDefinition { Width=GridLength.Auto });DockPanel.SetDock(header,Dock.Top);root.Children.Add(header);
             var heading=new StackPanel { Margin=new Thickness(0,10,0,6),VerticalAlignment=VerticalAlignment.Center };header.Children.Add(heading);
             heading.Children.Add(Text("Your corner companion",27));Note(heading,"Appearance, gentle interactions and a place to call home.");
-            Button supportButton;var support=SupportBanner.Create(this,host.TestMode,out supportButton);SupportQrButton=supportButton;Grid.SetColumn(support,1);header.Children.Add(support);
+            Button supportButton;var support=SupportBanner.Create(this,host.TestMode,out supportButton);SupportButton=supportButton;Grid.SetColumn(support,1);header.Children.Add(support);
             var bottom=new DockPanel { Margin=new Thickness(0,14,0,0) };DockPanel.SetDock(bottom,Dock.Bottom);root.Children.Add(bottom);
             var done=new Button { Content="Done",Width=90,Height=34,IsCancel=true };DockPanel.SetDock(done,Dock.Right);bottom.Children.Add(done);done.Click+=delegate { Close(); };
             saveStatus=Text("Changes apply live and save automatically.",12);saveStatus.VerticalAlignment=VerticalAlignment.Center;bottom.Children.Add(saveStatus);
@@ -66,6 +66,9 @@ namespace CornerSpider {
             CheckBox detail=null;
             SizeSlider=Range(options,"Desktop size",20,180,5,host.World.Scale*100,"%",delegate(double v) { host.World.SetScale(v/100);Preview.PetScale=v/100;if(detail!=null) detail.IsChecked=false;host.Render();Preview.InvalidateVisual(); });
             Note(options,"20% tiny  /  100% original  /  180% large");
+            Preview.WebVisibility=host.World.WebVisibility;
+            WebSlider=Range(options,"Web visibility",0,100,5,host.World.WebVisibility*100,"%",delegate(double v) { host.World.WebVisibility=v/100;Preview.WebVisibility=v/100;Preview.InvalidateVisual(); });
+            Note(options,"100% original silk  /  0% invisible. Applies to both webs and jump threads; nest progress is kept.");
             detail=Toggle(options,"Enlarge preview for detail",true);detail.Checked+=delegate { Preview.Enlarged=true;Preview.InvalidateVisual(); };detail.Unchecked+=delegate { Preview.Enlarged=false;Preview.InvalidateVisual(); };
             Note(options,"Changing size switches to a desktop-size preview. Turn this on for close detail; it does not resize your pet.");
             var dark=Toggle(options,"Dark preview background",true);dark.Checked+=delegate { Preview.Dark=true;Preview.InvalidateVisual(); };dark.Unchecked+=delegate { Preview.Dark=false;Preview.InvalidateVisual(); };
@@ -140,7 +143,7 @@ namespace CornerSpider {
             var help=NewPanel();help.Children.Add(Text("A quiet little desktop companion",21));
             Note(help,"Approach an awake spider and hold still for the configured invitation delay. The finger fades in; the spider can jump on, hang, climb and wander. Move gently to carry it. A click lets it plan an upward hop; a fast move startles it. The finger holds still until takeoff, and your pointer returns immediately. Your clicks still reach your apps.");
             Note(help,"It watches from corners, stalks occasional flies and returns to its silk retreat. Use the tray's quick actions to feed, call it home, wake or pause it. Double-click the tray icon to reopen these settings.");
-            Note(help,"Corner Spider 1.0 RC9\nFree software under the MIT License. The pet works offline with no accounts or telemetry. Optional Cash App support opens your browser only when clicked. Preferences are stored in LocalAppData\\CornerSpider. See README.txt for removal and manual checks.");
+            Note(help,"Corner Spider 1.0 RC10\nFree software under the MIT License. The pet works offline with no accounts or telemetry. Optional Cash App support opens your browser only when clicked. Preferences are stored in LocalAppData\\CornerSpider. See README.txt for removal and manual checks.");
             Note(help,"Future ideas: custom colors by body region; crickets, mealworms and other prey; additional spider species; an optional background with depth to explore.");AddTab("About & play",help);
             saveTimer.Tick+=delegate { saveTimer.Stop();host.Save();saveStatus.Text=host.Settings.LastError.Length==0?"Saved. Changes are live on your desktop.":"Could not save preferences. Check that your save folder is writable."; };
             Closed+=delegate { IsClosed=true;saveTimer.Stop();encounterTimer.Stop();Preview.Dispose();host.Save(); };
@@ -155,7 +158,7 @@ namespace CornerSpider {
             MonitorSelector.SelectedIndex=selected;syncing=false;
         }
         public void ResetPreferences() {
-            TraitsCheck.IsChecked=true;WebVisitsCheck.IsChecked=true;SpeciesSelector.SelectedItem=SkinCatalog.Get("Regal");SizeSlider.Value=100;FingerToneSlider.Value=World.DefaultFingerTone*100;FlySlider.Value=100;InviteSlider.Value=4.5;ToleranceSlider.Value=850;
+            TraitsCheck.IsChecked=true;WebVisitsCheck.IsChecked=true;SpeciesSelector.SelectedItem=SkinCatalog.Get("Regal");SizeSlider.Value=100;WebSlider.Value=100;FingerToneSlider.Value=World.DefaultFingerTone*100;FlySlider.Value=100;InviteSlider.Value=4.5;ToleranceSlider.Value=850;
             AttentionSlider.Value=185;DismissSlider.Value=230;FliesCheck.IsChecked=true;RidesCheck.IsChecked=true;CornerSelector.SelectedIndex=1;AllMonitorsCheck.IsChecked=true;MonitorSelector.SelectedIndex=0;Changed();
         }
     }

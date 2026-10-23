@@ -42,6 +42,7 @@ namespace CornerSpider {
         }
         static Brush BPreview(string color) { return (Brush)new BrushConverter().ConvertFromString(color); }
         public static void RenderSkinGallery(string folder) {
+            RenderSkinSizes(folder);
             RenderPalpGallery(folder);int height=100+((SkinCatalog.All.Length+4)/5)*325;
             foreach(bool dark in new[]{false,true}) {
                 var v=new DrawingVisual();using(var d=v.RenderOpen()) {
@@ -63,6 +64,24 @@ namespace CornerSpider {
                     for(int i=0;i<4;i++) { var w=new World(960,360,42);w.Scale=2.3;w.Angle=i*90;w.Spider=new V(120+i*240,185);w.State=i==3?Mood.Inspect:Mood.Rest;w.StateTime=.7;PetCanvas.DrawSpider(d,w,skin.Id); }
                 }SavePng(v,960,360,Path.Combine(folder,"skin-"+skin.Id+".png"));
             }
+        }
+        static void RenderSkinSizes(string folder) {
+            var visual=new DrawingVisual();using(var d=visual.RenderOpen()) {
+                d.DrawRectangle(BPreview("#e8ede3"),null,new Rect(0,0,1200,1050));
+                Text(d,"SKIN READABILITY / 100% AND 20%",20,12,24,Color.FromRgb(30,50,44));
+                for(int i=0;i<SkinCatalog.All.Length;i++) {
+                    var skin=SkinCatalog.All[i];double x=i%4*300,y=65+i/4*195;
+                    d.PushTransform(new TranslateTransform(x,y));
+                    d.DrawRectangle(BPreview(i%2==0?"#24313a":"#e0e6d9"),null,new Rect(3,0,294,160));
+                    for(int size=0;size<2;size++) {
+                        var w=new World(300,195,42);w.SetSpecies(skin.Id);w.Scale=size==0?1:.2;w.Angle=180;w.Spider=new V(size==0?90:220,78);
+                        PetCanvas.DrawSpider(d,w,skin.Id);
+                    }
+                    Color ink=i%2==0?Colors.White:Color.FromRgb(30,50,44);
+                    Text(d,"100%",70,137,11,ink);Text(d,"20%",208,137,11,ink);
+                    Text(d,skin.Name,12,168,14,Color.FromRgb(30,50,44));d.Pop();
+                }
+            }SavePng(visual,1200,1050,Path.Combine(folder,"skins-sizes.png"));
         }
         static void CheckSkinRendering() {
             var hashes=new System.Collections.Generic.HashSet<string>();

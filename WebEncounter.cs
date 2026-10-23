@@ -13,23 +13,30 @@ namespace CornerSpider {
         public double GuestWebScale { get { return GuestScale*GuestWebFactor; } }
         public double GuestWebExtent { get { return 188*GuestWebScale; } }
         public int GuestPluckSpoke { get; private set; }
+        public int GuestAnchorSpoke { get; private set; }
+        public int GuestPluckingSide { get { return -1; } }
         public V GuestPluckPoint { get { return GuestPatternPoint(GuestWebPattern.Rim(GuestPluckSpoke)); } }
+        public V GuestFootContact { get {
+            V axis=GuestCenter-GuestPluckPoint;
+            return GuestPluckPoint+axis*(2.5*GuestScale*GuestPulse/Math.Max(.0001,axis.Length));
+        } }
         public V GuestPluckPosition { get { return guestStop; } }
         public bool GuestFadeStarted { get; private set; }
         public double NextWebVisit=100;
         V guestStop,guestDetour,guestResidentGoal;
-        double guestResponse,previousPulse,guestFadeAge;
+        double guestFadeAge;
         bool guestReachedDetour;
         static readonly double[] guestNodeX={0,76,183,185,156,68,0,0,108,51,127,149,108,48,39},guestNodeY={0,0,0,83,166,188,188,91,108,43,38,91,149,137,85};
         public bool GuestPrey { get { return WebStage!=WebVisit.None && WebStage!=WebVisit.Fading && HasFly; } }
         public bool GuestPassive { get { return WebStage==WebVisit.Building || WebStage==WebVisit.Waiting; } }
         public bool PreyBlocksPlay { get { return HasFly && !GuestPassive; } }
+        const double GuestSettleTime=1.25,GuestSignalPeriod=3.6;
+        static readonly double[] guestApproachSteps={0,.12,.28,.48,.72,1};
+        public double GuestSignalPhase { get { return Math.Max(0,GuestStageAge-GuestSettleTime)%GuestSignalPeriod; } }
         public double GuestPulse { get {
-            if(WebStage!=WebVisit.Plucking) return 0;
-            double beat=GuestStageAge%3.2;
-            if(beat<.32) return Math.Sin(beat/.32*Math.PI);
-            if(GuestStageAge>4 && beat>=.55 && beat<.87) return Math.Sin((beat-.55)/.32*Math.PI);
-            return 0;
+            if(WebStage!=WebVisit.Plucking || GuestStageAge<GuestSettleTime || GuestStageAge>=GuestSettleTime+5*GuestSignalPeriod) return 0;
+            double beat=GuestSignalPhase;
+            return beat<.65?Math.Pow(Math.Sin(beat/.65*Math.PI),2):0;
         } }
         public string GuestStatus { get {
             switch(WebStage) {
@@ -106,16 +113,17 @@ namespace CornerSpider {
                 best=distance;found=true;GuestArea=area;GuestCornerIndex=corner;GuestCorner=edge;GuestCenter=center;GuestInward=inward*(1/Math.Sqrt(2));GuestScale=s;GuestWebFactor=factor;
             }
             if(!found) { NextWebVisit=Clock+120;return false; }
-            // Pluck at the nearer outer desktop attachment, never on the
-            // unsupported middle of the open rim. Both choices join a spoke.
-            V topStop,topGoal,sideStop,sideGoal;
-            bool top=PlanPlucking(GuestWebPattern.TopBridgeAnchor,out topStop,out topGoal);
-            bool side=PlanPlucking(GuestWebPattern.SideBridgeAnchor,out sideStop,out sideGoal);
+            // Stand on the silk beside the nearer anchored end. Use an existing
+            // rim/spoke junction close enough for a forefoot to touch directly.
+            V topStop,topGoal,sideStop,sideGoal;int topSpoke,sideSpoke;
+            bool top=PlanPlucking(true,out topSpoke,out topStop,out topGoal);
+            bool side=PlanPlucking(false,out sideSpoke,out sideStop,out sideGoal);
             if(!top && !side) { NextWebVisit=Clock+120;return false; }
             bool useTop=top && (!side || (topStop-Spider).Length<=(sideStop-Spider).Length);
-            GuestPluckSpoke=useTop?GuestWebPattern.TopBridgeAnchor:GuestWebPattern.SideBridgeAnchor;
+            GuestAnchorSpoke=useTop?GuestWebPattern.TopBridgeAnchor:GuestWebPattern.SideBridgeAnchor;
+            GuestPluckSpoke=useTop?topSpoke:sideSpoke;
             guestStop=useTop?topStop:sideStop;guestResidentGoal=useTop?topGoal:sideGoal;
-            GuestAge=GuestStageAge=GuestProgress=GuestLure=guestResponse=previousPulse=0;GuestTaps=0;
+            GuestAge=GuestStageAge=GuestProgress=GuestLure=0;GuestTaps=0;
             GuestBuildTime=Between(180,240);GuestWaitTime=Between(60,120);GuestOpacity=1;
             GuestFadeStarted=false;guestFadeAge=0;
             WebStage=WebVisit.Building;Prey=PreyKind.SmallSpider;HasFly=true;FlyAge=0;Fly=Areas[GuestArea].Clamp(GuestThreadStart(0),18*SmallSpiderSize*GuestScale);BeginPrey(PreyKind.SmallSpider);
@@ -125,7 +133,7 @@ namespace CornerSpider {
         }
         public void CancelWebVisit() {
             bool owned=GuestPrey;
-            WebStage=WebVisit.None;GuestOpacity=GuestProgress=GuestStageAge=GuestLure=previousPulse=0;
+            WebStage=WebVisit.None;GuestOpacity=GuestProgress=GuestStageAge=GuestLure=0;GuestTaps=0;
             GuestFadeStarted=false;guestFadeAge=0;
             NextWebVisit=Clock+120;
             if(owned) HasFly=false;
@@ -166,32 +174,47 @@ namespace CornerSpider {
             } else if(WebStage==WebVisit.Waiting || WebStage==WebVisit.Approach) {
                 V delta=GuestCenter-Fly;MoveGuest(Fly+delta*(Math.Min(delta.Length,12*GuestScale*dt)/Math.Max(.001,delta.Length)),dt);
             } else if(WebStage==WebVisit.Plucking) {
-                double pulse=GuestPulse;
-                if(pulse>.5 && previousPulse<=.5) {
-                    GuestTaps++;
-                    // Several probes get no response. Repeat the useful double taps.
-                    if(GuestTaps>=4) guestResponse=Math.Min(1,guestResponse+.2);
+                double age=GuestStageAge-GuestSettleTime;
+                if(age<0) return;
+                int cycle=Math.Min(4,(int)(age/GuestSignalPeriod));double phase=GuestSignalPhase;
+                GuestTaps=Math.Min(5,(int)Math.Floor(Math.Max(0,age-.325)/GuestSignalPeriod)+(age>=.325?1:0));
+                if(phase>=.325 || GuestTaps>1) {
+                    V toward=GuestPluckPoint-Fly;double angle=Math.Atan2(toward.Y,toward.X)*180/Math.PI+90;
+                    PreyAngle=(PreyAngle+Math.Max(-220*dt,Math.Min(220*dt,AngleDelta(PreyAngle,angle)))+360)%360;
                 }
-                previousPulse=pulse;GuestLure=Math.Min(guestResponse,GuestLure+dt*.16);
+                // Each signal gets a turn, one short stalking advance, then a
+                // still listening pause. Later advances grow a little bolder.
+                double step=Math.Max(0,Math.Min(1,(phase-1.25)/1.3));step=step*step*(3-2*step);
+                GuestLure=guestApproachSteps[cycle]+(guestApproachSteps[cycle+1]-guestApproachSteps[cycle])*step;
                 MoveGuest(GuestCenter+(guestResidentGoal-GuestCenter)*GuestLure,dt);
             }
         }
-        V PluckingPerch(V contact) {
-            double s=Scale*Areas[GuestArea].Dpi;V outward=contact-GuestCenter;outward=outward*(1/outward.Length);
-            // Keep the entire hunter inside the desktop beside the attachment.
-            return Areas[GuestArea].Clamp(contact+outward*(52*s),SpiderPose.Radius*s);
+        public bool GuestOnSilk(V point) {
+            if(GuestWebScale<=0) return false;
+            V relative=(point-GuestCorner)*(1/GuestWebScale);
+            return GuestWebPattern.InsideSilk(new V(relative.X*(GuestInward.X>0?1:-1),relative.Y*(GuestInward.Y>0?1:-1)));
         }
-        bool PlanPlucking(int spoke,out V stop,out V goal) {
-            V contact=GuestPatternPoint(GuestWebPattern.Rim(spoke));stop=PluckingPerch(contact);goal=GuestCenter;
+        bool PlanPlucking(bool top,out int spoke,out V stop,out V goal) {
+            spoke=top?14:2;stop=goal=GuestCenter;
             double s=Scale*Areas[GuestArea].Dpi;
-            // A fitted web's anchor is too close to the edge for the hunter's
-            // whole-body landing. Keep the resident on its connected spoke,
-            // but shorten the lure until the normal mouth-offset jump fits.
-            for(int step=0;step<18;step++) {
-                V candidate=GuestCenter+(contact-GuestCenter)*(.45-step*.025);
-                V direction=candidate-stop;
-                V landing=Areas[GuestArea].Clamp(candidate-direction*(25*s/direction.Length),SpiderPose.Radius*s);
-                if((landing-candidate).Length<32*s) { goal=candidate;return true; }
+            foreach(int choice in top?new[]{14,15}:new[]{2,1}) {
+                V contact=GuestPatternPoint(GuestWebPattern.Rim(choice)),inward=GuestCenter-contact;inward=inward*(1/inward.Length);
+                V perch=Areas[GuestArea].Clamp(contact+inward*(38*s),SpiderPose.Radius*s);
+                // Pull a boundary-clamped perch onto the silk, while keeping
+                // the contact within the fixed-length foreleg's working reach.
+                for(int i=0;i<40 && !GuestOnSilk(perch);i++) {
+                    V local=perch-GuestCorner;
+                    if(Math.Abs(local.X)>Math.Abs(local.Y)) perch.X-=Math.Sign(GuestInward.X)*s;
+                    else perch.Y-=Math.Sign(GuestInward.Y)*s;
+                }
+                if((perch-contact).Length>55*s || !GuestOnSilk(perch)) continue;
+                if((Areas[GuestArea].Clamp(perch,SpiderPose.Radius*s)-perch).Length>.000001) continue;
+                for(int step=0;step<18;step++) {
+                    V candidate=GuestCenter+(contact-GuestCenter)*(.45-step*.025),direction=candidate-perch;
+                    if(direction.Length<35*s) continue;
+                    V landing=Areas[GuestArea].Clamp(candidate-direction*(25*s/direction.Length),SpiderPose.Radius*s);
+                    if((landing-candidate).Length<32*s) { spoke=choice;stop=perch;goal=candidate;return true; }
+                }
             }
             return false;
         }
@@ -213,7 +236,7 @@ namespace CornerSpider {
         void PluckWeb() {
             if(!GuestPrey) { Wake();return; }
             Face(GuestPluckPoint);
-            if(GuestLure>=1 && GuestTaps>=8) { WebStage=WebVisit.Attack;GuestStageAge=0;PrepareJump(Fly,"fly"); }
+            if(GuestLure>=1 && GuestTaps>=5 && GuestSignalPhase>=3.05) { WebStage=WebVisit.Attack;GuestStageAge=0;PrepareJump(Fly,"fly"); }
         }
     }
 }

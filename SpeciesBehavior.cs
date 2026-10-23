@@ -26,7 +26,7 @@ namespace CornerSpider {
                 case "PantropicalFemale":return new BehaviorProfile("Silk-house keeper","Inspects and tends the hammock, inspired by this species' dense, structurally complex nests.",SpeciesGesture.NestCheck) { HomeAffinity=.4 };
                 case "Apache":return new BehaviorProfile("Twig explorer","Makes more short scouting trips, inspired by observations of males wandering on leaves and twigs.",SpeciesGesture.Survey) { PatrolSpeed=175,Duration=3 };
                 case "ApacheFemale":return new BehaviorProfile("Sheltered homebody","More frequent returns to the hammock echo observations of females staying in plant retreats.",SpeciesGesture.NestCheck) { HomeAffinity=.7,Duration=6 };
-                case "PortiaLabiata":return new BehaviorProfile("Web deceiver","Slow approach, exploratory plucks and repeated successful signals lure a web resident closer.",SpeciesGesture.WebWatch) { PatrolSpeed=125,Duration=6 };
+                case "PortiaLabiata":return new BehaviorProfile("Web deceiver","Steps onto the anchored edge and plucks with one foreleg; the resident stalks closer and pauses after each signal.",SpeciesGesture.WebWatch) { PatrolSpeed=125,Duration=6 };
                 case "HyllusDiardiGreen":return new BehaviorProfile("Weighty pauses","A deliberate, slower tempo inspired by its large build. This personality is stylized; species-specific behavior data are limited.",SpeciesGesture.HeavyWatch) { PatrolSpeed=115,Duration=6 };
                 default:return Get("Regal");
             }

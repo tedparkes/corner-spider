@@ -1,4 +1,4 @@
-# Corner Spider 1.0 RC9
+# Corner Spider 1.0 RC10
 
 A small jumping spider for your actual Windows desktop. It watches from corners,
 stalks occasional prey, builds a silk retreat and sometimes accepts a finger ride.
@@ -7,20 +7,29 @@ See the [changelog](CHANGELOG.md) for changes and fixes by version.
 
 ![Twenty procedural spider skins](docs/skins-light.png)
 Portia's resident prey builds a larger corner web and waits at its center. Portia
-reserves that corner, then approaches an outer desktop attachment to pluck and
-lure the resident along its connected spoke.
+reserves that corner, then steps onto the silk near an anchored end. One foreleg
+plucks an existing strand while the other seven feet stay planted. After each of
+five plucks, the resident turns toward the signal, stalks closer and pauses.
 The web stays visible after the meal until Portia moves clear. The resident weaves
 a corner-shaped web attached at eleven points along both desktop edges, with
 a smooth, deeply concave outer bridge, radial spokes and curved spiral silk. The
 middle sits about 30% closer to the corner than in RC8; both end anchors stay fixed.
-The resident waits at its hub; Portia plucks beside one of those anchored ends.
+The resident waits at its hub; Portia plucks beside one of those anchored ends
+with direct foot contact and no extra connecting threads.
 
 The Appearance preview includes each species' silk retreat in its upper-right
-corner, with live skin, size and background changes.
+corner, with live skin, size, web-visibility and background changes. The saved
+**Web visibility** slider runs from 0% (invisible silk) to 100% (the existing
+appearance), covering the retreat, resident web and jump threads. Nest progress
+is preserved.
 
-![Settings with species silk preview and the original optional Cash App QR](docs/settings-banner.png)
+All twenty skins received a [species-reference critique](docs/SKIN-REVIEW.md).
+Portia is more angular and fine-legged; flat bark/wall species have shorter setae
+and matte shading. The larger preview retains each species' details.
 
-This is the **1.0.0-rc.9 release candidate**. Windows build and automated checks
+![Settings with silk visibility and the subtle optional support button](docs/settings-banner.png)
+
+This is the **1.0.0-rc.10 release candidate**. Windows build and automated checks
 pass; the remaining hands-on release checklist is in [verification notes](docs/VERIFICATION.md).
 
 ## Download and start
@@ -100,7 +109,9 @@ with a silk safety line and a lower arc when hunting along the top edge.
 about 65% of ordinary automatic spawns are small spiders; the rest are flies. The existing
 occasional-prey switch and timing slider control both. The small spider crawls in
 short steps and pauses, then Portia notices, stalks, lines up and pounces. Its legs
-fold when caught and it remains visible at Portia's mouth during eating.
+wriggle briefly while Portia braces, then fold as she settles into eating.
+Portia's attack takes 130–190 ms with at most five logical pixels of lift;
+ordinary travel, finger boarding and other species' jumps keep their original arcs.
 
 To try it immediately, select Portia in Appearance and use **Release a small
 spider** from the tray. Other skins continue spawning flies. Switching skins
@@ -137,11 +148,14 @@ Existing silk progress carries over and gradually thickens the retreat.
 Select **Portia labiata** in Appearance, then open **Behavior** and choose
 **Invite a web-building spider**. A small resident walks its thread path while
 constructing a connected corner web over **3–4 minutes**, then waits **1–2 minutes**.
-Portia makes a cautious angled approach, tries small plucks, repeats a useful
-signal as the resident comes closer, and makes an ambush. The empty web stays
+Portia makes a cautious angled approach and steps onto the edge near an anchored
+end. One foreleg makes five spaced plucks while the other feet remain planted.
+Each signal makes the resident turn, advance a short distance and pause to listen,
+as though stalking prey. Portia ambushes after the final approach. The empty web stays
 visible while Portia eats or rests there; its 12-second fade starts after she moves
 fully clear of the web.
-The normal, longer hunting pounce still applies to free-moving prey.
+The same fast, direct Portia attack applies to free-moving prey. Other species
+keep their longer-distance, arcing hunting jumps.
 
 Automatic encounters are occasional, require automatic prey and corner-web visits
 to be enabled, and use the same single-prey slot. A free, roomy corner is chosen
@@ -149,7 +163,7 @@ away from Portia's hammock and current corner, including on another monitor.
 The web has three times its earlier span, fitted down when needed to keep an
 approach lane. Spider prey is 50% larger, still smaller than Portia. The resident
 waits at the central junction and follows the signal toward an outer anchor;
-Portia's front feet contact silk at that edge. Ordinary patrols and returns detour
+Portia's plucking forefoot contacts silk at that edge. Ordinary patrols and returns detour
 around the reserved footprint while the resident builds and waits.
 
 Small layouts may have no suitable corner. Portia can nap or play on your finger
@@ -181,9 +195,9 @@ The green Hyllus's heavier tempo is explicitly an artistic choice.
 
 ## Optional support
 
-The settings banner says **Buy me a coffee / Monster** and displays the creator's
-original Cash App QR, including its green logo. Click the QR to enlarge it, or click
-**$tedparkes** to open the matching public Cash App page in your browser. Corner
+The small **Buy me a coffee / Monster** button opens a flyout with the creator's
+original Cash App QR, including its green logo. Click **$tedparkes** inside the
+flyout to open the matching public Cash App page in your browser. Corner
 Spider remains free. It has no payment SDK, login form or automatic payment flow.
 Check the recipient in Cash App before paying. Sharing the code makes the public
 payment profile discoverable; it is not a login credential.

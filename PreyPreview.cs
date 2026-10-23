@@ -21,7 +21,7 @@ namespace CornerSpider {
                 w.Scale=6;w.Fly=new V(560,195);PetCanvas.DrawPrey(d,w);Text(d,"Eight-legged crawler (enlarged)",400,305,16,Colors.White);
                 w.HasFly=false;w.SpawnFly();w.Fly=new V(940,195);PetCanvas.DrawPrey(d,w);Text(d,"Flies remain in the mix",800,305,16,Color.FromRgb(30,50,44));
             }SavePng(v,1200,350,Path.Combine(folder,"portia-prey.png"));
-            v=new DrawingVisual();Mood[] stages={Mood.Notice,Mood.Stalk,Mood.Aim,Mood.Crouch,Mood.Jump,Mood.Eat};
+            v=new DrawingVisual();Mood[] stages={Mood.Notice,Mood.Stalk,Mood.Aim,Mood.Crouch,Mood.Jump,Mood.Struggle};
             using(var d=v.RenderOpen()) {
                 d.DrawRectangle(BPreview("#e6ebe1"),null,new Rect(0,0,1260,790));
                 Text(d,"PORTIA / SPIDER HUNT",20,12,24,Color.FromRgb(30,50,44));

@@ -2,6 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -29,26 +31,29 @@ namespace CornerSpider {
             catch(InvalidOperationException) { return false; }
         }
         static TextBlock Label(string text,double size) { return new TextBlock { Text=text,FontSize=size,TextWrapping=TextWrapping.Wrap,Foreground=new SolidColorBrush(Color.FromRgb(32,55,43)),Margin=new Thickness(0,0,0,5) }; }
-        public static FrameworkElement Create(Window owner,bool diagnostic,out Button qrButton) {
-            var row=new DockPanel();
-            qrButton=new Button { Content=new Image { Source=Qr,Width=112,Height=112,Stretch=Stretch.Uniform },Padding=new Thickness(0),BorderThickness=new Thickness(0),Background=Brushes.White,ToolTip="Enlarge the original Cash App QR code",Margin=new Thickness(0,0,10,0) };
-            System.Windows.Automation.AutomationProperties.SetName(qrButton,"Enlarge Cash App QR for "+CashTag);
-            DockPanel.SetDock(qrButton,Dock.Left);row.Children.Add(qrButton);
-            var words=new StackPanel { Width=158,VerticalAlignment=VerticalAlignment.Center };
-            words.Children.Add(Label("Buy me a coffee / Monster",17));words.Children.Add(Label("Optional support via Cash App",11));
-            var link=new Button { Content=CashTag+"  ↗",HorizontalAlignment=HorizontalAlignment.Left,Padding=new Thickness(9,4,9,4),ToolTip="Open cash.app in your browser" };
+        public static FrameworkElement Create(Window owner,bool diagnostic,out Button supportButton) {
+            var button=new Button { Content="Buy me a coffee / Monster",FontSize=12,Padding=new Thickness(10,6,10,6),Margin=new Thickness(18,0,0,10),VerticalAlignment=VerticalAlignment.Center,ToolTip="Optional support — show the Cash App link and QR" };
+            supportButton=button;
+            System.Windows.Automation.AutomationProperties.SetName(button,"Buy me a coffee / Monster");
+            var popup=new Popup { PlacementTarget=button,Placement=PlacementMode.Bottom,AllowsTransparency=true,StaysOpen=false };
+            button.Tag=popup;
+            var panel=new StackPanel { Width=272 };
+            panel.Children.Add(Label("Buy me a coffee / Monster",19));
+            panel.Children.Add(Label("Optional support. Corner Spider stays free.",12));
+            var code=new Image { Source=Qr,Width=272,Height=272,Stretch=Stretch.Uniform,Margin=new Thickness(0,8,0,12) };
+            System.Windows.Automation.AutomationProperties.SetName(code,"Original Cash App QR for "+CashTag);panel.Children.Add(code);
+            var link=new Button { Content="Open Cash App · "+CashTag+"  ↗",Padding=new Thickness(8,6,8,6),ToolTip=PaymentUrl };
             link.Click+=delegate { if(!OpenPayment(diagnostic) && !diagnostic) MessageBox.Show(owner,"Couldn't open your browser. You can scan the QR or visit "+PaymentUrl,"Cash App"); };
-            words.Children.Add(link);row.Children.Add(words);
-            qrButton.Click+=delegate { if(!diagnostic) ShowQr(owner); };
-            return new Border { Child=row,Padding=new Thickness(8),CornerRadius=new CornerRadius(10),Background=new SolidColorBrush(Color.FromRgb(226,240,220)),Margin=new Thickness(18,0,0,10) };
-        }
-        public static void ShowQr(Window owner) {
-            var window=new Window { Title="Optional support - Cash App",Owner=owner,Width=480,Height=590,ResizeMode=ResizeMode.NoResize,WindowStartupLocation=WindowStartupLocation.CenterOwner,Background=Brushes.White };
-            var panel=new StackPanel { Margin=new Thickness(24) };window.Content=panel;
-            panel.Children.Add(Label("Buy me a coffee / Monster",23));
-            panel.Children.Add(new Image { Source=Qr,Width=400,Height=400,Stretch=Stretch.Uniform });
-            panel.Children.Add(Label(CashTag+" · Optional. Corner Spider stays free.",14));
-            var close=new Button { Content="Done",IsCancel=true,Width=90,Height=32,HorizontalAlignment=HorizontalAlignment.Right };close.Click+=delegate { window.Close(); };panel.Children.Add(close);window.ShowDialog();
+            panel.Children.Add(link);
+            var close=new Button { Content="Close",Margin=new Thickness(0,10,0,0),Padding=new Thickness(12,5,12,5),HorizontalAlignment=HorizontalAlignment.Right };
+            close.Click+=delegate { popup.IsOpen=false;button.Focus(); };panel.Children.Add(close);
+            popup.Child=new Border { Child=panel,Padding=new Thickness(18),CornerRadius=new CornerRadius(9),Background=Brushes.White,BorderBrush=new SolidColorBrush(Color.FromRgb(185,200,185)),BorderThickness=new Thickness(1) };
+            popup.Child.PreviewKeyDown+=delegate(object sender,KeyEventArgs e) { if(e.Key==Key.Escape) { popup.IsOpen=false;button.Focus();e.Handled=true; } };
+            popup.Opened+=delegate { close.Focus(); };
+            button.Click+=delegate { popup.IsOpen=!popup.IsOpen; };
+            owner.Deactivated+=delegate { popup.IsOpen=false; };
+            owner.Closed+=delegate { popup.IsOpen=false; };
+            return button;
         }
     }
 }

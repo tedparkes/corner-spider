@@ -39,12 +39,13 @@ namespace CornerSpider {
             d.PushTransform(new RotateTransform(w.PreyAngle));DrawSmallSpider(d,w.PreySteps,w.PreyWalking,0);d.Pop();d.Pop();d.Pop();
         }
         static void DrawMeal(DrawingContext d,World w) {
-            if(w.State!=Mood.Eat) return;
+            if(!w.HoldingMeal) return;
             if(w.Meal==PreyKind.Fly) { Oval(d,B("#393f32"),0,-29,2.6,2);Line(d,"#6e877a",.5,-2,-30,-5,-31);return; }
-            double fade=Math.Max(0,Math.Min(1,(w.MealDuration-w.StateTime)/.8));
-            d.PushOpacity(fade);d.PushTransform(new TranslateTransform(0,-30.2));
-            d.PushTransform(new RotateTransform(90+Math.Sin(w.StateTime*6)*3));d.PushTransform(new ScaleTransform(.68*World.SmallSpiderSize,.68*World.SmallSpiderSize));
-            DrawSmallSpider(d,0,false,.85);d.Pop();d.Pop();d.Pop();d.Pop();
+            double effort=w.CaptureStruggle;
+            double fade=w.State==Mood.Eat?Math.Max(0,Math.Min(1,(w.MealDuration-w.StateTime)/.8)):1;
+            d.PushOpacity(fade);d.PushTransform(new TranslateTransform(Math.Sin(w.StateTime*19)*1.5*effort,-30.2));
+            d.PushTransform(new RotateTransform(90+Math.Sin(w.StateTime*19)*12*effort));d.PushTransform(new ScaleTransform(.68*World.SmallSpiderSize,.68*World.SmallSpiderSize));
+            DrawSmallSpider(d,w.StateTime*24,effort>.01,.85-.5*effort);d.Pop();d.Pop();d.Pop();d.Pop();
         }
     }
 }

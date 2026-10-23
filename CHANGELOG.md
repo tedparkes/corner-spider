@@ -2,6 +2,35 @@
 
 ## Unreleased
 
+## 1.0.0-rc.10
+
+- Make Portia's hunting attacks fast and nearly straight (130–190 ms, at most
+  five logical pixels of lift). Keep ordinary travel and finger jumps unchanged.
+- Add a short, non-graphic struggle after catching spider prey: Portia braces
+  with her forelegs while the resident wriggles, then settles into eating.
+- Add a saved 0–100% web-visibility slider. 100% retains the existing appearance;
+  it adjusts both webs and jump threads without resetting nest progress.
+- Replace the donation banner with a small "Buy me a coffee / Monster" button.
+  Its dismissible flyout contains the original recognizable QR and Cash App link.
+- Review all twenty skins with a critic. Separate coat density and hair length
+  from leg width; distinguish Portia's angular body and fine brushed limbs, matte
+  Tan/Gray Wall silhouettes, compact Zebra, robust Phidippus and larger Hyllus.
+- Correct selected sex/species markings: Emerald's four spot pairs, Gray Wall
+  male head stripes, Tan male mouth hairs, dark Apache male palps, Bold rear marks,
+  Zebra male jaws and the female Red-backed jumper's posterior stripe.
+- Include species-reference review notes, updated light/dark and size galleries,
+  native settings/flyout captures and expanded behavior/rendering checks.
+
+- Portia steps onto the web beside an anchored end and plucks an existing strand
+  with one foreleg. Remove the two connecting tethers; the other seven feet stay
+  planted, and leg segments keep their fixed lengths.
+- Use five spaced plucks. The resident turns toward each signal, stalks closer
+  in a short advance, then pauses to listen before the next pluck and final ambush.
+- Keep direct foot contact and safe capture on fitted webs, both anchored ends,
+  landscape/portrait displays and all four corners. Retain the RC9 web shape.
+- Add contact, planted-foot, reaction/pause and rendering checks; update the
+  encounter previews and release documentation.
+
 ## 1.0.0-rc.9
 
 - Deepen the resident web's open-edge curve: the middle sits about 30% closer to

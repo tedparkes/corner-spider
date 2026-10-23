@@ -50,6 +50,12 @@ static class PreyTests {
             w.State=Mood.Stalk;w.FlyAge=60;w.Tick(.025,away);Check(!w.HasFly,"uncaught spider expires without an orphan");
         }
         var disabled=New(1);disabled.NextFly=0;for(int f=0;f<100;f++) disabled.Tick(.025,away);Check(!disabled.HasFly,"occasional-prey toggle still suppresses all automatic prey");
+        var struggle=New(8);struggle.SpawnSmallSpider();for(int f=0;f<4000 && struggle.State!=Mood.Struggle;f++) struggle.Tick(.025,away);
+        Check(struggle.State==Mood.Struggle,"captured spider enters a visible struggle");V capture=struggle.Spider;struggle.SpawnFly();
+        Check(struggle.State==Mood.Struggle && struggle.Meal==PreyKind.SmallSpider,"manual feeding cannot replace or interrupt the held capture");
+        double captureStarted=struggle.Clock;for(int f=0;f<100 && struggle.State==Mood.Struggle;f++) struggle.Tick(.025,away);
+        Check(struggle.State==Mood.Eat && struggle.Clock-captureStarted>=World.StruggleDuration && struggle.Clock-captureStarted<World.StruggleDuration+.05 && (struggle.Spider-capture).Length==0,"struggle has a short bounded duration and settles in place");
+        struggle.GoHome();Check(!struggle.HoldingMeal && struggle.CaptureStruggle==0,"calling home clears the capture pose");
         disabled.Feed();disabled.GoHome();Check(!disabled.HasFly,"returning home clears spider prey");
         var layout=New(5);layout.ConfigureDisplays(new[]{new Area(0,0,1600,1000,1),new Area(1600,0,1800,1200,1.5)},1);layout.Spider=new V(2400,600);layout.SpawnSmallSpider();layout.ConfigureDisplays(new[]{new Area(0,0,1600,1000,1)},0);
         for(int f=0;f<100;f++) {layout.Tick(.025,away);Check(layout.InsideAny(layout.Fly),"prey remains on a display after monitor removal");}

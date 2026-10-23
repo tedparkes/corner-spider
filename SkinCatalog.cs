@@ -8,8 +8,10 @@ namespace CornerSpider {
         public string Body="#293034",BodyShade="#090c10",Head="#30373a",HeadShade="#0b1014";
         public string Legs="#343b3c",LegShade="#0b1012",Hair="#959c94",Mark="#eeeadd";
         public string Mouth="#39b6a2",MouthShade="#063235",Palps="#e7e4d8";
+        public string HeadHair,LegFur;
         public double BodyWidth=14,BodyLength=17,HeadWidth=1,LegWidth=1;
         public double HeadLength=1,HeadRear=1,BodyTaper=.08,FrontLeg=1,SideLeg=1,RearLeg=1,Stance=1,Chelicera=1;
+        public double CoatDensity=1,HairLength=1,LegHair=1,FrontBulk=1,MiddleEye=.65;
         public bool SpiderPrey;
         public bool Male { get { return Sex=="Male"; } }
         public double PalpWidth { get { return (Male?2.25:1.25)*HeadWidth; } }
@@ -53,6 +55,20 @@ namespace CornerSpider {
         var apacheFemale=apache.Variant("ApacheFemale","Apache - female","Female");apacheFemale.BodyWidth=15.5;apacheFemale.BodyLength=19;apacheFemale.BodyTaper=.16;apacheFemale.Pattern="ApacheStripe";apacheFemale.FrontLeg=.96;apacheFemale.Description="Broad orange-red abdomen with a dark median band, orange front body and green chelicerae.";
         var portia=new SkinProfile { Id="PortiaLabiata",SpiderPrey=true,Name="Portia labiata - female",Scientific="Portia labiata",Sex="Female",Shape="Tufted",Pattern="Portia",Description="Small angular body, long slender fringed legs, mottled brown coat and the female's pale moustache. Hunts small spiders as well as flies.",Body="#8c7151",BodyShade="#372a24",Head="#8b6240",HeadShade="#322720",Legs="#806143",LegShade="#30251e",Hair="#c5b18d",Palps="#e2d5b7",Mark="#c6b494",Mouth="#69432d",MouthShade="#211914",BodyWidth=10.3,BodyLength=17.5,BodyTaper=.2,HeadWidth=.8,HeadLength=.92,HeadRear=.63,LegWidth=.49,FrontLeg=1.08,SideLeg=1.32,RearLeg=1.5,Stance=1.11 };
         var hyllus=new SkinProfile { Id="HyllusDiardiGreen",Name="Hyllus diardi - green female",Scientific="Hyllus diardi",Sex="Female",Shape="Heavy",Pattern="Hyllus",Description="Broad head, long full abdomen, eye tufts and chevrons. Requested stylized green palette; wild females are normally brown/yellow, not bright green.",Body="#83a853",BodyShade="#344a27",Head="#6e8b40",HeadShade="#26331e",Legs="#67804a",LegShade="#2b3824",Hair="#c3cd8d",Mark="#d4d4a3",Palps="#dbd8ae",Mouth="#8a8146",MouthShade="#353420",BodyWidth=16,BodyLength=23,BodyTaper=.05,HeadWidth=1.07,HeadLength=.96,HeadRear=1.04,LegWidth=1.03,FrontLeg=.9,SideLeg=1.25,RearLeg=1.31,Stance=1.05 };
+        // Coat density and silhouette hairs are independent of limb width: fine
+        // legs must not disappear inside the same furry outline as a Phidippus.
+        foreach(var skin in new[]{zebra,zebraMale}) { skin.CoatDensity=.58;skin.HairLength=.40;skin.LegHair=.35;skin.FrontBulk=.83; }
+        foreach(var skin in new[]{tan,tanMale,wall,wallMale}) { skin.CoatDensity=.65;skin.HairLength=.50;skin.LegHair=.38;skin.FrontBulk=.86; }
+        tan.BodyWidth=11.7;tan.BodyLength=20;tanMale.BodyWidth=10;tanMale.BodyLength=18.5;
+        wall.BodyWidth=11.3;wall.BodyLength=20;wallMale.BodyWidth=9.8;wallMale.BodyLength=18.5;
+        wallMale.Head="#454d43";wallMale.HeadShade="#1b241e";
+        foreach(var skin in new[]{pantropical,pantropicalFemale}) { skin.CoatDensity=.68;skin.HairLength=.52;skin.LegHair=.48;skin.FrontBulk=.86; }
+        foreach(var skin in new[]{emerald,emeraldMale}) { skin.CoatDensity=.75;skin.HairLength=.58;skin.LegHair=.55;skin.Legs="#775d3e";skin.LegShade="#2d251c"; }
+        apache.Palps="#29231f";
+        foreach(var skin in new[]{red,redFemale,apache,apacheFemale}) { skin.HeadHair="#625a52";skin.LegFur="#625a52"; }
+        portia.CoatDensity=.40;portia.HairLength=.48;portia.LegHair=.24;portia.FrontBulk=.70;portia.MiddleEye=1.2;
+        portia.BodyWidth=8.5;portia.BodyLength=16;portia.BodyTaper=.24;
+        portia.Description="Angular high front body, narrow mottled abdomen and very fine, irregularly brushed legs. Large side eyes and a pale female moustache. Hunts spiders and flies.";
         return new[]{regal,regalMale,boldFemale,bold,zebra,zebraMale,tan,tanMale,redFemale,red,emerald,emeraldMale,wall,wallMale,pantropicalFemale,pantropical,apacheFemale,apache,portia,hyllus};
         }
         public static SkinProfile Get(string id) { foreach(var skin in All) if(skin.Id==id) return skin;return All[0]; }

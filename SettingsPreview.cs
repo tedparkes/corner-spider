@@ -25,7 +25,7 @@ namespace CornerSpider {
         bool disposed;
         readonly DispatcherTimer timer=new DispatcherTimer { Interval=TimeSpan.FromMilliseconds(50) };
         public string Species="Regal";
-        public double PetScale=1,Angle=180;
+        public double PetScale=1,Angle=180,WebVisibility=1;
         public bool Enlarged=true,Dark=true;
         public bool Running { get { return timer.IsEnabled; } }
         public SettingsPreview() {
@@ -49,6 +49,7 @@ namespace CornerSpider {
             // whole retreat without moving its attachments away from the corner.
             double silkFit=Math.Max(0,Math.Min(170,Math.Min(ActualWidth*.42,ActualHeight*.46)))/230;
             double silkScale=silkFit*(Enlarged?1:Math.Max(.2,Math.Min(1.8,PetScale))/1.8);
+            silkPreview.WebVisibility=WebVisibility;
             if(silkScale>0) {
                 d.PushTransform(new TranslateTransform(ActualWidth-400*silkScale,0));
                 d.PushTransform(new ScaleTransform(silkScale,silkScale));

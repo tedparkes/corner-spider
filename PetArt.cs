@@ -124,23 +124,25 @@ namespace CornerSpider {
             FingerArt(w.FingerTone);d.DrawImage(fingerImage.Image,fingerImage.Bounds);d.Pop();d.Pop();d.Pop();d.Pop();
         }
         static double bEase(double t) { return t*(3-2*t); }
-        static string FurColor(string species) { return SkinCatalog.Get(species).Hair; }
+        static string FurColor(string species) { var skin=SkinCatalog.Get(species);return skin.LegFur??skin.Hair; }
         static void Coat(DrawingContext d,string species,double rx,double ry,double cy,int seed,int count) {
             var random=new Random(seed);
             var skin=SkinCatalog.Get(species);string baseColor=cy>0?skin.Body:skin.Head,shade=cy>0?skin.BodyShade:skin.HeadShade;
-            string[] colors={"#90"+shade.Substring(1),"#90"+baseColor.Substring(1),"#60"+skin.Hair.Substring(1),"#a0"+baseColor.Substring(1),"#60"+shade.Substring(1)};
+            string hair=cy>0?skin.Hair:skin.HeadHair??skin.Hair;
+            string[] colors={"#90"+shade.Substring(1),"#90"+baseColor.Substring(1),"#60"+hair.Substring(1),"#a0"+baseColor.Substring(1),"#60"+shade.Substring(1)};
             // Dense, low-contrast overlapping setae, with only occasional guard hairs.
             // The previous evenly spaced bright strokes made the coat look like wire.
-            for(int i=0;i<count*4;i++) {
+            for(int i=0;i<count*4*skin.CoatDensity;i++) {
                 double a=random.NextDouble()*Math.PI*2,r=Math.Sqrt(random.NextDouble())*.98;
-                double x=Math.Cos(a)*rx*r,y=cy+Math.Sin(a)*ry*r,len=.35+random.NextDouble()*1.25;
+                double x=Math.Cos(a)*rx*r,y=cy+Math.Sin(a)*ry*r,len=(.35+random.NextDouble()*1.25)*skin.HairLength*(cy<0 && skin.Shape=="Heavy"?.55:1);
                 double dx=x/rx*.75+(random.NextDouble()-.5)*.65,dy=.4+(y-cy)/ry*.5;
                 Line(d,colors[i%colors.Length],.15,x,y,x+dx*len,y+dy*len);
             }
-            for(int i=0;i<240;i++) {
-                double a=i*Math.PI*2/240+(random.NextDouble()-.5)*.05;
-                double x=Math.Cos(a)*rx*.96,y=cy+Math.Sin(a)*ry*.96,len=.5+random.NextDouble()*2.3;
-                Line(d,i%13==0?FurColor(species):colors[i%colors.Length],.18,x,y,x+Math.Cos(a)*len,y+Math.Sin(a)*len);
+            int fringe=(int)(240*skin.CoatDensity);
+            for(int i=0;i<fringe;i++) {
+                double a=i*Math.PI*2/fringe+(random.NextDouble()-.5)*.05;
+                double x=Math.Cos(a)*rx*.96,y=cy+Math.Sin(a)*ry*.96,len=(.5+random.NextDouble()*2.3)*skin.HairLength*(cy<0 && skin.Shape=="Heavy"?.45:1);
+                Line(d,i%13==0?hair:colors[i%colors.Length],.18,x,y,x+Math.Cos(a)*len,y+Math.Sin(a)*len);
             }
         }
         static void TuftSpot(DrawingContext d,double x,double y,double rx,double ry,string color,int seed) {
@@ -161,10 +163,10 @@ namespace CornerSpider {
                 d.PushTransform(new TranslateTransform(0,22));
                 d.PushTransform(new ScaleTransform(rx/14,ry/17));
                 d.PushTransform(new TranslateTransform(0,-22));
-                Geometry shape=BodyShape(skin);d.DrawGeometry(Glow(skin.Body,skin.BodyShade),null,shape);
+                Geometry shape=BodyShape(skin);d.DrawGeometry(SurfaceShade(skin,skin.Body,skin.BodyShade),null,shape);
                 BodyFringe(d,skin);d.PushClip(shape);Coat(d,species,14,17,22,21,450);
                 if(skin.Pattern=="Zebra") {
-                    for(int i=0;i<3;i++) Curve(d,skin.Mark,3.4,new Point(-12,10+i*9),new Point(-5,16+i*9),new Point(5,16+i*9),new Point(12,10+i*9));
+                    for(int i=0;i<3;i++) for(int side=-1;side<=1;side+=2) Curve(d,skin.Mark,2.7,new Point(side*(11-i*.3),10+i*9),new Point(side*8,13+i*9),new Point(side*5,16+i*9),new Point(side*(.7+i*.35),14+i*9));
                 } else if(skin.Pattern=="Tan") {
                     for(int i=0;i<4;i++) {
                         Curve(d,"#584f40",2.5,new Point(-11,9+i*7),new Point(-6,10+i*7),new Point(-4,16+i*7),new Point(0,16+i*7));
@@ -180,13 +182,15 @@ namespace CornerSpider {
                 } else if(skin.Pattern=="Emerald") {
                     for(int side=-1;side<=1;side+=2) {
                         Curve(d,skin.Mark,1.8,new Point(side*10,7),new Point(side*16,18),new Point(side*13,28),new Point(side*7,36));
-                        for(int i=0;i<3;i++) TuftSpot(d,side*(7-i),13+i*9,1.6,1.3,skin.Mark,7+i);
+                        for(int i=0;i<4;i++) TuftSpot(d,side*(i==0?7:i==1?8:i==2?7:4.8),10+i*7.6,i==2?2.7:1.4,1.1,skin.Mark,7+i);
+                        TuftSpot(d,side*12,22,1.1,1.5,"#b87d3c",17);
                     }
                 } else if(skin.Pattern=="Spots" || skin.Pattern=="Regal") {
                     string color=skin.Mark;
                     if(skin.Pattern=="Regal") Curve(d,color,2.8,new Point(-11,9),new Point(-5,5),new Point(5,5),new Point(11,9));
                     TuftSpot(d,0,18,3.8,2.7,color,2);TuftSpot(d,0,20,2.1,2.2,color,22);
-                    TuftSpot(d,-6,31,2.9,1.7,color,3);TuftSpot(d,6,31,2.9,1.7,color,4);
+                    double rearHeight=skin.Pattern=="Spots"?.85:1.7;
+                    TuftSpot(d,-6,31,3.0,rearHeight,color,3);TuftSpot(d,6,31,3.0,rearHeight,color,4);
                 }
                 ExtraMarkings(d,skin);d.Pop();
                 Oval(d,B("#18181a"),-1.4,39,1,1.3);Oval(d,B("#18181a"),1.4,39,1,1.3);
@@ -203,7 +207,7 @@ namespace CornerSpider {
             DrawFinger(d,w);
             if(w.HasFly) DrawPrey(d,w);
             if(w.SilkOpacity>0) {
-                d.PushOpacity(w.SilkOpacity);SilkLine(d,.75*w.BodyScale,w.SilkStart,w.SilkEnd);d.Pop();
+                d.PushOpacity(w.SilkOpacity*w.WebVisibility);SilkLine(d,.75*w.BodyScale,w.SilkStart,w.SilkEnd);d.Pop();
             }
             DrawSpider(d,w,Species);
             if(w.UnderNestSilk) DrawHammock(d,w,true);d.Pop();d.Pop();
@@ -252,20 +256,27 @@ namespace CornerSpider {
                     }shape.Freeze();
                     c.DrawGeometry(Glow(skin.Legs,skin.LegShade),null,shape);
                     var random=new Random(731+(int)(width*10));
-                    for(int i=0;i<180;i++) {
+                    for(int i=0;i<180*skin.CoatDensity;i++) {
                         double y=random.NextDouble()*16,radius=width*(.22+.24*Math.Sin(y/16*Math.PI));
                         double x=(random.NextDouble()*2-1)*radius;
                         bool pale=(cuff && y>9.5 && y<13.5) || ((skin.Pattern=="Zebra" || skin.Pattern=="Portia") && y>6 && y<10);
-                        string color=pale?skin.Palps:i%7==0?skin.Hair:"#90"+skin.LegShade.Substring(1);
-                        double hairLength=.5+random.NextDouble()*(pale?2.1:1.2);
+                        string color=pale?skin.Palps:i%7==0?FurColor(species):"#90"+skin.LegShade.Substring(1);
+                        double hairLength=(.5+random.NextDouble()*(pale?2.1:1.2))*skin.LegHair;
                         Line(c,color,.16,x,y,x+Math.Sign(x)*hairLength*.65,y+hairLength);
                     }
-                    for(int i=0;i<70;i++) {
+                    for(int i=0;i<70*skin.CoatDensity;i++) {
                         double y=random.NextDouble()*16,sign=i%2==0?-1:1,radius=width*(.22+.24*Math.Sin(y/16*Math.PI));
                         bool pale=cuff && y>9 && y<13;
-                        double len=.4+random.NextDouble()*(skin.Pattern=="Portia" && y>7 && y<10?3.6:pale?1.6:1.0);
+                        double len=(.4+random.NextDouble()*(pale?1.6:1.0))*skin.LegHair;
                         Line(c,pale?FurColor(species):i%8==0?"#7b6e63":"#70242424",.16,sign*radius,y,sign*(radius+len),y+len*.4);
                     }
+                // Portia has isolated dark brushes, with fine exposed shafts between them.
+                    if(skin.Pattern=="Portia" && cuff) for(int i=0;i<25;i++) {
+                        double y=8.1+random.NextDouble()*2.4,side=i%2==0?-1:1;
+                        double radius=width*.45,len=.8+random.NextDouble()*2.6;
+                        Line(c,i%5==0?skin.Hair:skin.LegShade,.20,side*radius,y,side*(radius+len),y+len*.35);
+                    }
+                    if(skin.Pattern=="Emerald" && cuff) Curve(c,skin.LegShade,1,new Point(-width*.4,8),new Point(-width*.1,9),new Point(width*.2,9),new Point(width*.4,8));
                 }g.Freeze();segments[key]=g;
             }
             d.PushTransform(new TranslateTransform(from.X,from.Y));
@@ -275,11 +286,11 @@ namespace CornerSpider {
         static void DrawLeg(DrawingContext d,World w,string species,int side,int leg) {
             LegPose p=SpiderPose.Leg(w,side,leg,SkinCatalog.Get(species));
             V patella=p.Knee+(p.Ankle-p.Knee)*.18;
-            bool front=leg==0;
+            bool front=leg==0;double bulk=front?SkinCatalog.Get(species).FrontBulk:1;
             Segment(d,species,p.Root,p.Hip,3);
-            Segment(d,species,p.Hip,p.Knee,front?6.8:4.2,front);
-            Segment(d,species,p.Knee,patella,front?5.8:3.6);
-            Segment(d,species,patella,p.Ankle,front?5.1:3.0,front);
+            Segment(d,species,p.Hip,p.Knee,front?6.8*bulk:4.2,front);
+            Segment(d,species,p.Knee,patella,front?5.8*bulk:3.6);
+            Segment(d,species,patella,p.Ankle,front?5.1*bulk:3.0,front);
             Segment(d,species,p.Ankle,p.Toe,front?1.9:1.6);
             Segment(d,species,p.Toe,p.Tip,front?1.1:.9);
             // Small paired claws, rather than round cartoon shoes.
@@ -298,24 +309,32 @@ namespace CornerSpider {
                 d.PushTransform(new ScaleTransform(skin.HeadWidth,skin.HeadLength));
                 var shape=new StreamGeometry();using(var p=shape.Open()) {
                     p.BeginFigure(new Point(-12,-23),true,true);
-                    p.BezierTo(new Point(-18,-20),new Point(-17,-3),new Point(-12,5),true,false);
-                    p.BezierTo(new Point(-7*skin.HeadRear,11),new Point(7*skin.HeadRear,11),new Point(12,5),true,false);
-                    p.BezierTo(new Point(17,-3),new Point(18,-20),new Point(12,-23),true,false);
+                    if(skin.Shape=="Tufted") { p.LineTo(new Point(-14,-15),true,false);p.LineTo(new Point(-12,-2),true,false);p.LineTo(new Point(-7,7),true,false); }
+                    else p.BezierTo(new Point(-18,-20),new Point(-17,-3),new Point(-12,5),true,false);
+                    p.BezierTo(new Point(-7*skin.HeadRear,11),new Point(7*skin.HeadRear,11),skin.Shape=="Tufted"?new Point(7,7):new Point(12,5),true,false);
+                    if(skin.Shape=="Tufted") { p.LineTo(new Point(12,-2),true,false);p.LineTo(new Point(14,-15),true,false);p.LineTo(new Point(12,-23),true,false); }
+                    else p.BezierTo(new Point(17,-3),new Point(18,-20),new Point(12,-23),true,false);
                     p.BezierTo(new Point(7,-25),new Point(-7,-25),new Point(-12,-23),true,false);
-                }shape.Freeze();d.DrawGeometry(Glow(skin.Head,skin.HeadShade),null,shape);
+                }shape.Freeze();d.DrawGeometry(SurfaceShade(skin,skin.Head,skin.HeadShade),null,shape);
+                if(skin.Shape=="Tufted") d.PushClip(shape);
                 Coat(d,species,15,15,-7,91,460);
+                if(skin.Shape=="Tufted") d.Pop();
                 if(skin.Pattern=="Apache" || skin.Pattern=="ApacheStripe") Oval(d,B("#29221e"),0,-18,13,7);
                 if(skin.Pattern=="Stripe") Line(d,skin.Mark,3.6,0,6,0,-22);
-                if(skin.Pattern=="Wall" || skin.Pattern=="Stripe" || skin.Pattern=="Zebra" || skin.Pattern=="Emerald")
+                if(skin.Pattern=="Wall" || skin.Pattern=="WallMale" || skin.Pattern=="Stripe" || skin.Pattern=="Zebra" || skin.Pattern=="Emerald")
                     for(int side=-1;side<=1;side+=2) Curve(d,skin.Mark,skin.Pattern=="Zebra"?2:1.4,new Point(side*10,4),new Point(side*16,-3),new Point(side*16,-14),new Point(side*10,-23));
                 HeadDetails(d,skin);
                 for(int side=-1;side<=1;side+=2) {
-                    Oval(d,Glow(skin.Mouth,skin.MouthShade),side*3.1,-23.2-2.5*skin.Chelicera,2.8,4.4*skin.Chelicera);
+                    if(skin.Pattern=="Zebra" && skin.Male) {
+                        var jaw=new StreamGeometry();using(var j=jaw.Open()) { j.BeginFigure(new Point(side*1.2,-23),true,true);j.QuadraticBezierTo(new Point(side*1.5,-35),new Point(side*3.5,-36.5),true,false);j.QuadraticBezierTo(new Point(side*6,-30),new Point(side*5,-23),true,false); }jaw.Freeze();d.DrawGeometry(Glow("#584337","#1e1816"),null,jaw);
+                    } else Oval(d,Glow(skin.Mouth,skin.MouthShade),side*3.1,-23.2-2.5*skin.Chelicera,2.8,4.4*skin.Chelicera);
                     for(int i=0;i<17;i++) Line(d,i%3==0?"#80"+skin.Mouth.Substring(1):"#50"+skin.MouthShade.Substring(1),.16,side*3.1-1.6,-29+i*.39,side*3.1+1.5,-29.4+i*.39);
+                    if(skin.Pattern=="WallMale") Line(d,skin.Mark,.8,side*.5,-25.5,side*4,-29.5);
+                    if(skin.Pattern=="Tan" && skin.Male) for(int hair=0;hair<21;hair++) { double x=side*(1.5+hair*.18);Line(d,skin.Palps,.2,x,-25,x+side*.25,-28.5-(hair%4)*.3); }
                     // Two large anterior median eyes; three smaller pairs surround them.
                     Eye(d,side*4.4,-20.9,3.7);
                     Eye(d,side*11.3,-19.8,2.1);
-                    Eye(d,side*13.3,-10.2,.65);
+                    Eye(d,side*13.3,-10.2,skin.MiddleEye);
                     Eye(d,side*12,-1.6,1.35);
                     for(int i=0;i<32;i++) {
                         double x=side*(1+i*.38),y=-17.1+Math.Abs(16-i)*.035;
