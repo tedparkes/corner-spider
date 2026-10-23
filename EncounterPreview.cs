@@ -25,7 +25,7 @@ namespace CornerSpider {
             throw new InvalidOperationException("Encounter preview did not reach panel "+panel);
         }
         public static void RenderEncounterPreview(string folder) {
-            string[] labels={"Weaving the larger frame","Adding the cross threads","The resident waits at the center","A quiet approach to the edge","Plucking the outer anchor","Repeating the useful plucks","The resident comes closer","The web-side ambush","Meal; silk remains until departure"};
+            string[] labels={"Anchors, frame and radial spokes","Weaving the curved capture spiral","The resident waits at the center","A quiet approach to the edge","Plucking the outer anchor","Repeating the useful plucks","The resident comes closer","The web-side ambush","Meal; silk remains until departure"};
             var image=new DrawingVisual();using(var d=image.RenderOpen()) {
                 d.DrawRectangle(BPreview("#e6ebe1"),null,new Rect(0,0,1260,1210));
                 Text(d,"PORTIA / A CORNER-WEB ENCOUNTER",20,14,24,Color.FromRgb(30,50,44));
@@ -49,6 +49,19 @@ namespace CornerSpider {
                 d.DrawRectangle(BPreview("#24313a"),null,new Rect(0,0,800,800));
                 var bitmap=new RenderTargetBitmap(800,800,96,96,PixelFormats.Pbgra32);bitmap.Render(detail);d.DrawImage(bitmap,new Rect(0,0,800,800));
             }SavePng(detailImage,800,800,Path.Combine(folder,"portia-web-edge.png"));
+            var resting=GuestScene(2);var contrast=new DrawingVisual();using(var d=contrast.RenderOpen()) {
+                for(int side=0;side<2;side++) {
+                    bool dark=side==0;d.PushTransform(new TranslateTransform(side*600,0));
+                    d.DrawRectangle(BPreview(dark?"#24313a":"#e7eadd"),null,new Rect(0,0,600,650));
+                    Text(d,"Resident web / "+(dark?"dark":"light")+" desktop",20,18,22,dark?Colors.White:Color.FromRgb(30,50,44));
+                    d.PushTransform(new TranslateTransform(22,75));
+                    double zoom=530/(resting.GuestWebExtent+25*resting.GuestScale);d.PushTransform(new ScaleTransform(zoom,zoom));
+                    d.PushTransform(new TranslateTransform(-resting.GuestCorner.X,-resting.GuestCorner.Y));
+                    d.PushTransform(new ScaleTransform(resting.GuestInward.X>0?1:-1,resting.GuestInward.Y>0?1:-1,resting.GuestCorner.X,resting.GuestCorner.Y));
+                    PetCanvas.DrawGuestWeb(d,resting);PetCanvas.DrawPrey(d,resting);d.Pop();d.Pop();d.Pop();d.Pop();
+                    Text(d,"Edge anchors, radial spokes and curved silk",20,607,17,dark?Colors.White:Color.FromRgb(30,50,44));d.Pop();
+                }
+            }SavePng(contrast,1200,650,Path.Combine(folder,"prey-web-light-dark.png"));
             image=new DrawingVisual();using(var d=image.RenderOpen()) {
                 d.DrawRectangle(BPreview("#e6ebe1"),null,new Rect(0,0,1400,1340));Text(d,"SPECIES PERSONALITIES / SOLO DISPLAY ADAPTATIONS",20,14,24,Color.FromRgb(30,50,44));
                 for(int i=0;i<SkinCatalog.All.Length;i++) {
@@ -78,7 +91,32 @@ namespace CornerSpider {
             var qrBounds=panel.SupportQrButton.TransformToAncestor(root).TransformBounds(new Rect(new Point(),panel.SupportQrButton.RenderSize));
             Check(qrBounds.Left>=0 && qrBounds.Right<=root.ActualWidth && qrBounds.Bottom<=root.ActualHeight,"support QR stays inside compact settings bounds");
             Check(panel.SupportQrButton.ActualWidth>=112 && panel.SupportQrButton.ActualHeight>=112,"compact settings preserve the original QR at readable size");panel.Close();
-            RenderEncounterPreview(folder);
+            CheckGuestSilkRendering();RenderEncounterPreview(folder);
+        }
+        static void CheckGuestSilkRendering() {
+            var w=GuestScene(2);var visual=new DrawingVisual();
+            using(var d=visual.RenderOpen()) { PetCanvas.DrawGuestWeb(d,w); }
+            int count=PetCanvas.GuestSilkBuilds(w);
+            for(int i=0;i<180;i++) using(var d=visual.RenderOpen()) { PetCanvas.DrawGuestWeb(d,w); }
+            Check(count==1 && PetCanvas.GuestSilkBuilds(w)==count,"completed orb web reuses one generated silk image across 180 redraws");
+            w.GuestOpacity=.5;using(var d=visual.RenderOpen()) { PetCanvas.DrawGuestWeb(d,w); }
+            Check(PetCanvas.GuestSilkBuilds(w)==count,"departure fade reuses the web artwork without rebuilding geometry");
+            w.GuestOpacity=1;w.GuestProgress=.35;using(var d=visual.RenderOpen()) { PetCanvas.DrawGuestWeb(d,w); }
+            Check(PetCanvas.GuestSilkBuilds(w)==count+1,"construction progress replaces the single retained silk layer");
+            w.GuestProgress=1;var bounds=new DrawingVisual();using(var d=bounds.RenderOpen()) {
+                d.PushTransform(new TranslateTransform(10,10));double zoom=370/w.GuestWebExtent;d.PushTransform(new ScaleTransform(zoom,zoom));
+                d.PushTransform(new TranslateTransform(-w.GuestCorner.X,-w.GuestCorner.Y));
+                d.PushTransform(new ScaleTransform(w.GuestInward.X>0?1:-1,w.GuestInward.Y>0?1:-1,w.GuestCorner.X,w.GuestCorner.Y));
+                PetCanvas.DrawGuestWeb(d,w);d.Pop();d.Pop();d.Pop();d.Pop();
+            }
+            var bitmap=new RenderTargetBitmap(400,400,96,96,PixelFormats.Pbgra32);bitmap.Render(bounds);
+            byte[] pixels=new byte[400*400*4];bitmap.CopyPixels(pixels,1600,0);int visible=0,outside=0;
+            for(int y=0;y<400;y++) for(int x=0;x<400;x++) if(pixels[(y*400+x)*4+3]>8) { visible++;if(x<8 || y<8 || x>382 || y>382) outside++; }
+            Check(visible>3000,"rendered orb has clearly visible spoke and capture silk");
+            Check(outside==0 && pixels[(399*400+399)*4+3]==0,"rendered orb preserves transparency outside the reserved corner");
+            int builds=PetCanvas.GuestSilkBuilds(w);
+            for(int i=0;i<=360;i++) { w.GuestProgress=i/360.0;using(var d=visual.RenderOpen()) { PetCanvas.DrawGuestWeb(d,w); } }
+            Check(PetCanvas.GuestSilkBuilds(w)-builds<=14,"full construction batches image updates instead of allocating a bitmap per strand or frame");
         }
     }
 }

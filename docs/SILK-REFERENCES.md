@@ -31,10 +31,14 @@ reproductive state and available attachment surfaces can matter as much as speci
 The app's variations should not be used to identify a real spider.
 
 The little web resident remains a **generic prey spider**, not a named species.
-Its capture web is now an irregular network with multiple edge attachments, rather
-than concentric polygons. The same connected geometry controls thread construction,
-resident movement and Portia's encounter. Its build/wait timing is an app design
-choice; it is distinct from Portia's own sleeping platform.
+Its capture web uses a recognizable orb-style illustration: five desktop-edge
+attachments, an uneven outer frame, sixteen radial spokes and a continuous curved
+capture spiral winding toward the hub. Slightly varied spacing and inward sag
+avoid the former crossed-line network. This is an artistic choice for the generic
+resident, not a claim about a specific prey species. The same curved geometry
+controls silk construction and the builder's movement. The 3-4 minute build and
+1-2 minute wait remain app design choices; this is separate from Portia's own
+sleeping platform.
 
 For readability, the resident's web is now three times its earlier linear span
 (564 logical pixels across at 100% pet size), fitted down only when the selected

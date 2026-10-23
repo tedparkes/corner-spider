@@ -1,0 +1,11 @@
+Completed web (cached at display resolution)
+PASS: full orb web on real transparent overlays, forced 30 fps redraws.
+Seconds=16.0 CPU(one logical core)=12.48% WorkingMiB=169.9 PrivateMiB=205.7 PrivateDeltaMiB=1.7
+GDI=116 -> 116 USER=34 -> 34
+Disposed=True Overlays=0 CursorHelper=0
+
+Construction (batched image updates and retained fresh silk)
+PASS: building orb web on real transparent overlays, forced 30 fps redraws.
+Seconds=16.0 CPU(one logical core)=9.45% WorkingMiB=169.7 PrivateMiB=204.3 PrivateDeltaMiB=1.8
+GDI=116 -> 116 USER=34 -> 34
+Disposed=True Overlays=0 CursorHelper=0

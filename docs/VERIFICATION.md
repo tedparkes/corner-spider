@@ -1,63 +1,66 @@
-# Verification for 1.0.0-rc.5
+# Verification for 1.0.0-rc.6
 
-Local Windows checks, October 22, 2026. The previous RC4 working project and
-release packages were preserved. No public GitHub release was published.
+Local Windows verification, October 22, 2026. The RC5 working folder and release
+packages were preserved. The local Git repository is prepared for release;
+no public GitHub release was published.
 
-## Behavior checked
+## Behavior and appearance
 
-The Windows build and all deterministic suites pass, including **220,653 new
-finger-boarding assertions**. See [behavior output](behavior-checks.txt).
+The Windows build and deterministic suites pass, including 178,137 new orb-web
+checks and 48 complete Portia web encounters. See [behavior output](behavior-checks.txt).
+The new checks cover connected curved spiral segments, joins on real radial
+spokes, the builder following the visible strand, smooth construction, the hub
+and Portia's plucking anchor, and bounds at 20-180% size and 100-200% simulated DPI.
+Existing patrol reservation, single-prey limits, plucking/luring, capture and
+fade-after-departure checks remain intact.
 
-- Real invitation, preparation, jump and touchdown sequences at 20%, 100% and
-  180% pet sizes, 100%, 150% and 200% simulated DPI, both finger orientations
-  and 16/33/100 ms frame steps.
-- Different surface spots for repeated invitations from the same approach.
-  Base, upper and middle approaches land on the surface. Only exposed-tip-side
-  approaches can dangle, and those can also choose a surface landing.
-- A committed destination through preparation and flight, correct facing,
-  landing compression, continuous adjustment for small pointer drift, gentle
-  carrying, interruptions, click departures and fast escapes.
-- Existing catch/climb leg-contact, suspension, walking, waves and cleanup
-  checks. Catch fixtures now start on the exposed tip side, retaining the
-  existing attachment assertions. The old all-direction dangle expectation was
-  replaced with assertions for the requested side-aware boarding behavior.
+Inspected the [dark/light web preview](prey-web-light-dark.png),
+[edge-plucking detail](portia-web-edge.png) and
+[nine-stage encounter](portia-web-encounter.png). The generic resident builds an
+orb-style illustration; no particular prey species or exact natural construction
+sequence is claimed. Both the sleeping retreat and resident web remain distinct.
 
-The full suite still covers 4,574 pounce hunts, 48 complete resident-web hunts,
-all twenty skins, persistence, monitor gaps, nest entry and web reservation/fade.
+## Windows and resources
 
-## Windows and visual checks
+The Windows diagnostic checks actual transparent, nonactivating, click-through
+overlays on both connected monitors, settings, cursor restoration, render bounds,
+resource handles, timer cleanup and process shutdown. The web-specific checks
+verify retained artwork across redraws and fading, bounded image updates while
+building, visible silk and transparency outside the web footprint.
+See [native checks](windows-checks.txt).
 
-The native run passes **651 assertions, zero failures**, covering transparency,
-nonactivation, OS click-through, both actual monitor overlays, seam crossing,
-settings, cursor restoration, timer and native resource cleanup.
-See [native output](windows-checks.txt).
+The completed silk is rendered from procedural vectors into one display-sized
+image. During growth, newly completed strands reuse frozen vector artwork and
+join the image in batches. Only the currently growing strand and local plucking
+ripple need fresh geometry. Old build steps are not retained; temporary preview
+worlds use weak cache keys.
 
-Inspected [actual rendered boarding sequences](finger-boarding.png), including
-base-side and overhead surface landings, fingertip catches and mirrored catches.
-These use the same behavior and WPF renderer as the desktop pet.
+[Live web load samples](web-load-checks.txt) measure a completed web and active
+construction on the real transparent overlays at forced 30 fps. These short
+samples include the pet and both monitor overlays, and are not a long-term leak
+test or a guaranteed idle CPU figure. The initial uncached completed-web sample
+used 32.88% of one logical CPU; generated-image caching reduced the equivalent
+sample to 12.48%. Construction caching was subsequently batched and its fresh
+strands retained to avoid a new bitmap or static curve allocation on every frame.
+The final construction sample used 9.45% of one logical CPU and 169.7 MiB working
+set over 16 seconds; private memory rose 1.8 MiB, with GDI handles 116 to 116 and
+USER handles 34 to 34. Closing the harness removed all overlays and its cursor
+helper. These figures are short local measurements, not hardware-independent
+performance promises.
 
-The render-heavy native diagnostic's final 16.1-second sample measured 10.90% of
-one logical CPU, 472.2 MiB working set and 595.2 MiB private memory (31.6 MiB below
-the sample start, after bulk image generation). GDI handles fell 782 to 730 and
-USER handles changed 37 to 38 after 60 icon replacements. This is a short
-diagnostic workload, not a normal pet-session benchmark or long-term leak test.
+## Release and manual checks
 
-## Packages and manual follow-up
+The package report records ZIP entry checks, extracted-source builds, matching
+portable artwork and the local Git commit/tag. Hosted GitHub CI remains untested
+until publication. All assets remain procedural/local with no downloads or new
+runtime dependencies.
 
-Package.ps1 builds and checksums the Windows and source bundles. The separate
-release verification report records extracted-source builds, matching portable
-bytes and rendered artwork, and the local Git commit/tag. Hosted GitHub CI remains
-untested until the repository is published and its workflow runs.
+To try the web, select Portia and choose Settings > Behavior > Invite a
+web-building spider. Watch the anchors/frame, spokes and inward spiral develop;
+the resident should wait at the hub. After the quiet wait, Portia should pluck
+at the edge and lure it along a spoke. Silk should remain until Portia leaves.
 
-For a quick hands-on check:
-
-1. Hold the pointer to the left of an awake spider so it approaches from the
-   base side of the left-pointing finger. It should land on top, settle and walk.
-2. Offer the finger to a spider beyond its exposed tip. Across repeated offers,
-   it should sometimes catch and dangle and sometimes land on top.
-3. Carry gently, click for a planned upward departure, then try a fast movement
-   on another ride for a startled escape. Check that normal clicks still work.
-
-Physical mixed-DPI changes, actual sleep/unplug, hands-on cursor feel, phone QR
-scanning and a long resource soak remain manual checks. Both connected monitors
-used for native verification are 96 DPI; mixed-DPI layouts were simulated.
+Automated complete hunts use simulated time. The full multi-minute sequence,
+physical mixed-DPI changes, actual sleep/unplug and a long resource soak remain
+manual follow-up. Both real monitors used for the native checks are 96 DPI;
+mixed-DPI layouts were simulated.

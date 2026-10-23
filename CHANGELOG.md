@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.0.0-rc.6
+
+- Replace the resident prey's crossed-line capture mesh with an orb-style web:
+  anchored frame, uneven radial spokes, curved spiral silk and a clear hub.
+- Weave along the same curves used by the artwork. Weight construction by strand
+  and travel length to preserve smooth movement during the multi-minute build.
+- Keep the enlarged footprint, central resident, edge plucking, reserved corner
+  and departure-triggered fade. Portia's plucking point lies on a real radial spoke.
+- Retain completed strands as one image generated from vectors per world, sized
+  for the display. Growth updates it in batches; ordinary redraws and fading reuse
+  it. Add geometry, construction,
+  native rendering/cache checks and dark/light web previews.
+
 ## 1.0.0-rc.5
 
 - Choose a varied upper-surface finger landing near the approach, rather than

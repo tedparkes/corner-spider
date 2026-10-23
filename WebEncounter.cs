@@ -9,7 +9,6 @@ namespace CornerSpider {
         public double GuestScale,GuestProgress,GuestOpacity,GuestAge,GuestStageAge,GuestBuildTime,GuestWaitTime;
         public int GuestArea,GuestCornerIndex,GuestTaps;
         public double GuestLure { get; private set; }
-        public const double GuestTravelFraction=.5;
         public double GuestWebFactor { get; private set; }
         public double GuestWebScale { get { return GuestScale*GuestWebFactor; } }
         public double GuestWebExtent { get { return 188*GuestWebScale; } }
@@ -21,8 +20,6 @@ namespace CornerSpider {
         double guestResponse,previousPulse,guestFadeAge;
         bool guestReachedDetour;
         static readonly double[] guestNodeX={0,76,183,185,156,68,0,0,108,51,127,149,108,48,39},guestNodeY={0,0,0,83,166,188,188,91,108,43,38,91,149,137,85};
-        static readonly int[] threadFrom={1,10,3,5,13,7,9,2,0,6,7,2,3,4,4,5,5,6,7,0,9,10,11,12,13,14,8,8,8,8,8,8,9,10,11,12,13,14,8,8};
-        static readonly int[] threadTo={10,3,5,13,7,9,2,4,9,13,10,10,11,11,12,12,13,13,14,14,10,12,13,14,9,11,9,10,11,12,13,14,11,12,13,14,10,10,0,4};
         public bool GuestPrey { get { return WebStage!=WebVisit.None && WebStage!=WebVisit.Fading && HasFly; } }
         public bool GuestPassive { get { return WebStage==WebVisit.Building || WebStage==WebVisit.Waiting; } }
         public bool PreyBlocksPlay { get { return HasFly && !GuestPassive; } }
@@ -81,12 +78,9 @@ namespace CornerSpider {
             if(CrossesNestBox(Spider-center,destination-center,half,half)) return GuestLocal(edge,edge);
             return destination;
         }
-        public V GuestThreadStart(int index) {
-            return GuestNode(threadFrom[Math.Max(0,Math.Min(39,index))]);
-        }
-        public V GuestThreadEnd(int index) {
-            return GuestNode(threadTo[Math.Max(0,Math.Min(39,index))]);
-        }
+        public V GuestPatternPoint(V p) { return GuestLocal(p.X*GuestWebScale,p.Y*GuestWebScale); }
+        public V GuestThreadStart(int index) { return GuestPatternPoint(GuestWebPattern.Strand(index).A); }
+        public V GuestThreadEnd(int index) { return GuestPatternPoint(GuestWebPattern.Strand(index).D); }
         public bool StartWebVisit() {
             if(!HuntsSpiders || !WebVisits || HasFly || WebStage!=WebVisit.None) return false;
             int nearest=NearestCorner(AreaAt(Spider),Spider);double best=double.MaxValue;bool found=false;
@@ -154,9 +148,9 @@ namespace CornerSpider {
             if(!HasFly) { FinishWebVisit();return; }
             if(WebStage==WebVisit.Building) {
                 GuestProgress=Math.Min(1,GuestStageAge/GuestBuildTime);
-                double path=Math.Min(39.999999,GuestProgress*40),part=path-Math.Floor(path);int thread=(int)path;
-                V start=GuestThreadStart(thread),end=GuestThreadEnd(thread),previous=thread==0?start:GuestThreadEnd(thread-1);
-                MoveGuest(part<GuestTravelFraction?previous+(start-previous)*(part/GuestTravelFraction):start+(end-start)*((part-GuestTravelFraction)/(1-GuestTravelFraction)),dt);
+                // Length-weighted travel prevents short spiral segments and long
+                // foundation threads from giving the builder different speeds.
+                MoveGuest(GuestPatternPoint(GuestWebPattern.Builder(GuestProgress)),dt);
                 if(GuestProgress>=1) { WebStage=WebVisit.Waiting;GuestStageAge=0; }
             } else if(WebStage==WebVisit.Waiting || WebStage==WebVisit.Approach) {
                 V delta=GuestCenter-Fly;MoveGuest(Fly+delta*(Math.Min(delta.Length,12*GuestScale*dt)/Math.Max(.001,delta.Length)),dt);

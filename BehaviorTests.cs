@@ -34,7 +34,7 @@ class BehaviorTests {
             Assert(w.Meals>0,"Automatic feeding should work");
             BehaviorRegressionTests.Run();
             NaturalMotionTests.Run();
-            PounceTests.Run();EncounterTests.Run();
+            PounceTests.Run();EncounterTests.Run();GuestWebTests.Run();
             PlayTests.Run();BoardingTests.Run();
             PatrolAttentionTests.Run();SettingsTests.Run();MorphologyTests.Run();PreyTests.Run();HammockTests.Run();DismountTests.Run();NestEntryTests.Run();
             Console.WriteLine("PASS: corners, hunting, cursor boarding, fast dismount, disabled rides, naps, 10-minute simulation.");

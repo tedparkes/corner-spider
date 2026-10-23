@@ -1,6 +1,11 @@
-CORNER SPIDER 1.0 RC5 (1.0.0-rc.5)
+CORNER SPIDER 1.0 RC6 (1.0.0-rc.6)
 
-NEW: Spiders choose different spots to land on the finger, settle briefly,
+NEW: The web-building prey now weaves a recognizable orb-style spiderweb:
+edge anchors, radial spokes and curved spiral silk around a central hub.
+Its movement follows the strands it is building. Portia still approaches the
+edge, plucks a connected spoke and lures the resident away from the center.
+
+Spiders choose different spots to land on the finger, settle briefly,
 then explore. Only approaches from the exposed fingertip side may catch and
 dangle; coming from the base or above lands on top. This works for all skins
 and for the mirrored finger near a screen edge.

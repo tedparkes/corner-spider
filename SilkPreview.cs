@@ -30,7 +30,7 @@ namespace CornerSpider {
                             PetCanvas.DrawGuestWeb(d,w);PetCanvas.DrawPrey(d,w);d.Pop();d.Pop();d.Pop();
                         }
                         d.Pop();Text(d,i<11?SkinCatalog.Get(ids[i]).Name:"Web resident (generic prey)",12,283,15,Color.FromRgb(30,50,44));
-                        Text(d,i<11?SilkProfile.Get(ids[i]).Name:"Irregular anchored capture threads",12,304,13,Color.FromRgb(50,75,65));d.Pop();
+                        Text(d,i<11?SilkProfile.Get(ids[i]).Name:"Anchored spokes and curved spiral",12,304,13,Color.FromRgb(50,75,65));d.Pop();
                     }
                 }SavePng(v,1400,1060,Path.Combine(folder,"species-retreats-"+(dark?"dark":"light")+".png"));
             }

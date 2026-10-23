@@ -1,4 +1,4 @@
-Corner Spider 1.0 RC5 Windows runtime checks 2026-10-22T22:45:13
+Corner Spider 1.0 RC6 Windows runtime checks 2026-10-22T23:45:05
 PASS: seed isolated finger-tone and Portia preferences
 FOCUS: captured foreground window/process before and after overlay creation.
 PASS: saved finger tone is loaded into the desktop world at startup
@@ -371,6 +371,12 @@ PASS: native toggle clears resident and web
 PASS: reset restores personality and web preferences
 PASS: support QR stays inside compact settings bounds
 PASS: compact settings preserve the original QR at readable size
+PASS: completed orb web reuses one generated silk image across 180 redraws
+PASS: departure fade reuses the web artwork without rebuilding geometry
+PASS: construction progress replaces the single retained silk layer
+PASS: rendered orb has clearly visible spoke and capture silk
+PASS: rendered orb preserves transparency outside the reserved corner
+PASS: full construction batches image updates instead of allocating a bitmap per strand or frame
 PASS: click-departure fixture starts with the real cursor hidden
 PASS: mouse-button notification starts planned departure with a solid launch pad
 PASS: click restores native cursor while departure is being prepared
@@ -645,8 +651,8 @@ PASS: visible centered finger requests native cursor hiding
 PASS: pause releases the cursor visibility lease
 PASS: rendered overlay has transparent background and visible vector artwork
 PASS: running desktop pet walks across the real two-monitor seam
-MEASURED: 16.1 seconds, CPU=10.90% of one logical CPU, working set=472.2 MiB, private=595.2 MiB (delta -31.6).
-RESOURCES: GDI 782 -> 730, USER 37 -> 38 after 60 icon replacements.
+MEASURED: 16.0 seconds, CPU=11.30% of one logical CPU, working set=430.1 MiB, private=527.7 MiB (delta -52.5).
+RESOURCES: GDI 760 -> 708, USER 37 -> 38 after 60 icon replacements.
 PASS: replacing species icons does not leak native handles
 PASS: resume path resets cursor history and dismounts
 PASS: previous-save backup exists
