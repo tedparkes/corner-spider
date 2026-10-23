@@ -18,7 +18,7 @@ static class NaturalMotionTests {
         }
         Check(peak>100,"patrol has quick steps, not a slow cruise");
         Check(bursts>=4 && still>1,"patrol repeatedly stops on planted feet");
-        Check(longest<.8,"movement bursts stay short");
+        Check(longest>.8 && longest<3,"long travel includes a sustained run as well as short steps, without endless cruising");
         Check((w.Spider-w.Target).Length<2,"bursty movement still reaches its destination");
 
         w=New(8);V cursor=new V(600,250);bool inspected=false,raised=false;int entries=0;Mood last=w.State;

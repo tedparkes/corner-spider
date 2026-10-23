@@ -60,7 +60,7 @@ namespace CornerSpider {
         double nestRest;
         public double NestTuck { get { return nestRest*nestRest*(3-2*nestRest); } }
         public World(double width,double height,int seed) {
-            random=new Random(seed); Width=width;Height=height;
+            random=new Random(seed);travelRandom=new Random(seed^0x516e23); Width=width;Height=height;
             Areas.Add(new Area(0,0,width,height,1));UpdateHome();Spider=Target=Home;Cursor=LastCursor=new V(-1000,-1000);
         }
         public static bool Finite(double n) { return !double.IsNaN(n) && !double.IsInfinity(n); }
@@ -130,6 +130,7 @@ namespace CornerSpider {
             Areas.Clear();Areas.Add(new Area(0,0,Width,Height,1));HomeArea=0;Reflow();
         }
         void Reflow() {
+            ResetTravel();GaitDirection=new V(0,-1);
             CancelWebVisit();ClearPlay();SilkOpacity=0;
             cornerWaypoint=null;
             if(!Finite(Scale)) Scale=1;Scale=Math.Max(.2,Math.Min(1.8,Scale));UpdateHome();
@@ -142,6 +143,7 @@ namespace CornerSpider {
         }
         public void SetScale(double scale) { Scale=scale;Reflow(); }
         void Enter(Mood state) {
+            ResetTravel();
             State=state;StateTime=0;
             if(state!=Mood.Walk && state!=Mood.Return && state!=Mood.Stalk && state!=Mood.WebApproach) Speed=0;
             else { burstMoving=true;burstRemaining=Between(.19,.34); }
@@ -266,9 +268,13 @@ namespace CornerSpider {
             return destination; // Disconnected/diagonal screens are traversed by a silk hop below.
         }
         bool Move(V destination,double speed,double dt) {
-            V dest=AvoidGuestWeb(Route(destination)),d=dest-Spider;double distance=d.Length;Face(dest);
+            return MoveResolved(destination,AvoidGuestWeb(Route(destination)),speed,dt,null);
+        }
+        bool MoveResolved(V destination,V dest,double speed,double dt,double? heading) {
+            V d=dest-Spider;double distance=d.Length;Face(dest);
+            if(heading.HasValue) desiredAngle=heading.Value;
             if((destination-Spider).Length<2*BodyScale) { Spider=destination;Speed=0;return true; }
-            if(distance<.01) return false;
+            if(distance<.000001*BodyScale) { Speed=0;return false; }
             double targetSpeed=Math.Min(speed*BodyScale,Math.Sqrt(2*1300*BodyScale*distance));
             // Pivot before advancing. Quick starts and strong braking remove the gliding feel.
             if(Math.Abs(AngleDelta(Angle,desiredAngle))>28) targetSpeed=0;
@@ -282,6 +288,7 @@ namespace CornerSpider {
             StepPhase+=(next-Spider).Length/(4.5*BodyScale);Spider=next;return false;
         }
         bool BurstMove(V destination,double speed,double dt,bool stalking) {
+            if(!stalking) return Travel(destination,speed,dt);
             burstRemaining-=dt;
             if(burstRemaining<=0) {
                 burstMoving=!burstMoving;
@@ -303,6 +310,7 @@ namespace CornerSpider {
         public void Tick(double dt,V cursor,bool clicked) {
             if(!Finite(dt) || dt<=0) return;
             if(dt>.5) { Resume();return; }
+            V tickStart=Spider;
             dt=Math.Min(.1,dt);Clock+=dt;StateTime+=dt;Cursor=cursor;
             double cursorSpeed=TrackCursor(dt,cursor);RideCooldown=Math.Max(0,RideCooldown-dt);
             if(State!=Mood.Jump) pixelScale+=(Areas[AreaAt(Spider)].Dpi-pixelScale)*Math.Min(1,dt*8);
@@ -407,6 +415,7 @@ namespace CornerSpider {
             }
             double turn=AngleDelta(Angle,desiredAngle),delta=catchTurning?turn:Math.Max(-190*dt,Math.Min(190*dt,turn));
             Angle=(Angle+delta+360)%360;AngularSpeed=delta/dt;
+            UpdateGaitDirection(Spider-tickStart,dt);
             // Turn with planted steps first, then ease into the silk. Keep the
             // same continuous blend on waking so the feet do not snap outward.
             bool settled=State==Mood.Sleep && StateTime>.08 && (Spider-Home).Length<3*HomeScale && Math.Abs(AngleDelta(Angle,NestAngle))<8;

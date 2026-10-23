@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+## 1.0.0-rc.12
+
+- Replace uniform short travel timers with distance-based bouts: small probes,
+  medium dashes and occasional longer runs, with varied stationary pauses.
+- Let long patrols run faster while keeping small perch adjustments and the
+  homeward nest approach deliberate. Preserve the existing bounded turning speed.
+- Add occasional sideways scuttles with the body still facing the destination,
+  plus modest changes of course. Avoid desktop boundaries and reserved prey webs.
+- Drive all eight legs from the actual direction of ground movement, including
+  lateral steps, while retaining fixed joint lengths and species proportions.
+  Raised foreleg greetings override the walking stride even while turning.
+- Fit stopping points to hard screen edges where a shared monitor seam ends,
+  and preserve deliberate silk hops across disconnected displays.
+- Keep cursor attention, stalking, plucking, finger rides and end-entry nesting
+  covered by their existing regressions. Replace the obsolete short-burst-only
+  check with a requirement for both sustained runs and shorter movement.
+- Add 184 travel trials across skins, sizes, DPI, frame rates, directions and
+  desktop edges, plus native frame/trajectory export with `--travel-preview`.
+
 ## 1.0.0-rc.11
 
 - Move Portia's plucking perch farther toward the anchored ends of the sides,

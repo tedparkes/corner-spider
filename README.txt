@@ -1,4 +1,9 @@
-CORNER SPIDER 1.0 RC11 (1.0.0-rc.11)
+CORNER SPIDER 1.0 RC12 (1.0.0-rc.12)
+
+RC12: Longer trips now mix short probes, medium dashes and longer runs, with
+varied pauses, occasional sideways scuttles and small changes of course. The
+eight-leg gait follows the direction of travel. Local adjustments and hammock
+entry stay careful. Passing the cursor still interrupts a trip for interaction.
 
 RC11: Portia plucks farther toward the anchored side ends. She turns toward the
 resident before signaling and follows it with her eyes/body as it approaches.

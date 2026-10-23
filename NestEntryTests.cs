@@ -38,7 +38,7 @@ static class NestEntryTests {
                 Check(Math.Abs(Across(w,w.Spider))>32 || Math.Abs(Along(w,w.Spider))>60,"return route stays outside the cocoon body");
             }
         }
-        Check(w.State==Mood.Sleep && (w.Spider-w.Home).Length<.01,"return finishes inside the retreat");
+        Check(w.State==Mood.Sleep && (w.Spider-w.Home).Length<.01,"return finishes inside the retreat: corner="+w.Corner+", scale="+w.Scale+", dpi="+w.Areas[w.HomeArea].Dpi+", state="+w.State+", position="+w.Spider.X+","+w.Spider.Y+", home="+w.Home.X+","+w.Home.Y);
         Check(entered && crawlSteps>15 && w.StepPhase>crawlPhase+5,"a visible walking sequence precedes sleep");
     }
     public static void Run() {

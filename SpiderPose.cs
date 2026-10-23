@@ -38,7 +38,10 @@ namespace CornerSpider {
             if(phase<.65) stride=-9+18*phase/.65;
             else { double t=(phase-.65)/.35;stride=9-18*t*t*(3-2*t);lift=Math.Sin(t*Math.PI)*3; }
             stride*=w.GaitBlend*(1-tuck);lift*=w.GaitBlend*(1-tuck);
-            V3 ankle=new V3(side*ankleX[leg],ankleY[leg]+stride,.8+lift);
+            // Compensate for the later species proportions so every grounded
+            // foot follows the same travel vector. Raised poses override stride.
+            double stance=skin==null?1:skin.Stance;
+            V3 ankle=new V3(side*ankleX[leg]-w.GaitDirection.X*stride/stance,ankleY[leg]-w.GaitDirection.Y*stride/limb,.8+lift);
             double reach=leg==0?w.FrontReach(side):0;
             if(reach>0) {
                 // Both long front legs reach forward and UP. The raised feet stay

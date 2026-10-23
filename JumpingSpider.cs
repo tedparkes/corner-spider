@@ -13,7 +13,7 @@ using Forms=System.Windows.Forms;
 [assembly:System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.8")]
 [assembly:System.Reflection.AssemblyVersion("1.0.0.0")]
 [assembly:System.Reflection.AssemblyFileVersion("1.0.0.0")]
-[assembly:System.Reflection.AssemblyInformationalVersion("1.0.0-rc.11")]
+[assembly:System.Reflection.AssemblyInformationalVersion("1.0.0-rc.12")]
 [assembly:System.Reflection.AssemblyTitle("Corner Spider")]
 [assembly:System.Reflection.AssemblyProduct("Corner Spider")]
 [assembly:System.Reflection.AssemblyDescription("A local jumping-spider companion for the Windows desktop.")]
@@ -262,7 +262,7 @@ namespace CornerSpider {
             }
         }
         void BuildTray() {
-            Menu=new Forms.ContextMenuStrip();Menu.Opening+=delegate { CursorVisibility.Release(); };Menu.Items.Add(new Forms.ToolStripMenuItem("CORNER SPIDER  1.0 RC11") { Enabled=false });
+            Menu=new Forms.ContextMenuStrip();Menu.Opening+=delegate { CursorVisibility.Release(); };Menu.Items.Add(new Forms.ToolStripMenuItem("CORNER SPIDER  1.0 RC12") { Enabled=false });
             var status=new Forms.ToolStripMenuItem { Enabled=false };Menu.Items.Add(status);
             Menu.Opening+=delegate { status.Text=(World.GuestStatus.Length>0?World.GuestStatus:World.State.ToString())+"  |  "+World.Meals+" prey caught"+(Settings.LastError.Length>0?"  |  Save failed":""); };
             Menu.Items.Add(new Forms.ToolStripSeparator());
@@ -296,7 +296,7 @@ namespace CornerSpider {
             if(args.Length>0 && args[0]=="--quit") {
                 try { using(var signal=EventWaitHandle.OpenExisting(quitEvent)) signal.Set(); } catch(WaitHandleCannotBeOpenedException) {}return 0;
             }
-            bool test=args.Length>0 && (args[0]=="--self-test" || args[0]=="--desktop-test" || args[0]=="--render-preview" || args[0]=="--finger-preview" || args[0]=="--prey-preview" || args[0]=="--encounter-preview" || args[0]=="--release-preview" || args[0]=="--hammock-preview" || args[0]=="--dismount-preview" || args[0]=="--nest-preview");
+            bool test=args.Length>0 && (args[0]=="--self-test" || args[0]=="--desktop-test" || args[0]=="--render-preview" || args[0]=="--finger-preview" || args[0]=="--prey-preview" || args[0]=="--encounter-preview" || args[0]=="--travel-preview" || args[0]=="--release-preview" || args[0]=="--hammock-preview" || args[0]=="--dismount-preview" || args[0]=="--nest-preview");
             bool created;using(var mutex=new Mutex(true,test?"Local\\CornerSpiderPet_Tests":"Local\\CornerSpiderPet_v1",out created)) {
                 if(!created) return 0;
                 PetHost host=null;try {
