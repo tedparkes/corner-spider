@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## 1.0.0
+
+- Publish the first public Windows release, with portable and source packages,
+  SHA-256 checksums and the complete development changelog below.
+- Include twenty procedural skins across eleven species, species-shaped retreats,
+  multi-monitor exploration, varied ground travel, hunting and interactive finger rides.
+- Include Portia's web-building prey encounters, direct plucking and ambush behavior,
+  adjustable appearance and interaction settings, and the QR-only optional support flyout.
+- Retain local saves, opt-in startup, click-through overlays and cursor cleanup.
+- Rebuild and recheck the final Windows package; document verification and physical
+  display/sleep testing limits. Preserve the complete release-candidate history.
+
 ## 1.0.0-rc.14
 
 - Make optional support QR-only: remove the visible Cash App username, payment

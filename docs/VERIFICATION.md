@@ -1,38 +1,65 @@
-# Verification for 1.0.0-rc.14
+# Verification for 1.0.0
 
-Local Windows verification, October 27, 2026. RC13 packages, source and Git tag
-are preserved. This release simplifies the optional support flyout only.
+Local Windows verification, October 27, 2026. RC14 source, packages and Git tag
+are preserved. The public release retains the tested RC14 behavior and QR-only
+support interface, updates the version, and includes the full development changelog.
 
-The Windows .NET Framework build and complete deterministic behavior suite pass.
-See [behavior output](behavior-checks.txt). No spider behavior or artwork changed.
+## Automated behavior
 
-The existing native settings checks were updated for QR-only support. They
-exercise the original QR image at 272 logical pixels, compact settings layout,
-open/close behavior, closing the owner window, and verify that Close is the only
-button inside the flyout. Obsolete URL-validation checks were removed with the
-URL and browser-launch implementation. Settings persistence, web-visit toggles
-and guest-silk rendering checks in the same native routine also pass.
-See [native results](support-checks.txt) and the [flyout](support-flyout.png).
-The resulting flyout and settings screenshots were visually inspected.
+The Windows .NET Framework build and complete deterministic suite pass. See
+[behavior output](behavior-checks.txt). Coverage includes 184 travel routes,
+4,574 pounce hunts, 56 complete Portia web hunts, settings and save migration,
+20 skins, finger play, nest entry/exit, 20-180% size, 100-200% simulated DPI,
+display layout changes and interruptions. No behavior tests were weakened.
 
-SupportQr.png remains byte-for-byte identical to RC13. It retains the same public
-payment destination. There is no visible username label, recipient tooltip or
-clickable payment link. No payment or phone-scanning test was performed here.
-Earlier releases decoded the original QR and actual rendered flyout successfully.
+## Native Windows checks
 
-Both ZIPs are checked entry by entry. The extracted source rebuilds with the
-complete suite. The installed executable matches the extracted Windows package,
-and the Desktop shortcut points to it. Package and launch evidence is recorded
-beside the archives. Source bytes match the local Git repository.
+The final 1.0 executable passed all 671 assertions in the full native self-test.
+See [Windows results](windows-checks.txt). The machine presented one 3840-pixel-wide
+4K display at 200% scaling, with a 3840x2100 working area. This run verifies:
 
-The full native overlay, cursor and tray suite was not repeated for this small
-UI change; see [RC10 verification](VERIFICATION-RC10.md). The retreat rendering
-checks passed on RC13; see [RC13 verification](VERIFICATION-RC13.md). Physical
-mixed-DPI changes, sleep/resume and a long resource soak remain manual checks.
+- Nonactivating layered overlays, physical working-area and DPI matching, and
+  OS hit-testing that passes through both the spider and illustrated finger.
+- Tray actions, live settings, every skin, 20-180% size, finger tone, silk visibility,
+  interaction controls, save/reload, preview disposal and opt-in startup protection.
+- QR-only support, the unchanged QR image, compact layout and popup closure.
+- Native cursor hiding and restoration after release, lost heartbeat, interrupted
+  helpers, pause and exit; mouse-observer cleanup and removal of overlays/tray icons.
+- Skin, prey and retreat rendering, anchored silk, opacity, retained caches and
+  stable growth. Sixty icon replacements did not leak GDI or USER handles.
 
-Manual check: open Settings, click Buy me a coffee / Monster, scan the QR on your
-phone and verify the recipient before deciding whether to send any payment.
-Close the flyout with Close, Escape or an outside click.
+The native resource sample followed rendering and icon stress: 16 seconds,
+12.69% of one logical CPU, 364.4 MiB private memory with memory falling during the
+sample. This is a diagnostic workload, not a normal-use performance benchmark.
+Normal-launch measurements are recorded beside the release packages.
 
-The hosted packages remain private to the user's ChatGPT account. No public
-GitHub release has been published.
+This run did not exercise a physical two-monitor seam because only one display
+was connected. Earlier native two-monitor checks and current simulated coverage
+are documented in the preserved verification history. Physical mixed-DPI changes,
+actual unplug/reconnect, sleep/resume and a long resource soak remain unverified
+for 1.0. User interaction feedback informed development; phone QR scanning and a
+real support payment were not repeated for this release.
+
+## Release integrity
+
+Both ZIPs are verified entry by entry. Extracted source rebuilds with the complete
+suite. The portable executable version and files are checked against the packaged
+build, and the installed copy matches that portable executable. The Desktop
+shortcut targets the current build. Source bytes match the local Git repository.
+
+The repository history was scanned for private local paths and credential patterns
+before upload; no matches were found. Only project source, public documentation,
+procedural artwork and the intentionally supplied support QR are included. Personal
+saves, reference photographs, workspace backups and credentials are excluded.
+The executable is unsigned; no code-signing or security certification is claimed.
+
+## Quick manual check on another PC
+
+Extract the Windows ZIP and run JumpingSpider.exe. Confirm ordinary clicks still
+reach the desktop. Open Settings from the tray, change skin/size, invite a finger
+ride, click to dismount, and send the spider home. Quit and confirm the cursor,
+tray and overlay return to normal. On multiple monitors, check travel and the
+chosen hammock corner, then test display reconnection and sleep/resume.
+
+The public repository and release are available at
+https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0.

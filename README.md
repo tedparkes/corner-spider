@@ -1,7 +1,14 @@
-# Corner Spider 1.0 RC14
+# Corner Spider 1.0
 
 A small jumping spider for your actual Windows desktop. It watches from corners,
 stalks occasional prey, builds a silk retreat and sometimes accepts a finger ride.
+
+**[Download Corner Spider 1.0 for Windows](https://github.com/tedparkes/corner-spider/releases/download/v1.0.0/CornerSpider-v1.0.0-Windows.zip)**
+
+[Release page and full changelog](https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0)
+
+Extract the ZIP, then open **JumpingSpider.exe**. Windows 10/11 with .NET Framework
+4.8; no installer or administrator rights required. This community build is unsigned.
 
 The eleven species families now have visibly different silk shelters, from flat
 crevice sleeves and folded envelopes to roomy pouches and Portia's open platform.
@@ -42,8 +49,8 @@ and matte shading. The larger preview retains each species' details.
 
 ![Settings with silk visibility and the subtle optional support button](docs/settings-banner.png)
 
-This is the **1.0.0-rc.14 release candidate**. Windows build and automated checks
-pass; the remaining hands-on release checklist is in [verification notes](docs/VERIFICATION.md).
+This is **version 1.0.0**. The [verification notes](docs/VERIFICATION.md) describe
+the Windows checks and remaining hardware-specific testing limits.
 
 ## Download and start
 

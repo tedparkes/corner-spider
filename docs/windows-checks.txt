@@ -1,6 +1,6 @@
-Corner Spider 1.0 RC10 Windows runtime checks 2026-10-23T14:22:33
+Corner Spider 1.0 Windows runtime checks 2026-10-27T16:25:26
 PASS: seed isolated finger-tone and Portia preferences
-FOCUS: foreground handle remained unchanged (process identifiers omitted from public log).
+FOCUS: HWND 65844 -> 65844, PID 11696 -> 11696, pet PID 3164.
 PASS: saved finger tone is loaded into the desktop world at startup
 PASS: saved Portia selection restores prey behavior and tray action on startup
 PASS: overlay creation preserves foreground window
@@ -359,20 +359,15 @@ PASS: spider prey keeps a transparent background
 PASS: spider prey is visible and unclipped at size 1.8 / DPI 2
 PASS: spider prey keeps a transparent background
 PASS: support starts as a quiet text button and retains the original QR
-PASS: support uses the public Cash App recipient; diagnostics never open payment pages
-PASS: reject unexpected support target: http://cash.app/$tedparkes
-PASS: reject unexpected support target: https://cash.app.evil.example/$tedparkes
-PASS: reject unexpected support target: https://other@cash.app/$tedparkes
-PASS: reject unexpected support target: file:///tmp/pay
-PASS: reject unexpected support target: https://cash.app/$someoneelse
-PASS: reject unexpected support target: https://cash.app/$tedparkes?amount=100
 PASS: new behavior controls persist through native UI
 PASS: native host starts corner web encounter
 PASS: native toggle clears resident and web
 PASS: reset restores personality and web preferences
 PASS: support button stays inside compact settings bounds
-PASS: button opens a dismissible QR and link flyout without launching a browser
+PASS: button opens a dismissible QR-only flyout
 PASS: flyout displays the original recognizable QR at scanning size
+PASS: QR flyout has no payment-link action
+PASS: Close is the only action inside the QR flyout
 PASS: flyout close button works
 PASS: closing settings also closes its flyout
 PASS: resident web obeys visibility without affecting its construction: 1
@@ -669,8 +664,8 @@ PASS: growing silk preserves existing threads rather than rearranging them: Hyll
 PASS: visible centered finger requests native cursor hiding
 PASS: pause releases the cursor visibility lease
 PASS: rendered overlay has transparent background and visible vector artwork
-MEASURED: 16.1 seconds, CPU=8.37% of one logical CPU, working set=589.5 MiB, private=630.7 MiB (delta -57.2).
-RESOURCES: GDI 779 -> 781, USER 45 -> 42 after 60 icon replacements.
+MEASURED: 16.0 seconds, CPU=12.69% of one logical CPU, working set=265.7 MiB, private=364.4 MiB (delta -342.5).
+RESOURCES: GDI 791 -> 613, USER 45 -> 45 after 60 icon replacements.
 PASS: replacing species icons does not leak native handles
 PASS: resume path resets cursor history and dismounts
 PASS: previous-save backup exists
@@ -680,4 +675,3 @@ PASS: exit cleanup restores cursor and closes the helper
 PASS: cleanup successfully unhooks the native mouse observer
 PASS: cleanup stops the mouse observer message loop
 RESULT: PASS (0 failures). Physical mixed-DPI changes, actual sleep/unplug and hands-on cursor feel still require manual QA.
-PASS: separate QR decoder read the actual flyout capture as https://cash.app/$tedparkes?qr=1

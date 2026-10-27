@@ -1,15 +1,15 @@
 # Preparing a GitHub release
 
-The prepared source bundle is ready for a public repository. Nothing is published
-by the local packaging script or build workflow.
+The public repository is https://github.com/tedparkes/corner-spider.
+Nothing is published automatically by the local packaging script or build workflow.
 
 Changes after a preserved tag belong to the next release. Choose its version,
 update the version sources below and tag the reviewed commit containing the new
 documentation. Replace `vNEXT_VERSION` below with that tag. Keep the existing release
 tags and ZIPs unchanged.
 
-1. Create an empty public repository named corner-spider under your chosen
-   GitHub account. Review LICENSE and the public README before uploading.
+1. Use the existing corner-spider repository, or create an empty repository for a
+   deliberate fork. Review LICENSE and the public README before uploading.
 2. Use the prepared local repository on branch `main`, or extract the source
    bundle into a new repository. The source includes .github, .gitignore, LICENSE
    and docs. Connect your chosen GitHub repository and push the reviewed commit:
@@ -41,8 +41,8 @@ tags and ZIPs unchanged.
 The portable executable is unsigned. Do not claim it is signed, security-certified
 or tested on systems that were not exercised. Code signing is a future improvement.
 
-Before final 1.0, complete the manual checklist and update the informational
-version from 1.0.0-rc.14 to 1.0.0. Retest the exact release contents. The optional
+Before each release, update the version and verification notes. Retest the exact
+release contents and record which manual checks remain unverified. The optional
 support QR intentionally identifies the creator; review docs/SUPPORT.md before
 redistributing a fork. Keep this recipient or deliberately replace and verify the QR.
 

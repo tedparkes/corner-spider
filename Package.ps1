@@ -53,7 +53,22 @@ try {
     # Generate release notes directly from the complete versioned changelog.
     $changelog = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'CHANGELOG.md')).Trim()
     $releaseLog = ($changelog -replace '\A# Changelog\s*', '').Trim()
-    $notes = '# Corner Spider ' + $releaseVersion + "`r`n`r`n" + $releaseLog + "`r`n"
+    $releaseLog = ($releaseLog -replace '\A## Unreleased\s*(?=## )', '').Trim()
+    $downloadRoot = 'https://github.com/tedparkes/corner-spider/releases/download/v' + $releaseVersion
+    $intro = @(
+        'A free jumping-spider companion for your actual Windows desktop. Twenty procedural skins, corner silk retreats, hunting, finger rides and multi-monitor exploration.'
+        ''
+        ('**[Download for Windows (ZIP)](' + $downloadRoot + '/CornerSpider-v' + $releaseVersion + '-Windows.zip)**')
+        ''
+        'Extract the entire Windows ZIP, then open **JumpingSpider.exe** inside the CornerSpider folder. Windows 10/11 with .NET Framework 4.8. No installer or administrator rights needed. Startup is opt-in.'
+        ''
+        'This is an unsigned community build. The pet works offline, with local saves and no telemetry. Optional support is a bundled Cash App QR. See the included verification notes for tested behavior and remaining hardware-specific limits.'
+        ''
+        ('[Source package](' + $downloadRoot + '/CornerSpider-v' + $releaseVersion + '-Source.zip) | [SHA-256 checksums](' + $downloadRoot + '/SHA256SUMS.txt) | [Changelog file](' + $downloadRoot + '/CHANGELOG.md)')
+        ''
+        '## Full changelog'
+    ) -join "`r`n"
+    $notes = '# Corner Spider ' + $releaseVersion + "`r`n`r`n" + $intro + "`r`n`r`n" + $releaseLog + "`r`n"
     [IO.File]::WriteAllText((Join-Path $output 'RELEASE-NOTES.md'),$notes)
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'CHANGELOG.md') -Destination (Join-Path $output 'CHANGELOG.md')
     # Remove only the fresh staging folder inside the explicit output directory.

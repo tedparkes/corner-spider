@@ -13,7 +13,7 @@ using Forms=System.Windows.Forms;
 [assembly:System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.8")]
 [assembly:System.Reflection.AssemblyVersion("1.0.0.0")]
 [assembly:System.Reflection.AssemblyFileVersion("1.0.0.0")]
-[assembly:System.Reflection.AssemblyInformationalVersion("1.0.0-rc.14")]
+[assembly:System.Reflection.AssemblyInformationalVersion("1.0.0")]
 [assembly:System.Reflection.AssemblyTitle("Corner Spider")]
 [assembly:System.Reflection.AssemblyProduct("Corner Spider")]
 [assembly:System.Reflection.AssemblyDescription("A local jumping-spider companion for the Windows desktop.")]
@@ -262,7 +262,7 @@ namespace CornerSpider {
             }
         }
         void BuildTray() {
-            Menu=new Forms.ContextMenuStrip();Menu.Opening+=delegate { CursorVisibility.Release(); };Menu.Items.Add(new Forms.ToolStripMenuItem("CORNER SPIDER  1.0 RC14") { Enabled=false });
+            Menu=new Forms.ContextMenuStrip();Menu.Opening+=delegate { CursorVisibility.Release(); };Menu.Items.Add(new Forms.ToolStripMenuItem("CORNER SPIDER  1.0") { Enabled=false });
             var status=new Forms.ToolStripMenuItem { Enabled=false };Menu.Items.Add(status);
             Menu.Opening+=delegate { status.Text=(World.GuestStatus.Length>0?World.GuestStatus:World.State.ToString())+"  |  "+World.Meals+" prey caught"+(Settings.LastError.Length>0?"  |  Save failed":""); };
             Menu.Items.Add(new Forms.ToolStripSeparator());

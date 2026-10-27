@@ -1,4 +1,9 @@
-CORNER SPIDER 1.0 RC14 (1.0.0-rc.14)
+CORNER SPIDER 1.0 (1.0.0)
+
+Download and full changelog:
+https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0
+
+Extract the Windows ZIP and open JumpingSpider.exe.
 
 RC14: Optional support now shows only the original Cash App QR code, with no
 username label, payment link or browser launch.
@@ -130,8 +135,8 @@ Free software under the MIT License. Unsigned community build; Windows may displ
 an unknown-publisher warning. Compare the release's SHA-256 checksums.
 No accounts, telemetry, reference photos or asset downloads. The pet works offline.
 Optional support shows the original Cash App QR code. No payment
-credentials are collected. This release candidate has not been published.
-Before public 1.0, complete the hands-on checklist in docs\VERIFICATION.md.
+credentials are collected. See docs\VERIFICATION.md for Windows verification
+and the remaining hardware-specific testing limits.
 See README.md for fuller instructions, docs\VERIFICATION.md for tests and limits,
 and ROADMAP.md for future ideas.
 
