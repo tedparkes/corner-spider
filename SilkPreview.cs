@@ -76,5 +76,61 @@ namespace CornerSpider {
             }
             RenderSilkGallery(folder);
         }
+        static void CheckRetreatVariety(string folder) {
+            string[] ids={"Regal","Bold","Zebra","Tan","RedBackFemale","Emerald","GrayWall","Pantropical","Apache","PortiaLabiata","HyllusDiardiGreen"};
+            var masks=new System.Collections.Generic.List<byte[]>();
+            for(int s=0;s<ids.Length;s++) {
+                var profile=SilkProfile.Get(ids[s]);var visual=new DrawingVisual();
+                using(var d=visual.RenderOpen()) {
+                    d.PushTransform(new TranslateTransform(80,80));d.PushTransform(new ScaleTransform(profile.Width,profile.Length));
+                    d.DrawGeometry(Brushes.White,null,PetCanvas.Pocket(profile));d.Pop();d.Pop();
+                }
+                var bitmap=new RenderTargetBitmap(160,160,96,96,PixelFormats.Pbgra32);bitmap.Render(visual);
+                byte[] mask=new byte[160*160*4];bitmap.CopyPixels(mask,640,0);
+                for(int previous=0;previous<masks.Count;previous++) {
+                    int union=0,difference=0;for(int i=3;i<mask.Length;i+=4) {
+                        bool a=mask[i]>127,b=masks[previous][i]>127;if(a||b) union++;if(a!=b) difference++;
+                    }
+                    Check(difference>union*.075,"retreat silhouettes visibly differ before texture: "+ids[s]+" / "+ids[previous]);
+                }
+                masks.Add(mask);
+            }
+            // The same renderer is used by the settings thumbnail, without image
+            // caches. Exercise every skin in the preview and at the supported size extremes.
+            var gallery=new DrawingVisual();using(var d=gallery.RenderOpen()) {
+                d.DrawRectangle(BPreview("#e6ebe1"),null,new Rect(0,0,1200,1160));
+                Text(d,"RETREAT VARIETY / EMPTY SHELTER AND SETTINGS PREVIEW",18,12,22,Color.FromRgb(30,50,44));
+                for(int i=0;i<SkinCatalog.All.Length;i++) {
+                    var skin=SkinCatalog.All[i];double x=i%5*240,y=55+i/5*275;
+                    d.PushTransform(new TranslateTransform(x,y));
+                    var preview=new SettingsPreview { Species=skin.Id,Dark=i%2==0,Enlarged=true };
+                    preview.Measure(new Size(236,250));preview.Arrange(new Rect(0,0,236,250));preview.UpdateLayout();
+                    var bitmap=new RenderTargetBitmap(236,250,96,96,PixelFormats.Pbgra32);bitmap.Render(preview);
+                    d.DrawImage(bitmap,new Rect(0,0,236,250));preview.Dispose();
+                    Text(d,skin.Name,8,254,12,Color.FromRgb(30,50,44));d.Pop();
+                }
+            }SavePng(gallery,1200,1160,Path.Combine(folder,"retreat-settings.png"));
+            var canvas=new PetCanvas();
+            foreach(var skin in SkinCatalog.All) foreach(double size in new[]{.2,1.0,1.8}) {
+                // A large offscreen work area prevents the small-screen scale fit
+                // from disguising the true 20% and 180% rendering bounds.
+                var w=new World(1200,900,42);w.AutoFeed=w.CursorPlay=false;w.SetScale(size);w.Web=1;
+                var v=new DrawingVisual();using(var d=v.RenderOpen()) {
+                    canvas.DrawHammock(d,w,false,skin.Id,true);canvas.DrawHammock(d,w,true,skin.Id,true);
+                }
+                var bitmap=new RenderTargetBitmap(1200,900,96,96,PixelFormats.Pbgra32);bitmap.Render(v);
+                byte[] pixels=new byte[1200*900*4];bitmap.CopyPixels(pixels,4800,0);int painted=0;
+                for(int i=3;i<pixels.Length;i+=4) if(pixels[i]>12) painted++;
+                Check(painted>25,"visible vector silk at "+size+": "+skin.Id);
+            }
+            foreach(string id in new[]{"Regal","PortiaLabiata"}) {
+                var w=new World(360,360,42);w.Web=1;var v=new DrawingVisual();
+                using(var d=v.RenderOpen()) canvas.DrawHammock(d,w,true,id,true);
+                var bitmap=new RenderTargetBitmap(360,360,96,96,PixelFormats.Pbgra32);bitmap.Render(v);
+                byte[] pixels=new byte[360*360*4];bitmap.CopyPixels(pixels,1440,0);long center=0;
+                for(int y=(int)w.Home.Y-4;y<=(int)w.Home.Y+4;y++) for(int x=(int)w.Home.X-4;x<=(int)w.Home.X+4;x++) center+=pixels[(y*360+x)*4+3];
+                Check(id=="PortiaLabiata"?center==0:center>200,"open Portia platform versus covered oval: "+id);
+            }
+        }
     }
 }

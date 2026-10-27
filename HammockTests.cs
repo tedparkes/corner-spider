@@ -8,6 +8,14 @@ static class HammockTests {
     public static void Run() {
         string[] corners={"TopLeft","TopRight","BottomLeft","BottomRight"};
         double[] angles={225,135,315,45};
+        foreach(var skin in SkinCatalog.All) {
+            var silk=SilkProfile.Get(skin.Id);
+            for(int i=0;i<=100;i++) for(int side=-1;side<=1;side+=2) {
+                double x=silk.Edge(i/100.0,side)*silk.Width,y=silk.Along(i/100.0)*silk.Length;
+                Check(Math.Sqrt(x*x+y*y)<80,"retreat silhouette stays within the existing nest route clearance: "+skin.Id);
+            }
+            Check(silk.Along(0)*silk.Length>-65 && silk.Along(1)*silk.Length<65,"both openings leave an unobstructed approach before the 96-pixel entry waypoints");
+        }
         foreach(double size in new[]{.2,1.0,1.8}) foreach(double dpi in new[]{1.0,1.5,2.0}) for(int c=0;c<4;c++) {
             var w=new World(1920,1080,14);w.AutoFeed=w.CursorPlay=false;
             w.ConfigureDisplays(new[]{new Area(-1920,160,1920,1080,1),new Area(0,0,1920,1080,dpi)},1);

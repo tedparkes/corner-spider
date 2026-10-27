@@ -11,7 +11,7 @@ PASS: 2116 patrol attention checks (prior greetings, return trips, retained rout
 PASS: 462 settings checks (twenty skins, finger tones and migration, 20% size, configured delay/distance/tolerance, mixed DPI and persistence).
 PASS: 1355331 species anatomy checks (20 profiles, original IDs, nine sex pairs, fixed joints, all-state bounds and alternating eye/chelicera grooming).
 PASS: 27675 Portia prey checks (mixed spawn, species routing, single slot, full hunts, crawl/pause, held meal, size/DPI and cleanup).
-PASS: 356034 hammock checks (four corners, turn then tuck, fixed hinges, 20-180% sizes, mixed DPI, return, wake and reflow).
+PASS: 360094 hammock checks (four corners, turn then tuck, fixed hinges, 20-180% sizes, mixed DPI, return, wake and reflow).
 PASS: 24335 planned-dismount checks (upward targets, turn/brace, catch/climb exits, frozen pad, ceiling/edges, silk, interruption and mixed DPI).
 PASS: 774706 end-entry checks (approach sides, axis alignment, crawl, silk occlusion, exit, four corners, size/DPI/frame steps and interruptions).
 PASS: corners, hunting, cursor boarding, fast dismount, disabled rides, naps, 10-minute simulation.

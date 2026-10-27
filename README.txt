@@ -1,4 +1,8 @@
-CORNER SPIDER 1.0 RC12 (1.0.0-rc.12)
+CORNER SPIDER 1.0 RC13 (1.0.0-rc.13)
+
+RC13: Eleven distinct retreat shapes, with layered tubes, flat sleeves, folded
+envelopes, tangled shelters, a broad pouch and Portia's open platform. The same
+art appears in the settings preview. Existing silk progress is preserved.
 
 RC12: Longer trips now mix short probes, medium dashes and longer runs, with
 varied pauses, occasional sideways scuttles and small changes of course. The

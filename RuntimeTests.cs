@@ -24,6 +24,13 @@ namespace CornerSpider {
             if(args[0]=="--prey-preview") { RenderPreyPreview(folder);return 0; }
             if(args[0]=="--release-preview") { RenderSkinGallery(folder);RenderFingerPreview(folder);RenderHammockGallery(folder);return 0; }
             if(args[0]=="--hammock-preview") { RenderHammockGallery(folder);RenderSilkGallery(folder);return 0; }
+            if(args[0]=="--silk-test") {
+                log=new StringBuilder("Corner Spider retreat rendering checks\n");failures=0;
+                try { CheckSilkArt(folder);CheckRetreatVariety(folder);RenderHammockGallery(folder); }
+                catch(Exception ex) { Check(false,ex.ToString()); }
+                log.AppendLine("RESULT: "+(failures==0?"PASS":"FAIL")+" ("+failures+" failures).");
+                File.WriteAllText(Path.Combine(folder,"silk-render-checks.txt"),log.ToString());return failures==0?0:1;
+            }
             if(args[0]=="--finger-preview") { RenderFingerPreview(folder);return 0; }
             if(args[0]=="--nest-preview") { RenderNestEntry(folder);RenderHammockGallery(folder);return 0; }
             if(args[0]=="--dismount-preview") { RenderDismountPreview(folder);return 0; }
@@ -33,7 +40,7 @@ namespace CornerSpider {
                 using(var icon=PetHost.MakeIcon("Bold")) using(var file=File.Create(Path.Combine(folder,"CornerSpider.ico"))) icon.Save(file);
                 return 0;
             }
-            log=new StringBuilder();log.AppendLine("Corner Spider 1.0 RC12 Windows runtime checks "+DateTime.Now.ToString("s"));
+            log=new StringBuilder();log.AppendLine("Corner Spider 1.0 RC13 Windows runtime checks "+DateTime.Now.ToString("s"));
             string testSettings=Path.Combine(folder,"settings");Check(new Settings { FingerTone=.37,Species="PortiaLabiata" }.Save(testSettings),"seed isolated finger-tone and Portia preferences");
             IntPtr foreground=Native.GetForegroundWindow();var host=new PetHost(testSettings,true);
             IntPtr afterCreation=Native.GetForegroundWindow();uint foregroundPid,afterCreationPid;

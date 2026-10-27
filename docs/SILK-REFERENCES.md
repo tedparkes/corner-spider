@@ -1,4 +1,12 @@
-# Silk and retreat artwork — 1.0 RC2
+# Silk and retreat artwork — 1.0 RC13
+
+RC13 gives each species family a distinct silhouette and construction treatment.
+These are readable illustrations of the descriptions below, not a claim that
+each species always builds one recognizable architectural pattern. The shared
+oval has been replaced by independently shaped sleeves, cells, pockets and an
+open platform. See the [dark](species-retreats-dark.png) and
+[light](species-retreats-light.png) comparisons, and the
+[twenty settings previews](retreat-settings.png).
 
 The sleeping retreat now rests on a connected silk support mesh, with attachment
 bundles spread along both adjacent desktop edges. Fine cross ties end on actual
@@ -15,12 +23,12 @@ assets are required; silk is drawn procedurally and retained between frames.
 | Species | Artwork choice | Evidence and limits |
 | --- | --- | --- |
 | Regal | Elliptical sleeve with two openings | [UF/IFAS, Edwards](https://ask.ifas.ufl.edu/publication/IN309) describes ellipsoid retreats, end openings and use of plant/bark shelters. The exact weave is illustrative. |
-| Bold | Layered tubular shelter | Uses the general Phidippus retreat form, with a slightly fuller woven sleeve. Not claimed as a unique species web pattern. |
+| Bold | Broad tube with double walls and rolled cuffs | Uses the general Phidippus retreat form. The prominent cuffs and layering are artistic choices, not a unique species web pattern. |
 | Zebra | Smaller crevice sleeve | Scaled to its smaller body. The precise sleeve proportions and weave are artistic choices, not identification features. |
-| Tan | Lighter, flatter bark sleeve | Inspired by its low body and bark/crevice habitat. [Missouri Department of Conservation](https://mdc.mo.gov/discover-nature/field-guide/tan-jumping-spider). Silk use varies with activity; the app keeps a persistent shelter. |
+| Tan | Long flattened bark slit with lengthwise side seams | Inspired by its low body and bark/crevice habitat. [Missouri Department of Conservation](https://mdc.mo.gov/discover-nature/field-guide/tan-jumping-spider). Silk use varies with activity; the app keeps a persistent shelter. |
 | Red-backed | Layered tube; male version lighter | [Jackson 1979](https://www.americanarachnology.org/journal-joa/joa-all-volumes/detail/article/download/JoA_v7_p47.pdf/?no_cache=1) describes tubular nests, density variation and less dense nests occupied by males. These are tendencies, not a fixed sex-specific construction rule. |
 | Emerald | Layered leaf-side shelter | [Thurlow 2016](https://peckhamia.com/peckhamia/PECKHAMIA_144.1.pdf) documents a thick molting sac under a leaf; [Mooney & Haloin 2006](https://research.fs.usda.gov/treesearch/59222) measured differences in nest silk associated with guarding offspring. The app does not add eggs or assume every individual is guarding. |
-| Gray wall | Low crevice cell | Form and habitat inspired, with no claim that this exact silk arrangement is diagnostic. |
+| Gray wall | Short flat-sided crevice cell with transverse layers | Form and habitat inspired, with no claim that this exact silk arrangement is diagnostic. |
 | Pantropical | Tube within denser irregular silk | [Jackson & Macnab 1989](https://www.tandfonline.com/doi/abs/10.1080/03014223.1989.10422565) describes dense, complex nests. The added crossing threads suggest that structure. |
 | Apache | Gently tapered plant-side tube | General Phidippus retreat form with a modest artistic variation. Exact species-specific weave was not established. |
 | Portia labiata | Looser sleeping platform and extra funnel-like scaffold | [Jackson & Hallas 1986](https://gwern.net/doc/biology/portia/1986-jackson.pdf) compares Portia webs and illustrates P. labiata's irregular funnel-like structure. The app projects this idea into two dimensions and retains the existing sleeping routine. |
@@ -29,6 +37,14 @@ assets are required; silk is drawn procedurally and retained between frames.
 The other male/female pairs share their species' silk profile. Age, purpose,
 reproductive state and available attachment surfaces can matter as much as species.
 The app's variations should not be used to identify a real spider.
+
+The Emerald illustration uses a broad folded seam; Apache's sleeve narrows toward
+one end; Hyllus has a rounded pouch with a reinforced rim. Pantropical adds loose
+outer tangles, while Portia's central sleeping sheet stays uncovered with a small
+wall-side canopy. These treatments make the species descriptions visible without
+inventing eggs, new nest behaviors or unsupported sex differences. Anchor bundles
+meet the actual side outline of each retreat. All silhouettes stay inside the
+existing entry route clearance; the approach and two end openings are preserved.
 
 The little web resident remains a **generic prey spider**, not a named species.
 Its capture web uses a corner-shaped radial illustration: eleven direct

@@ -1,0 +1,387 @@
+Corner Spider retreat rendering checks
+PASS: hammock opacity fades and restores its original alpha: 0.5
+PASS: opacity changes retain cached art and nest progress
+PASS: hammock opacity fades and restores its original alpha: 0
+PASS: opacity changes retain cached art and nest progress
+PASS: hammock opacity fades and restores its original alpha: 1
+PASS: opacity changes retain cached art and nest progress
+PASS: retreat has multiple visible attachments to both desktop edges: Regal / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Regal / TopLeft
+PASS: static silk reuses its retained artwork: Regal / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Regal / TopRight
+PASS: retreat preserves clear desktop outside its corner: Regal / TopRight
+PASS: static silk reuses its retained artwork: Regal / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Regal / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Regal / BottomLeft
+PASS: static silk reuses its retained artwork: Regal / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Regal / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Regal / BottomRight
+PASS: static silk reuses its retained artwork: Regal / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: RegalMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: RegalMale / TopLeft
+PASS: static silk reuses its retained artwork: RegalMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RegalMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: RegalMale / TopRight
+PASS: static silk reuses its retained artwork: RegalMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: RegalMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: RegalMale / BottomLeft
+PASS: static silk reuses its retained artwork: RegalMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RegalMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: RegalMale / BottomRight
+PASS: static silk reuses its retained artwork: RegalMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: BoldFemale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: BoldFemale / TopLeft
+PASS: static silk reuses its retained artwork: BoldFemale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: BoldFemale / TopRight
+PASS: retreat preserves clear desktop outside its corner: BoldFemale / TopRight
+PASS: static silk reuses its retained artwork: BoldFemale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: BoldFemale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: BoldFemale / BottomLeft
+PASS: static silk reuses its retained artwork: BoldFemale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: BoldFemale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: BoldFemale / BottomRight
+PASS: static silk reuses its retained artwork: BoldFemale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Bold / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Bold / TopLeft
+PASS: static silk reuses its retained artwork: Bold / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Bold / TopRight
+PASS: retreat preserves clear desktop outside its corner: Bold / TopRight
+PASS: static silk reuses its retained artwork: Bold / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Bold / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Bold / BottomLeft
+PASS: static silk reuses its retained artwork: Bold / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Bold / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Bold / BottomRight
+PASS: static silk reuses its retained artwork: Bold / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Zebra / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Zebra / TopLeft
+PASS: static silk reuses its retained artwork: Zebra / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Zebra / TopRight
+PASS: retreat preserves clear desktop outside its corner: Zebra / TopRight
+PASS: static silk reuses its retained artwork: Zebra / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Zebra / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Zebra / BottomLeft
+PASS: static silk reuses its retained artwork: Zebra / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Zebra / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Zebra / BottomRight
+PASS: static silk reuses its retained artwork: Zebra / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: ZebraMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: ZebraMale / TopLeft
+PASS: static silk reuses its retained artwork: ZebraMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: ZebraMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: ZebraMale / TopRight
+PASS: static silk reuses its retained artwork: ZebraMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: ZebraMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: ZebraMale / BottomLeft
+PASS: static silk reuses its retained artwork: ZebraMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: ZebraMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: ZebraMale / BottomRight
+PASS: static silk reuses its retained artwork: ZebraMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Tan / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Tan / TopLeft
+PASS: static silk reuses its retained artwork: Tan / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Tan / TopRight
+PASS: retreat preserves clear desktop outside its corner: Tan / TopRight
+PASS: static silk reuses its retained artwork: Tan / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Tan / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Tan / BottomLeft
+PASS: static silk reuses its retained artwork: Tan / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Tan / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Tan / BottomRight
+PASS: static silk reuses its retained artwork: Tan / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: TanMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: TanMale / TopLeft
+PASS: static silk reuses its retained artwork: TanMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: TanMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: TanMale / TopRight
+PASS: static silk reuses its retained artwork: TanMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: TanMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: TanMale / BottomLeft
+PASS: static silk reuses its retained artwork: TanMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: TanMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: TanMale / BottomRight
+PASS: static silk reuses its retained artwork: TanMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: RedBackFemale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: RedBackFemale / TopLeft
+PASS: static silk reuses its retained artwork: RedBackFemale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RedBackFemale / TopRight
+PASS: retreat preserves clear desktop outside its corner: RedBackFemale / TopRight
+PASS: static silk reuses its retained artwork: RedBackFemale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: RedBackFemale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: RedBackFemale / BottomLeft
+PASS: static silk reuses its retained artwork: RedBackFemale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RedBackFemale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: RedBackFemale / BottomRight
+PASS: static silk reuses its retained artwork: RedBackFemale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: RedBack / TopLeft
+PASS: retreat preserves clear desktop outside its corner: RedBack / TopLeft
+PASS: static silk reuses its retained artwork: RedBack / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RedBack / TopRight
+PASS: retreat preserves clear desktop outside its corner: RedBack / TopRight
+PASS: static silk reuses its retained artwork: RedBack / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: RedBack / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: RedBack / BottomLeft
+PASS: static silk reuses its retained artwork: RedBack / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RedBack / BottomRight
+PASS: retreat preserves clear desktop outside its corner: RedBack / BottomRight
+PASS: static silk reuses its retained artwork: RedBack / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Emerald / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Emerald / TopLeft
+PASS: static silk reuses its retained artwork: Emerald / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Emerald / TopRight
+PASS: retreat preserves clear desktop outside its corner: Emerald / TopRight
+PASS: static silk reuses its retained artwork: Emerald / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Emerald / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Emerald / BottomLeft
+PASS: static silk reuses its retained artwork: Emerald / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Emerald / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Emerald / BottomRight
+PASS: static silk reuses its retained artwork: Emerald / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: EmeraldMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: EmeraldMale / TopLeft
+PASS: static silk reuses its retained artwork: EmeraldMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: EmeraldMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: EmeraldMale / TopRight
+PASS: static silk reuses its retained artwork: EmeraldMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: EmeraldMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: EmeraldMale / BottomLeft
+PASS: static silk reuses its retained artwork: EmeraldMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: EmeraldMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: EmeraldMale / BottomRight
+PASS: static silk reuses its retained artwork: EmeraldMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWall / TopLeft
+PASS: retreat preserves clear desktop outside its corner: GrayWall / TopLeft
+PASS: static silk reuses its retained artwork: GrayWall / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWall / TopRight
+PASS: retreat preserves clear desktop outside its corner: GrayWall / TopRight
+PASS: static silk reuses its retained artwork: GrayWall / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWall / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: GrayWall / BottomLeft
+PASS: static silk reuses its retained artwork: GrayWall / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWall / BottomRight
+PASS: retreat preserves clear desktop outside its corner: GrayWall / BottomRight
+PASS: static silk reuses its retained artwork: GrayWall / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWallMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: GrayWallMale / TopLeft
+PASS: static silk reuses its retained artwork: GrayWallMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWallMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: GrayWallMale / TopRight
+PASS: static silk reuses its retained artwork: GrayWallMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWallMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: GrayWallMale / BottomLeft
+PASS: static silk reuses its retained artwork: GrayWallMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWallMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: GrayWallMale / BottomRight
+PASS: static silk reuses its retained artwork: GrayWallMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: PantropicalFemale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: PantropicalFemale / TopLeft
+PASS: static silk reuses its retained artwork: PantropicalFemale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: PantropicalFemale / TopRight
+PASS: retreat preserves clear desktop outside its corner: PantropicalFemale / TopRight
+PASS: static silk reuses its retained artwork: PantropicalFemale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: PantropicalFemale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: PantropicalFemale / BottomLeft
+PASS: static silk reuses its retained artwork: PantropicalFemale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: PantropicalFemale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: PantropicalFemale / BottomRight
+PASS: static silk reuses its retained artwork: PantropicalFemale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Pantropical / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Pantropical / TopLeft
+PASS: static silk reuses its retained artwork: Pantropical / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Pantropical / TopRight
+PASS: retreat preserves clear desktop outside its corner: Pantropical / TopRight
+PASS: static silk reuses its retained artwork: Pantropical / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Pantropical / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Pantropical / BottomLeft
+PASS: static silk reuses its retained artwork: Pantropical / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Pantropical / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Pantropical / BottomRight
+PASS: static silk reuses its retained artwork: Pantropical / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: ApacheFemale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: ApacheFemale / TopLeft
+PASS: static silk reuses its retained artwork: ApacheFemale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: ApacheFemale / TopRight
+PASS: retreat preserves clear desktop outside its corner: ApacheFemale / TopRight
+PASS: static silk reuses its retained artwork: ApacheFemale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: ApacheFemale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: ApacheFemale / BottomLeft
+PASS: static silk reuses its retained artwork: ApacheFemale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: ApacheFemale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: ApacheFemale / BottomRight
+PASS: static silk reuses its retained artwork: ApacheFemale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Apache / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Apache / TopLeft
+PASS: static silk reuses its retained artwork: Apache / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Apache / TopRight
+PASS: retreat preserves clear desktop outside its corner: Apache / TopRight
+PASS: static silk reuses its retained artwork: Apache / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Apache / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Apache / BottomLeft
+PASS: static silk reuses its retained artwork: Apache / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Apache / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Apache / BottomRight
+PASS: static silk reuses its retained artwork: Apache / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: PortiaLabiata / TopLeft
+PASS: retreat preserves clear desktop outside its corner: PortiaLabiata / TopLeft
+PASS: static silk reuses its retained artwork: PortiaLabiata / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: PortiaLabiata / TopRight
+PASS: retreat preserves clear desktop outside its corner: PortiaLabiata / TopRight
+PASS: static silk reuses its retained artwork: PortiaLabiata / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: PortiaLabiata / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: PortiaLabiata / BottomLeft
+PASS: static silk reuses its retained artwork: PortiaLabiata / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: PortiaLabiata / BottomRight
+PASS: retreat preserves clear desktop outside its corner: PortiaLabiata / BottomRight
+PASS: static silk reuses its retained artwork: PortiaLabiata / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: HyllusDiardiGreen / TopLeft
+PASS: retreat preserves clear desktop outside its corner: HyllusDiardiGreen / TopLeft
+PASS: static silk reuses its retained artwork: HyllusDiardiGreen / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: HyllusDiardiGreen / TopRight
+PASS: retreat preserves clear desktop outside its corner: HyllusDiardiGreen / TopRight
+PASS: static silk reuses its retained artwork: HyllusDiardiGreen / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: HyllusDiardiGreen / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: HyllusDiardiGreen / BottomLeft
+PASS: static silk reuses its retained artwork: HyllusDiardiGreen / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: HyllusDiardiGreen / BottomRight
+PASS: retreat preserves clear desktop outside its corner: HyllusDiardiGreen / BottomRight
+PASS: static silk reuses its retained artwork: HyllusDiardiGreen / BottomRight
+PASS: switching species replaces the retained silk style immediately
+PASS: saved silk progress still controls growth layers
+PASS: growing silk preserves existing threads rather than rearranging them: Regal
+PASS: growing silk preserves existing threads rather than rearranging them: RegalMale
+PASS: growing silk preserves existing threads rather than rearranging them: BoldFemale
+PASS: growing silk preserves existing threads rather than rearranging them: Bold
+PASS: growing silk preserves existing threads rather than rearranging them: Zebra
+PASS: growing silk preserves existing threads rather than rearranging them: ZebraMale
+PASS: growing silk preserves existing threads rather than rearranging them: Tan
+PASS: growing silk preserves existing threads rather than rearranging them: TanMale
+PASS: growing silk preserves existing threads rather than rearranging them: RedBackFemale
+PASS: growing silk preserves existing threads rather than rearranging them: RedBack
+PASS: growing silk preserves existing threads rather than rearranging them: Emerald
+PASS: growing silk preserves existing threads rather than rearranging them: EmeraldMale
+PASS: growing silk preserves existing threads rather than rearranging them: GrayWall
+PASS: growing silk preserves existing threads rather than rearranging them: GrayWallMale
+PASS: growing silk preserves existing threads rather than rearranging them: PantropicalFemale
+PASS: growing silk preserves existing threads rather than rearranging them: Pantropical
+PASS: growing silk preserves existing threads rather than rearranging them: ApacheFemale
+PASS: growing silk preserves existing threads rather than rearranging them: Apache
+PASS: growing silk preserves existing threads rather than rearranging them: PortiaLabiata
+PASS: growing silk preserves existing threads rather than rearranging them: HyllusDiardiGreen
+PASS: retreat silhouettes visibly differ before texture: Bold / Regal
+PASS: retreat silhouettes visibly differ before texture: Zebra / Regal
+PASS: retreat silhouettes visibly differ before texture: Zebra / Bold
+PASS: retreat silhouettes visibly differ before texture: Tan / Regal
+PASS: retreat silhouettes visibly differ before texture: Tan / Bold
+PASS: retreat silhouettes visibly differ before texture: Tan / Zebra
+PASS: retreat silhouettes visibly differ before texture: RedBackFemale / Regal
+PASS: retreat silhouettes visibly differ before texture: RedBackFemale / Bold
+PASS: retreat silhouettes visibly differ before texture: RedBackFemale / Zebra
+PASS: retreat silhouettes visibly differ before texture: RedBackFemale / Tan
+PASS: retreat silhouettes visibly differ before texture: Emerald / Regal
+PASS: retreat silhouettes visibly differ before texture: Emerald / Bold
+PASS: retreat silhouettes visibly differ before texture: Emerald / Zebra
+PASS: retreat silhouettes visibly differ before texture: Emerald / Tan
+PASS: retreat silhouettes visibly differ before texture: Emerald / RedBackFemale
+PASS: retreat silhouettes visibly differ before texture: GrayWall / Regal
+PASS: retreat silhouettes visibly differ before texture: GrayWall / Bold
+PASS: retreat silhouettes visibly differ before texture: GrayWall / Zebra
+PASS: retreat silhouettes visibly differ before texture: GrayWall / Tan
+PASS: retreat silhouettes visibly differ before texture: GrayWall / RedBackFemale
+PASS: retreat silhouettes visibly differ before texture: GrayWall / Emerald
+PASS: retreat silhouettes visibly differ before texture: Pantropical / Regal
+PASS: retreat silhouettes visibly differ before texture: Pantropical / Bold
+PASS: retreat silhouettes visibly differ before texture: Pantropical / Zebra
+PASS: retreat silhouettes visibly differ before texture: Pantropical / Tan
+PASS: retreat silhouettes visibly differ before texture: Pantropical / RedBackFemale
+PASS: retreat silhouettes visibly differ before texture: Pantropical / Emerald
+PASS: retreat silhouettes visibly differ before texture: Pantropical / GrayWall
+PASS: retreat silhouettes visibly differ before texture: Apache / Regal
+PASS: retreat silhouettes visibly differ before texture: Apache / Bold
+PASS: retreat silhouettes visibly differ before texture: Apache / Zebra
+PASS: retreat silhouettes visibly differ before texture: Apache / Tan
+PASS: retreat silhouettes visibly differ before texture: Apache / RedBackFemale
+PASS: retreat silhouettes visibly differ before texture: Apache / Emerald
+PASS: retreat silhouettes visibly differ before texture: Apache / GrayWall
+PASS: retreat silhouettes visibly differ before texture: Apache / Pantropical
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / Regal
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / Bold
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / Zebra
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / Tan
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / RedBackFemale
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / Emerald
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / GrayWall
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / Pantropical
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / Apache
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / Regal
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / Bold
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / Zebra
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / Tan
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / RedBackFemale
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / Emerald
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / GrayWall
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / Pantropical
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / Apache
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / PortiaLabiata
+PASS: visible vector silk at 0.2: Regal
+PASS: visible vector silk at 1: Regal
+PASS: visible vector silk at 1.8: Regal
+PASS: visible vector silk at 0.2: RegalMale
+PASS: visible vector silk at 1: RegalMale
+PASS: visible vector silk at 1.8: RegalMale
+PASS: visible vector silk at 0.2: BoldFemale
+PASS: visible vector silk at 1: BoldFemale
+PASS: visible vector silk at 1.8: BoldFemale
+PASS: visible vector silk at 0.2: Bold
+PASS: visible vector silk at 1: Bold
+PASS: visible vector silk at 1.8: Bold
+PASS: visible vector silk at 0.2: Zebra
+PASS: visible vector silk at 1: Zebra
+PASS: visible vector silk at 1.8: Zebra
+PASS: visible vector silk at 0.2: ZebraMale
+PASS: visible vector silk at 1: ZebraMale
+PASS: visible vector silk at 1.8: ZebraMale
+PASS: visible vector silk at 0.2: Tan
+PASS: visible vector silk at 1: Tan
+PASS: visible vector silk at 1.8: Tan
+PASS: visible vector silk at 0.2: TanMale
+PASS: visible vector silk at 1: TanMale
+PASS: visible vector silk at 1.8: TanMale
+PASS: visible vector silk at 0.2: RedBackFemale
+PASS: visible vector silk at 1: RedBackFemale
+PASS: visible vector silk at 1.8: RedBackFemale
+PASS: visible vector silk at 0.2: RedBack
+PASS: visible vector silk at 1: RedBack
+PASS: visible vector silk at 1.8: RedBack
+PASS: visible vector silk at 0.2: Emerald
+PASS: visible vector silk at 1: Emerald
+PASS: visible vector silk at 1.8: Emerald
+PASS: visible vector silk at 0.2: EmeraldMale
+PASS: visible vector silk at 1: EmeraldMale
+PASS: visible vector silk at 1.8: EmeraldMale
+PASS: visible vector silk at 0.2: GrayWall
+PASS: visible vector silk at 1: GrayWall
+PASS: visible vector silk at 1.8: GrayWall
+PASS: visible vector silk at 0.2: GrayWallMale
+PASS: visible vector silk at 1: GrayWallMale
+PASS: visible vector silk at 1.8: GrayWallMale
+PASS: visible vector silk at 0.2: PantropicalFemale
+PASS: visible vector silk at 1: PantropicalFemale
+PASS: visible vector silk at 1.8: PantropicalFemale
+PASS: visible vector silk at 0.2: Pantropical
+PASS: visible vector silk at 1: Pantropical
+PASS: visible vector silk at 1.8: Pantropical
+PASS: visible vector silk at 0.2: ApacheFemale
+PASS: visible vector silk at 1: ApacheFemale
+PASS: visible vector silk at 1.8: ApacheFemale
+PASS: visible vector silk at 0.2: Apache
+PASS: visible vector silk at 1: Apache
+PASS: visible vector silk at 1.8: Apache
+PASS: visible vector silk at 0.2: PortiaLabiata
+PASS: visible vector silk at 1: PortiaLabiata
+PASS: visible vector silk at 1.8: PortiaLabiata
+PASS: visible vector silk at 0.2: HyllusDiardiGreen
+PASS: visible vector silk at 1: HyllusDiardiGreen
+PASS: visible vector silk at 1.8: HyllusDiardiGreen
+PASS: open Portia platform versus covered oval: Regal
+PASS: open Portia platform versus covered oval: PortiaLabiata
+RESULT: PASS (0 failures).

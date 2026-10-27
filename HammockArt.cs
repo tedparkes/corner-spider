@@ -21,16 +21,67 @@ namespace CornerSpider {
             if(bundle) Curve(d,"#5234464d",width+.7,a,b,c,end);
             Curve(d,"#edf8fbf4",width,a,b,c,end);d.Pop();
         }
-        static StreamGeometry Pocket() {
+        static Point PocketPoint(SilkProfile p,int side,double t,double inset=0) {
+            return new Point(p.Edge(t,side)-side*inset,p.Along(t));
+        }
+        internal static StreamGeometry Pocket(SilkProfile profile) {
             var g=new StreamGeometry();using(var p=g.Open()) {
-                p.BeginFigure(new Point(-16,-43),true,true);
-                p.BezierTo(new Point(-29,-32),new Point(-34,-5),new Point(-29,20),true,false);
-                p.BezierTo(new Point(-27,39),new Point(-19,49),new Point(-13,51),true,false);
-                p.BezierTo(new Point(-5,48),new Point(6,48),new Point(14,50),true,false);
-                p.BezierTo(new Point(30,34),new Point(33,6),new Point(29,-16),true,false);
-                p.BezierTo(new Point(27,-32),new Point(22,-42),new Point(16,-44),true,false);
-                p.BezierTo(new Point(7,-40),new Point(-7,-40),new Point(-16,-43),true,false);
+                p.BeginFigure(PocketPoint(profile,-1,0),true,true);
+                for(int i=1;i<=64;i++) p.LineTo(PocketPoint(profile,-1,i/64.0),true,false);
+                Point a=PocketPoint(profile,1,1),b=PocketPoint(profile,-1,1);
+                p.BezierTo(new Point(b.X*.5,b.Y-4),new Point(a.X*.5,a.Y-4),a,true,false);
+                for(int i=63;i>=0;i--) p.LineTo(PocketPoint(profile,1,i/64.0),true,false);
+                a=PocketPoint(profile,-1,0);b=PocketPoint(profile,1,0);
+                p.BezierTo(new Point(b.X*.5,b.Y+4),new Point(a.X*.5,a.Y+4),a,true,false);
             }g.Freeze();return g;
+        }
+        static void Seam(DrawingContext d,SilkProfile profile,int side,double inset,double opacity,double width) {
+            var g=new StreamGeometry();using(var p=g.Open()) {
+                p.BeginFigure(PocketPoint(profile,side,0,inset),false,false);
+                for(int i=1;i<=64;i++) p.LineTo(PocketPoint(profile,side,i/64.0,inset),true,false);
+            }g.Freeze();d.PushOpacity(opacity);d.DrawGeometry(null,P("#edf8fbf4",width),g);d.Pop();
+        }
+        static void RetreatDetails(DrawingContext d,SilkProfile p,double maturity) {
+            // Construction changes the silhouette and folded layers, rather than
+            // merely recoloring a common oval. No decoration blocks the end axis.
+            double strength=.65+maturity*.35;
+            switch(p.Style) {
+                case RetreatStyle.Tube:case RetreatStyle.LongTube:case RetreatStyle.Pocket:
+                    for(int side=-1;side<=1;side+=2) for(int i=0;i<5;i++)
+                        Seam(d,p,side,1.2+i*.9,strength*.24*p.Density,i==0?.65:.35);
+                    break;
+                case RetreatStyle.Bark:case RetreatStyle.Crevice:
+                    for(int side=-1;side<=1;side+=2) for(int i=0;i<4;i++)
+                        Seam(d,p,side,1+i*.7,strength*.30,.4);
+                    break;
+                case RetreatStyle.Leaf:
+                    for(int i=0;i<14;i++) {
+                        double x=i*.55;
+                        Fiber(d,.16*strength,.45,new Point(-24+x,-25),new Point(9+x,-15),new Point(-9+x,18),new Point(23+x,33),i==0);
+                    }
+                    break;
+                case RetreatStyle.Cell:
+                    for(int side=-1;side<=1;side+=2) Seam(d,p,side,2,.55*strength,.7);
+                    for(int i=0;i<12;i++) {
+                        double y=-20+i*4;
+                        Fiber(d,.20*strength,.4,new Point(-27,y),new Point(-9,y-3),new Point(12,y-3),new Point(29,y),false);
+                    }
+                    break;
+                case RetreatStyle.Taper:
+                    for(int i=0;i<9;i++) {
+                        double x=-19+i*5;
+                        Fiber(d,.27*strength,.45,new Point(x,-29),new Point(x*1.1,-4),new Point(x*.5,28),new Point(x*.35,48),i%4==0);
+                    }
+                    break;
+            }
+        }
+        static void TangledWrap(DrawingContext d,SilkProfile p,int level) {
+            var r=new Random(p.Seed+339);
+            for(int i=0;i<48+level;i++) {
+                double t=R(r,.08,.92),next=R(r,.08,.92);int side=i%2==0?-1:1;
+                Point a=PocketPoint(p,side,t),b=PocketPoint(p,side,next);
+                Fiber(d,.22,.3,a,new Point(a.X+side*R(r,6,16),a.Y+R(r,-12,12)),new Point(b.X+side*R(r,6,16),b.Y+R(r,-12,12)),b,i%13==0);
+            }
         }
         static Point Lerp(Point a,Point b,double t) { return new Point(a.X+(b.X-a.X)*t,a.Y+(b.Y-a.Y)*t); }
         static Point RibPoint(Point a,Point b,double t) {
@@ -50,8 +101,9 @@ namespace CornerSpider {
                 // Broadly spaced attachment patches meet both actual desktop edges.
                 // Their roots extend back toward the corner, not just two thin fans.
                 roots[i]=top?new Point(-56+(edgeX+48)*t,-edgeY):new Point(edgeX,-edgeY+8+(edgeY+48)*t);
-                double along=(top?46-t*74:28-t*74)+R(random,-4,4);
-                ends[i]=NestPoint((-25+R(random,-2,2))*profile.Width,along*profile.Length);
+                double along=Math.Max(.04,Math.Min(.96,(top? .93-t*.79:.74-t*.70)+R(random,-.025,.025)));
+                // Meet this retreat's actual side seam, even on narrow sleeves.
+                ends[i]=NestPoint((profile.Edge(along,-1)+1)*profile.Width,profile.Along(along)*profile.Length);
                 for(int strand=0;strand<3;strand++) {
                     Point a=top?new Point(roots[i].X+strand*.8,roots[i].Y):new Point(roots[i].X,roots[i].Y+strand*.8);
                     Point b=new Point(ends[i].X+strand*.35,ends[i].Y-strand*.35);
@@ -75,9 +127,9 @@ namespace CornerSpider {
             // The sleeping platform retains both usable end entrances.
             if(profile.Scaffold) {
                 Point high=new Point(edgeX*.64,-edgeY*.83),low=NestPoint(-22,22);
-                for(int i=0;i<12;i++) {
-                    Point root=roots[i];Point at=Lerp(high,low,(i%6)/6.0);
-                    Rib(d,.24,.34,root,at,i%4==0);Rib(d,.20,.25,at,ends[(i+5)%count],false);
+                for(int i=0;i<24;i++) {
+                    Point root=roots[i%count];Point at=Lerp(high,low,(i%8)/8.0);
+                    Rib(d,.29,.38,root,at,i%4==0);Rib(d,.23,.3,at,ends[(i+5)%count],false);
                 }
             }
         }
@@ -90,43 +142,54 @@ namespace CornerSpider {
                 var random=new Random(profile.Seed);
                 Foundation(d,profile,level,edgeX,edgeY);
                 d.PushTransform(new RotateTransform(135));d.PushTransform(new ScaleTransform(profile.Width,profile.Length));
-                var shape=Pocket();
-                d.PushOpacity((.5+maturity*.5)*profile.Density);d.DrawGeometry(B("#1fe6f0eb"),null,shape);d.Pop();
+                var shape=Pocket(profile);
+                if(profile.Style==RetreatStyle.Tangle) TangledWrap(d,profile,level);
+                d.PushOpacity((.5+maturity*.5)*profile.Density);d.DrawGeometry(B(profile.Scaffold?"#08e6f0eb":"#1fe6f0eb"),null,shape);d.Pop();
                 d.PushClip(shape);
-                Oval(d,SoftGlow("#42edf7ef"),-20,7,19,53);Oval(d,SoftGlow("#38edf7ef"),22,8,18,49);
+                if(!profile.Scaffold) {
+                    Oval(d,SoftGlow("#42edf7ef"),profile.Edge(.5,-1),7,12,53);
+                    Oval(d,SoftGlow("#38edf7ef"),profile.Edge(.5,1),8,12,49);
+                }
                 // Uneven, crossing lengthwise sheets, not a regular capture-web grid.
                 for(int i=0;i<(65+level*2)*profile.Density;i++) {
-                    double x=R(random,-33,33),end=R(random,-25,25);
+                    double x=R(random,-53,53),end=R(random,-42,42);
                     Fiber(d,R(random,.19,.46),i%11==0?.55:.25,new Point(x,-50),new Point(x*.8+R(random,-5,5),-12),new Point(end*.8+R(random,-6,6),27),new Point(end,56),i%17==0);
                 }
                 random=new Random(profile.Seed+113);
                 for(int i=0;i<(16+level)*profile.Weave;i++) {
                     double y=R(random,-46,49);
-                    Fiber(d,R(random,.12,.32),.3,new Point(-35,y),new Point(-12,y+R(random,-9,10)),new Point(14,y+R(random,-7,9)),new Point(35,y+R(random,-11,11)),false);
+                    Fiber(d,R(random,.12,.32),.3,new Point(-55,y),new Point(-12,y+R(random,-9,10)),new Point(14,y+R(random,-7,9)),new Point(55,y+R(random,-11,11)),false);
                 }
                 d.Pop();d.Pop();d.Pop();
             }nestBack.Freeze();
             using(var d=nestFront.Open()) {
                 var random=new Random(profile.Seed+5516);
-                d.PushTransform(new RotateTransform(135));d.PushTransform(new ScaleTransform(profile.Width,profile.Length));var shape=Pocket();
-                d.PushOpacity((.6+maturity*.4)*Math.Min(1,profile.Density));d.DrawGeometry(B("#16f3f9ef"),null,shape);d.Pop();
+                d.PushTransform(new RotateTransform(135));d.PushTransform(new ScaleTransform(profile.Width,profile.Length));var shape=Pocket(profile);
                 d.PushClip(shape);
+                // Portia's sleeping sheet is open. Only the wall-side lip has a
+                // canopy; the broad floor and tall scaffold remain visible below.
+                if(profile.Scaffold) d.PushClip(new RectangleGeometry(new Rect(-60,-60,39,125)));
+                d.PushOpacity((.6+maturity*.4)*Math.Min(1,profile.Density));d.DrawGeometry(B("#16f3f9ef"),null,shape);d.Pop();
                 // A thin translucent cover leaves eyes and coat visible underneath.
                 for(int i=0;i<(30+level)*profile.Density;i++) {
-                    double x=R(random,-34,34),end=x+R(random,-18,18);
+                    double x=R(random,-53,53),end=x+R(random,-18,18);
                     Fiber(d,R(random,.15,.38),i%13==0?.5:.25,new Point(x,-50),new Point(x+R(random,-7,7),-11),new Point(end+R(random,-6,6),28),new Point(end,56),i%23==0);
                 }
                 random=new Random(profile.Seed+224);
                 for(int i=0;i<(10+level/2)*profile.Weave;i++) {
                     double y=R(random,-43,48);
-                    Fiber(d,.18,.25,new Point(-34,y),new Point(-14,y+9),new Point(15,y-4),new Point(34,y+8),false);
+                    Fiber(d,.18,.25,new Point(-55,y),new Point(-14,y+9),new Point(15,y-4),new Point(55,y+8),false);
                 }
+                RetreatDetails(d,profile,maturity);
+                if(profile.Scaffold) d.Pop();
                 d.Pop();
                 random=new Random(profile.Seed+225);
                 // Loose, frayed rims suggest the two small retreat entrances.
-                for(int end=-1;end<=1;end+=2) for(int i=0;i<6;i++) {
+                int rims=profile.Scaffold?2:profile.Style==RetreatStyle.Tube?11:profile.Style==RetreatStyle.Pocket?9:5;
+                for(int end=-1;end<=1;end+=2) for(int i=0;i<rims;i++) {
                     double y=end<0?-43:50,offset=R(random,-1.8,1.8);
-                    Fiber(d,.35+maturity*.12,.3,new Point(-16-i*.4,y+offset),new Point(-8,y-end*5+offset),new Point(7,y-end*5+offset),new Point(16+i*.3,y+offset),i==0);
+                    double t=end<0?0:1,left=profile.Edge(t,-1),right=profile.Edge(t,1);
+                    Fiber(d,(.35+maturity*.12)*Math.Min(1,profile.Density),.3,new Point(left-i*.18,y+offset),new Point(left*.5,y-end*(4+i*.28)+offset),new Point(right*.5,y-end*(4+i*.28)+offset),new Point(right+i*.18,y+offset),i==0);
                 }
                 d.Pop();d.Pop();
             }nestFront.Freeze();

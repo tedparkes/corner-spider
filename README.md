@@ -1,7 +1,13 @@
-# Corner Spider 1.0 RC12
+# Corner Spider 1.0 RC13
 
 A small jumping spider for your actual Windows desktop. It watches from corners,
 stalks occasional prey, builds a silk retreat and sometimes accepts a finger ride.
+
+The eleven species families now have visibly different silk shelters, from flat
+crevice sleeves and folded envelopes to roomy pouches and Portia's open platform.
+The same artwork appears on the desktop and in the skin preview. See the
+[retreat comparison](docs/species-retreats-dark.png) and
+[all twenty settings previews](docs/retreat-settings.png).
 
 Travel mixes short probes, medium dashes and occasional longer runs. Sideways
 scuttles and small changes of course break up long straight trips; the feet follow
@@ -36,7 +42,7 @@ and matte shading. The larger preview retains each species' details.
 
 ![Settings with silk visibility and the subtle optional support button](docs/settings-banner.png)
 
-This is the **1.0.0-rc.12 release candidate**. Windows build and automated checks
+This is the **1.0.0-rc.13 release candidate**. Windows build and automated checks
 pass; the remaining hands-on release checklist is in [verification notes](docs/VERIFICATION.md).
 
 ## Download and start

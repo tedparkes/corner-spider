@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+## 1.0.0-rc.13
+
+- Give the eleven species families distinct retreat silhouettes instead of
+  variations of one oval: ellipsoid, broad cuffed tube, compact crevice sleeve,
+  long bark slit, narrow tube, folded envelope, flat cell, tangled shelter,
+  tapered sleeve, open platform and broad pouch.
+- Add construction details that remain visible in the settings preview:
+  layered side walls, rolled cuffs, folded seams, converging strands and loose
+  outer silk. Portia rests on a largely uncovered sheet beneath its scaffold.
+- Attach foundation bundles to each shelter's actual side seam, keeping both
+  desktop edges connected even for the narrowest sleeves.
+- Retain the diagonal sleeping pose, end entrances, saved growth, transparency
+  slider and bounded artwork cache. Male/female pairs share their species' form;
+  the red-backed male keeps a lighter version of its species' tube.
+- Update species blurbs and silk-reference notes to separate documented natural
+  history from illustrative construction choices.
+- Add silhouette, route-clearance, coverage and size regressions plus a focused
+  `--silk-test` diagnostic and a gallery of all twenty settings previews.
+
 ## 1.0.0-rc.12
 
 - Replace uniform short travel timers with distance-based bouts: small probes,
