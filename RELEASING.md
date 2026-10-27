@@ -38,6 +38,21 @@ tags and ZIPs unchanged.
    Both ZIPs contain CHANGELOG.md at the root.
 7. Check the draft's changelog, files and links, then publish when ready.
 
+## Preserve the published wording
+
+Before editing an existing release or preparing its successor, fetch the current
+GitHub release body and README. The maintained public text is the editorial
+baseline; generated notes are a draft. Preserve manual wording changes and
+deletions, and merge only the intended additions. Do not replace a live post with
+an older local copy or restore removed text while adding screenshots or fixes.
+
+Keep the screenshot introduction brief: **All 20 skin options across 11 species**
+(update the counts when the app changes), followed by the combined gallery.
+Keep the collapsible silk-retreat comparison. Omit the removed explanation about
+plain backgrounds, enlarged views and personal windows, and the extra gallery
+download/dark-background link row. The images can remain available as assets.
+Apply these choices when reviewing generated release notes for later versions.
+
 The portable executable is unsigned. Do not claim it is signed, security-certified
 or tested on systems that were not exercised. Code signing is a future improvement.
 
