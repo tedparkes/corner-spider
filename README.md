@@ -10,6 +10,18 @@ stalks occasional prey, builds a silk retreat and sometimes accepts a finger rid
 Extract the ZIP, then open **JumpingSpider.exe**. Windows 10/11 with .NET Framework
 4.8; no installer or administrator rights required. This community build is unsigned.
 
+## Meet the spiders
+
+All **20 skin options across 11 species**, rendered by the app on a plain background.
+Each is labeled with its common name, sex and scientific name. These are enlarged
+views of the actual procedural artwork, with no desktop or personal windows included.
+
+![All twenty Corner Spider skin options on a light background](docs/skins-light.png)
+
+[Open the full-size gallery](docs/skins-light.png) ·
+[View on a dark background](docs/skins-dark.png) ·
+[Compare the silk retreats](docs/species-retreats-dark.png)
+
 The eleven species families now have visibly different silk shelters, from flat
 crevice sleeves and folded envelopes to roomy pouches and Portia's open platform.
 The same artwork appears on the desktop and in the skin preview. See the
@@ -23,7 +35,6 @@ approach stay deliberate, and passing the cursor still interrupts a patrol.
 
 See the [changelog](CHANGELOG.md) for changes and fixes by version.
 
-![Twenty procedural spider skins](docs/skins-light.png)
 Portia's resident prey builds a larger corner web and waits at its center. Portia
 reserves that corner, then steps onto the farthest safe point toward an anchored
 side end. She turns to face the resident before signaling and watches it throughout
