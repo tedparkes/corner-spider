@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 1.0.0-rc.14
+
+- Make optional support QR-only: remove the visible Cash App username, payment
+  link, recipient tooltip and browser-launch code. Keep the original recognizable
+  QR, a short scanning instruction and the Close button.
+- Update support documentation and native flyout checks for the simplified UI.
+
 ## 1.0.0-rc.13
 
 - Give the eleven species families distinct retreat silhouettes instead of

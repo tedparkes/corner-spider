@@ -1,4 +1,7 @@
-CORNER SPIDER 1.0 RC13 (1.0.0-rc.13)
+CORNER SPIDER 1.0 RC14 (1.0.0-rc.14)
+
+RC14: Optional support now shows only the original Cash App QR code, with no
+username label, payment link or browser launch.
 
 RC13: Eleven distinct retreat shapes, with layered tubes, flat sleeves, folded
 envelopes, tangled shelters, a broad pouch and Portia's open platform. The same
@@ -48,7 +51,7 @@ See docs\SILK-REFERENCES.md for evidence and artistic choices.
 
 Also included: Portia corner-web encounters, species personalities, and an optional
 "Buy me a coffee / Monster" button. It opens a flyout containing the original
-Cash App QR and the $tedparkes link. Only clicking the link opens your browser.
+Cash App QR to scan with your phone. No username or clickable payment link is shown.
 Close it with Close, Escape or an outside click. Support is optional.
 
 Select Portia, then Settings > Behavior > Invite a web-building spider. It builds
@@ -126,7 +129,7 @@ Delete the extracted folder to remove; optionally delete the local save folder.
 Free software under the MIT License. Unsigned community build; Windows may display
 an unknown-publisher warning. Compare the release's SHA-256 checksums.
 No accounts, telemetry, reference photos or asset downloads. The pet works offline.
-Optional support opens cash.app in your browser only when clicked. No payment
+Optional support shows the original Cash App QR code. No payment
 credentials are collected. This release candidate has not been published.
 Before public 1.0, complete the hands-on checklist in docs\VERIFICATION.md.
 See README.md for fuller instructions, docs\VERIFICATION.md for tests and limits,

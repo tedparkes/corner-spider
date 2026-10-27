@@ -42,9 +42,9 @@ The portable executable is unsigned. Do not claim it is signed, security-certifi
 or tested on systems that were not exercised. Code signing is a future improvement.
 
 Before final 1.0, complete the manual checklist and update the informational
-version from 1.0.0-rc.13 to 1.0.0. Retest the exact release contents. The optional
+version from 1.0.0-rc.14 to 1.0.0. Retest the exact release contents. The optional
 support QR intentionally identifies the creator; review docs/SUPPORT.md before
-redistributing a fork. Keep this recipient or replace both QR and link deliberately.
+redistributing a fork. Keep this recipient or deliberately replace and verify the QR.
 
 When bumping the final version, move completed Unreleased entries into its
 changelog section, refresh docs/VERIFICATION.md and regenerate the packages and

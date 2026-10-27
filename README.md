@@ -1,4 +1,4 @@
-# Corner Spider 1.0 RC13
+# Corner Spider 1.0 RC14
 
 A small jumping spider for your actual Windows desktop. It watches from corners,
 stalks occasional prey, builds a silk retreat and sometimes accepts a finger ride.
@@ -42,7 +42,7 @@ and matte shading. The larger preview retains each species' details.
 
 ![Settings with silk visibility and the subtle optional support button](docs/settings-banner.png)
 
-This is the **1.0.0-rc.13 release candidate**. Windows build and automated checks
+This is the **1.0.0-rc.14 release candidate**. Windows build and automated checks
 pass; the remaining hands-on release checklist is in [verification notes](docs/VERIFICATION.md).
 
 ## Download and start
@@ -53,7 +53,7 @@ permanent writable location, and double-click **JumpingSpider.exe** or
 
 Windows 10/11 with .NET Framework 4.8 desktop components. No administrator rights,
 installer, accounts or asset downloads. The pet works offline; the optional
-support link opens Cash App in your browser only when clicked. Only one pet runs per
+support button shows a Cash App QR to scan with your phone. Only one pet runs per
 Windows session. This is an unsigned community build; Windows may display an
 unknown-publisher warning. The release includes SHA-256 checksums.
 
@@ -209,9 +209,9 @@ The green Hyllus's heavier tempo is explicitly an artistic choice.
 ## Optional support
 
 The small **Buy me a coffee / Monster** button opens a flyout with the creator's
-original Cash App QR, including its green logo. Click **$tedparkes** inside the
-flyout to open the matching public Cash App page in your browser. Corner
-Spider remains free. It has no payment SDK, login form or automatic payment flow.
+original Cash App QR, including its green logo. Scan it with your phone to support
+the project. The flyout has no username label or clickable payment link. Corner
+Spider remains free. It has no browser launch, payment SDK, login form or automatic payment flow.
 Check the recipient in Cash App before paying. Sharing the code makes the public
 payment profile discoverable; it is not a login credential.
 
@@ -246,8 +246,9 @@ explain the artwork choices. No reference photos are bundled.
 
 Preferences, silk progress and meal count stay in
 `%LOCALAPPDATA%\CornerSpider\settings.txt`; `.bak` keeps the previous save.
-Existing saves migrate automatically. The pet makes no network requests. The optional support button delegates to your
-browser; its page is governed by Cash App. There is no telemetry, keyboard
+Existing saves migrate automatically. The pet makes no network requests. Optional
+support displays a bundled QR image; scanning it opens Cash App on your phone.
+There is no telemetry, keyboard
 hook, mouse injection or capture. A read-only mouse hook observes button-down edges
 and immediately forwards them. It stores no click history.
 

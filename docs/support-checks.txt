@@ -1,0 +1,29 @@
+Corner Spider RC14 native settings and QR-only support checks
+PASS: support starts as a quiet text button and retains the original QR
+PASS: new behavior controls persist through native UI
+PASS: native host starts corner web encounter
+PASS: native toggle clears resident and web
+PASS: reset restores personality and web preferences
+PASS: support button stays inside compact settings bounds
+PASS: button opens a dismissible QR-only flyout
+PASS: flyout displays the original recognizable QR at scanning size
+PASS: QR flyout has no payment-link action
+PASS: Close is the only action inside the QR flyout
+PASS: flyout close button works
+PASS: closing settings also closes its flyout
+PASS: resident web obeys visibility without affecting its construction: 1
+PASS: resident web obeys visibility without affecting its construction: 0.5
+PASS: resident web obeys visibility without affecting its construction: 0
+PASS: completed orb web reuses one generated silk image across 180 redraws
+PASS: departure fade reuses the web artwork without rebuilding geometry
+PASS: construction progress replaces the single retained silk layer
+PASS: rendered orb has clearly visible spoke and capture silk
+PASS: rendered orb preserves transparency outside the reserved corner
+PASS: full construction batches image updates instead of allocating a bitmap per strand or frame
+PASS: rendered silk touches both desktop edges in TopLeft
+PASS: rendered silk touches both desktop edges in TopRight
+PASS: rendered silk touches both desktop edges in BottomLeft
+PASS: rendered silk touches both desktop edges in BottomRight
+PASS: repeated plucks reuse the retained web image while only the contacted spoke ripples
+PASS: plucking adds no tether strands outside the existing concave web
+RESULT: PASS (0 failures).

@@ -52,7 +52,7 @@ namespace CornerSpider {
             var header=new Grid();header.ColumnDefinitions.Add(new ColumnDefinition());header.ColumnDefinitions.Add(new ColumnDefinition { Width=GridLength.Auto });DockPanel.SetDock(header,Dock.Top);root.Children.Add(header);
             var heading=new StackPanel { Margin=new Thickness(0,10,0,6),VerticalAlignment=VerticalAlignment.Center };header.Children.Add(heading);
             heading.Children.Add(Text("Your corner companion",27));Note(heading,"Appearance, gentle interactions and a place to call home.");
-            Button supportButton;var support=SupportBanner.Create(this,host.TestMode,out supportButton);SupportButton=supportButton;Grid.SetColumn(support,1);header.Children.Add(support);
+            Button supportButton;var support=SupportBanner.Create(this,out supportButton);SupportButton=supportButton;Grid.SetColumn(support,1);header.Children.Add(support);
             var bottom=new DockPanel { Margin=new Thickness(0,14,0,0) };DockPanel.SetDock(bottom,Dock.Bottom);root.Children.Add(bottom);
             var done=new Button { Content="Done",Width=90,Height=34,IsCancel=true };DockPanel.SetDock(done,Dock.Right);bottom.Children.Add(done);done.Click+=delegate { Close(); };
             saveStatus=Text("Changes apply live and save automatically.",12);saveStatus.VerticalAlignment=VerticalAlignment.Center;bottom.Children.Add(saveStatus);
@@ -143,7 +143,7 @@ namespace CornerSpider {
             var help=NewPanel();help.Children.Add(Text("A quiet little desktop companion",21));
             Note(help,"Approach an awake spider and hold still for the configured invitation delay. The finger fades in; the spider can jump on, hang, climb and wander. Move gently to carry it. A click lets it plan an upward hop; a fast move startles it. The finger holds still until takeoff, and your pointer returns immediately. Your clicks still reach your apps.");
             Note(help,"It watches from corners, stalks occasional flies and returns to its silk retreat. Use the tray's quick actions to feed, call it home, wake or pause it. Double-click the tray icon to reopen these settings.");
-            Note(help,"Corner Spider 1.0 RC13\nFree software under the MIT License. The pet works offline with no accounts or telemetry. Optional Cash App support opens your browser only when clicked. Preferences are stored in LocalAppData\\CornerSpider. See README.txt for removal and manual checks.");
+            Note(help,"Corner Spider 1.0 RC14\nFree software under the MIT License. The pet works offline with no accounts or telemetry. Optional support shows a Cash App QR code to scan with your phone. Preferences are stored in LocalAppData\\CornerSpider. See README.txt for removal and manual checks.");
             Note(help,"Future ideas: custom colors by body region; crickets, mealworms and other prey; additional spider species; an optional background with depth to explore.");AddTab("About & play",help);
             saveTimer.Tick+=delegate { saveTimer.Stop();host.Save();saveStatus.Text=host.Settings.LastError.Length==0?"Saved. Changes are live on your desktop.":"Could not save preferences. Check that your save folder is writable."; };
             Closed+=delegate { IsClosed=true;saveTimer.Stop();encounterTimer.Stop();Preview.Dispose();host.Save(); };

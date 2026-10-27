@@ -97,8 +97,6 @@ namespace CornerSpider {
             host.World.GoHome();host.SetSpecies("PortiaLabiata");var panel=new PetSettingsWindow(host);
             var popup=(System.Windows.Controls.Primitives.Popup)panel.SupportButton.Tag;
             Check(panel.SupportButton.Content is string && !popup.IsOpen && SupportBanner.Qr.PixelWidth==545,"support starts as a quiet text button and retains the original QR");
-            Check(SupportBanner.ValidPaymentLink(SupportBanner.PaymentUrl) && !SupportBanner.OpenPayment(true),"support uses the public Cash App recipient; diagnostics never open payment pages");
-            foreach(string bad in new[]{"http://cash.app/$tedparkes","https://cash.app.evil.example/$tedparkes","https://other@cash.app/$tedparkes","file:///tmp/pay","https://cash.app/$someoneelse","https://cash.app/$tedparkes?amount=100"}) Check(!SupportBanner.ValidPaymentLink(bad),"reject unexpected support target: "+bad);
             panel.TraitsCheck.IsChecked=false;panel.WebVisitsCheck.IsChecked=false;host.Save();var s=Settings.Load(host.Folder);
             Check(!s.SpeciesTraits && !s.WebVisits,"new behavior controls persist through native UI");
             panel.TraitsCheck.IsChecked=true;panel.WebVisitsCheck.IsChecked=true;
@@ -112,10 +110,14 @@ namespace CornerSpider {
             Check(buttonBounds.Left>=0 && buttonBounds.Right<=root.ActualWidth && buttonBounds.Bottom<=root.ActualHeight,"support button stays inside compact settings bounds");
             panel.SupportButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));panel.UpdateLayout();
             var flyout=(FrameworkElement)popup.Child;flyout.Measure(new Size(400,600));flyout.Arrange(new Rect(new Point(),flyout.DesiredSize));flyout.UpdateLayout();
-            Check(popup.IsOpen && !popup.StaysOpen,"button opens a dismissible QR and link flyout without launching a browser");
+            Check(popup.IsOpen && !popup.StaysOpen,"button opens a dismissible QR-only flyout");
             SavePng(flyout,(int)Math.Ceiling(flyout.ActualWidth),(int)Math.Ceiling(flyout.ActualHeight),Path.Combine(folder,"support-flyout.png"));
             var contents=(StackPanel)((Border)popup.Child).Child;var image=(Image)contents.Children[2];
             Check(image.ActualWidth==272 && image.Source==SupportBanner.Qr,"flyout displays the original recognizable QR at scanning size");
+            int actions=0;foreach(UIElement child in contents.Children) if(child is Button) {
+                actions++;Check(((Button)child).Content as string=="Close","QR flyout has no payment-link action");
+            }
+            Check(actions==1,"Close is the only action inside the QR flyout");
             ((Button)contents.Children[contents.Children.Count-1]).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(!popup.IsOpen,"flyout close button works");
             panel.SupportButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));panel.Close();Check(!popup.IsOpen,"closing settings also closes its flyout");
             CheckGuestSilkRendering();RenderEncounterPreview(folder);
