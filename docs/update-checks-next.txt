@@ -1,0 +1,26 @@
+Corner Spider 1.1.0-alpha.2 updater verification, 2026-11-05
+
+PASS: public GitHub releases API read with actual application network code.
+Latest compatible stable: 1.0.0
+Newer than installed preview: False
+Verified official package: CornerSpider-v1.0.0-Windows.zip
+SHA256: 10bfbff62c261b83ad9fceec625afb3f93bf23f8fb52f010926086c46517a553
+Verified executable ProductVersion: 1.0.0
+No installation was attempted by the live network probe.
+
+PASS: actual updater helper waits for old fixture process to exit.
+PASS: running-pet mutex blocks installation; old fixture bytes remain unchanged.
+PASS: helper installs alpha.2 into an isolated fixture directory.
+PASS: original fixture executable preserved byte-for-byte in backup.
+PASS: unrelated personal.txt preserved.
+PASS: helper exits with expected success/failure status.
+PASS: explicit restart launches a harmless new fixture from its install directory.
+
+PASS: deterministic suite covers 112 updater cases, including release ordering,
+stable/preview filtering, draft rejection, foreign asset rejection, exact checksum
+selection, checksum mismatch, version mismatch, unsafe ZIP paths, duplicate paths,
+settings-file rejection, safe installation and injected-copy-failure rollback.
+
+LIMIT: no newer public release exists for a live upgrade from this preview.
+LIMIT: daily native scheduling, real offline outages and interrupted-power update
+recovery remain manual checks. Backups are retained, not a transactional installer.

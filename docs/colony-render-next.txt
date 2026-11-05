@@ -1,0 +1,6 @@
+PASS: independent resident artwork follows monitor offset and DPI: PortiaLabiata / 1
+PASS: independent resident artwork follows monitor offset and DPI: GardenOrb / 1
+PASS: departed residents leave no retained visual or silk at DPI 1
+PASS: independent resident artwork follows monitor offset and DPI: PortiaLabiata / 2
+PASS: independent resident artwork follows monitor offset and DPI: GardenOrb / 2
+PASS: departed residents leave no retained visual or silk at DPI 2

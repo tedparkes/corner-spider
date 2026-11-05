@@ -1,6 +1,6 @@
-Corner Spider 1.0 Windows runtime checks 2026-11-05T12:37:48
+Corner Spider 1.1 alpha 2 Windows runtime checks 2026-11-05T15:39:35
 PASS: seed isolated finger-tone and Portia preferences
-FOCUS: HWND 65928 -> 65928, PID 3188 -> 3188, pet PID 10028.
+FOCUS: HWND 65928 -> 65928, PID 3188 -> 3188, pet PID 28596.
 PASS: saved finger tone is loaded into the desktop world at startup
 PASS: saved Portia selection restores prey behavior and tray action on startup
 PASS: overlay creation preserves foreground window
@@ -36,6 +36,9 @@ PASS: tray food selection: Moth
 PASS: tray food selection: Cricket
 PASS: tray food selection: Mealworm
 PASS: tray food selection: Beetle
+PASS: resident checkbox and population slider apply live
+PASS: automatic check and preview channel preferences apply
+PASS: manual check handler is wired and diagnostics do not contact the network
 PASS: category filters skins and updates the live pet: Jumping spiders
 PASS: category filters skins and updates the live pet: Orb weavers
 PASS: category filters skins and updates the live pet: Widows
@@ -155,6 +158,7 @@ PASS: diagnostics cannot alter autostart
 PASS: new settings persist through reload
 PASS: finger tone persists with other settings
 PASS: web visibility persists through native UI
+PASS: reset restores opt-in defaults for colonies and update checks
 PASS: reset restores preference defaults
 PASS: preference reset preserves nest and meals
 PASS: reset restores original finger shade in world and preview
@@ -1343,6 +1347,12 @@ PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Gr
 PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Groom / 225
 PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Groom / 270
 PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Groom / 315
+PASS: independent resident artwork follows monitor offset and DPI: PortiaLabiata / 1
+PASS: independent resident artwork follows monitor offset and DPI: GardenOrb / 1
+PASS: departed residents leave no retained visual or silk at DPI 1
+PASS: independent resident artwork follows monitor offset and DPI: PortiaLabiata / 2
+PASS: independent resident artwork follows monitor offset and DPI: GardenOrb / 2
+PASS: departed residents leave no retained visual or silk at DPI 2
 PASS: finger tone 0 retains solid fingertip and transparent hand fade
 PASS: changing finger tone preserves the exact silhouette and alpha fade: 0
 PASS: finger shades progress from deep brown to very pale: 0
@@ -2130,8 +2140,8 @@ PASS: growing silk preserves existing threads rather than rearranging them: Copp
 PASS: visible centered finger requests native cursor hiding
 PASS: pause releases the cursor visibility lease
 PASS: rendered overlay has transparent background and visible vector artwork
-MEASURED: 16.0 seconds, CPU=10.82% of one logical CPU, working set=499.1 MiB, private=610.4 MiB (delta -1.7).
-RESOURCES: GDI 841 -> 843, USER 44 -> 41 after 60 icon replacements.
+MEASURED: 16.0 seconds, CPU=8.10% of one logical CPU, working set=543.5 MiB, private=616.9 MiB (delta 16.1).
+RESOURCES: GDI 848 -> 851, USER 44 -> 42 after 60 icon replacements.
 PASS: replacing species icons does not leak native handles
 PASS: resume path resets cursor history and dismounts
 PASS: previous-save backup exists

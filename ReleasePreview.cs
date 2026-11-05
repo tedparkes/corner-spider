@@ -112,6 +112,9 @@ namespace CornerSpider {
                 SavePng(settings,(int)Math.Ceiling(content.ActualWidth+content.Margin.Left+content.Margin.Right),(int)Math.Ceiling(content.ActualHeight+content.Margin.Top+content.Margin.Bottom),Path.Combine(folder,"settings-"+i+".png"));
                 settings.Close();
             }
+            var colonySettings=new PetSettingsWindow(host);colonySettings.Tabs.SelectedIndex=1;colonySettings.ShowActivated=false;colonySettings.ShowInTaskbar=false;colonySettings.Show();colonySettings.UpdateLayout();
+            ((System.Windows.Controls.ScrollViewer)((System.Windows.Controls.TabItem)colonySettings.Tabs.Items[1]).Content).ScrollToBottom();colonySettings.UpdateLayout();
+            var colonyContent=(FrameworkElement)colonySettings.Content;SavePng(colonySettings,(int)Math.Ceiling(colonyContent.ActualWidth+colonyContent.Margin.Left+colonyContent.Margin.Right),(int)Math.Ceiling(colonyContent.ActualHeight+colonyContent.Margin.Top+colonyContent.Margin.Bottom),Path.Combine(folder,"settings-residents.png"));colonySettings.Close();
         }
     }
 }

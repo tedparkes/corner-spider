@@ -18,6 +18,7 @@ namespace CornerSpider {
         static void Check(bool b,string message) { log.AppendLine((b?"PASS: ":"FAIL: ")+message);if(!b) failures++; }
         public static int Run(Application app,string[] args) {
             string folder=args.Length>1?Path.GetFullPath(args[1]):Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"diagnostics");Directory.CreateDirectory(folder);
+            if(args[0]=="--colony-load-test") return ColonyLoad(app,folder);
             if(args[0]=="--life-preview") { RenderLifePreview(folder);return 0; }if(args[0]=="--desktop-test") return Desktop(app,folder);
             if(args[0]=="--encounter-preview") { RenderEncounterPreview(folder);return 0; }
             if(args[0]=="--travel-preview") { RenderTravelPreview(folder);return 0; }
@@ -40,7 +41,7 @@ namespace CornerSpider {
                 using(var icon=PetHost.MakeIcon("Bold")) using(var file=File.Create(Path.Combine(folder,"CornerSpider.ico"))) icon.Save(file);
                 return 0;
             }
-            log=new StringBuilder();log.AppendLine("Corner Spider 1.0 Windows runtime checks "+DateTime.Now.ToString("s"));
+            log=new StringBuilder();log.AppendLine("Corner Spider 1.1 alpha 2 Windows runtime checks "+DateTime.Now.ToString("s"));
             string testSettings=Path.Combine(folder,"settings");Check(new Settings { FingerTone=.37,Species="PortiaLabiata" }.Save(testSettings),"seed isolated finger-tone and Portia preferences");
             IntPtr foreground=Native.GetForegroundWindow();var host=new PetHost(testSettings,true);
             IntPtr afterCreation=Native.GetForegroundWindow();uint foregroundPid,afterCreationPid;
@@ -82,6 +83,9 @@ namespace CornerSpider {
                         Check(host.Commands.Count==13 && host.Commands.ContainsKey("settings"),"tray contains quick actions, seven food choices and a single settings entry");
                         foreach(PreyKind food in Enum.GetValues(typeof(PreyKind))) { host.World.HasFly=false;host.Commands["food-"+food].PerformClick();Check(host.World.HasFly && host.World.Prey==food,"tray food selection: "+food); }host.World.HasFly=false;
                         var settingsPanel=new PetSettingsWindow(host);
+                        settingsPanel.KeepBabiesCheck.IsChecked=true;settingsPanel.ResidentLimitSlider.Value=10;Check(host.World.KeepBabies && host.World.ResidentLimit==10,"resident checkbox and population slider apply live");
+                        settingsPanel.AutoUpdatesCheck.IsChecked=true;settingsPanel.PreviewUpdatesCheck.IsChecked=true;Check(host.Settings.AutoUpdateCheck && host.Settings.PreviewUpdates,"automatic check and preview channel preferences apply");
+                        settingsPanel.CheckUpdateButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(host.Updates.Status.Contains("diagnostics") && !settingsPanel.InstallUpdateButton.IsEnabled,"manual check handler is wired and diagnostics do not contact the network");
                         foreach(string family in SkinCatalog.Categories) { settingsPanel.CategorySelector.SelectedItem=family;Check(settingsPanel.SpeciesSelector.Items.Count==SkinCatalog.InCategory(family).Length && SkinCatalog.Get(host.World.Species).Category==family,"category filters skins and updates the live pet: "+family); }
                         settingsPanel.CategorySelector.SelectedItem="Jumping spiders";
                         settingsPanel.MoltSlider.Value=12;settingsPanel.MateSlider.Value=24;Check(host.World.MoltHours==12 && host.World.MateHours==24,"life interval sliders update the world");
@@ -113,6 +117,7 @@ namespace CornerSpider {
                         Check(saved.FingerTone==.37,"finger tone persists with other settings");
                         Check(saved.WebVisibility==.45,"web visibility persists through native UI");
                         double web=host.World.Web;int meals=host.World.Meals;settingsPanel.ResetPreferences();
+                        Check(!host.World.KeepBabies && host.World.ResidentLimit==6 && !host.Settings.AutoUpdateCheck && !host.Settings.PreviewUpdates,"reset restores opt-in defaults for colonies and update checks");
                         Check(host.World.Scale==1 && host.World.InviteDelay==4.5 && host.World.AttentionDistance==185 && host.World.DismissDistance==230 && host.World.AutoFeed && host.World.CursorPlay && host.Settings.Species=="Regal","reset restores preference defaults");
                         Check(host.World.Web==web && host.World.Meals==meals,"preference reset preserves nest and meals");
                         Check(host.World.FingerTone==World.DefaultFingerTone && settingsPanel.FingerPreview.Tone==World.DefaultFingerTone,"reset restores original finger shade in world and preview");
@@ -120,7 +125,7 @@ namespace CornerSpider {
                         CaptureSettings(host,folder);settingsPanel.SizeSlider.Value=125;settingsPanel.Close();
                         Check(Settings.Load(host.Folder).Scale==1.25,"closing settings saves slider size");
                         Check(settingsPanel.IsClosed && !settingsPanel.Preview.Running,"closing settings stops its preview timer");host.World.SetScale(1);
-                        CheckSkinRendering();CheckLivingArt();RenderLifePreview(folder);CheckFingerTones();RenderSkinGallery(folder);RenderFingerPreview(folder);RenderHammockGallery(folder);
+                        CheckSkinRendering();CheckLivingArt();CheckColonyVisuals();RenderLifePreview(folder);CheckFingerTones();RenderSkinGallery(folder);RenderFingerPreview(folder);RenderHammockGallery(folder);
                         CheckPortiaPrey(host,folder);CheckEncounterSettings(host,folder);CheckClickDismount(host);
                         CheckNestEntry(host);CheckSilkArt(folder);
                         host.World.Cursor=host.World.FingerOrigin=host.World.Spider;host.World.InviteTime=5;host.World.FingerBlend=1;host.Render();

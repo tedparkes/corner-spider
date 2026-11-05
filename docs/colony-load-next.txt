@@ -1,0 +1,25 @@
+Early travel sample
+Residents: 12
+Sample seconds: 20.0
+CPU percent of one core: 44.28
+Private MiB: 290.8
+Handles: 583 -> 583
+Resident pose builds: 26
+
+Later activity sample
+Residents: 12
+Sample seconds: 30.1
+CPU percent of one core: 40.84
+Private MiB: 464.6
+Handles: 583 -> 578
+Resident pose builds: 30
+
+Extended activity sample
+Residents: 12
+Sample seconds: 120.9
+CPU percent of one core: 38.17
+Private MiB: 282.0
+Handles: 578 -> 566
+Resident pose builds: 30
+Private MiB after diagnostic collection: 280.0
+Cleanup: PASS

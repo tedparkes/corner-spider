@@ -15,6 +15,9 @@ namespace CornerSpider {
         public readonly ComboBox CategorySelector;
         public readonly CheckBox MoltingCheck,MatingCheck;
         public readonly Slider MoltSlider,MateSlider;
+        public readonly CheckBox KeepBabiesCheck,AutoUpdatesCheck,PreviewUpdatesCheck;
+        public readonly Slider ResidentLimitSlider;
+        public readonly Button CheckUpdateButton,InstallUpdateButton;
         public readonly CheckBox FliesCheck,RidesCheck,AllMonitorsCheck,StartupCheck,TraitsCheck,WebVisitsCheck;
         public readonly Button WebVisitButton,SupportButton;
         public readonly SettingsPreview Preview=new SettingsPreview();
@@ -95,8 +98,12 @@ namespace CornerSpider {
             var inviteMate=new Button { Content="Invite a mate",HorizontalAlignment=HorizontalAlignment.Left,Padding=new Thickness(12,6,12,6) };lifePanel.Children.Add(inviteMate);
             inviteMate.Click+=delegate { saveStatus.Text=host.World.InviteMate()?"A male is approaching the nest.":"Choose an available female, enable visits, and finish any current prey or life-cycle event.";host.Render(); };
             var lifeStatus=Text("",14);lifeStatus.Margin=new Thickness(0,12,0,0);lifePanel.Children.Add(lifeStatus);
-            encounterTimer.Tick+=delegate { lifeStatus.Text=host.World.LifeStatus;inviteMate.IsEnabled=host.World.MatingEnabled && !SkinCatalog.Get(host.World.Species).Male && host.World.Life.Stage==LifeStage.Quiet && !host.World.HasFly; };
+            encounterTimer.Tick+=delegate { lifeStatus.Text=host.World.LifeStatus+"\nResident offspring: "+host.World.Residents.Count+" / "+host.World.ResidentLimit;inviteMate.IsEnabled=host.World.MatingEnabled && !SkinCatalog.Get(host.World.Species).Male && host.World.Life.Stage==LifeStage.Quiet && !host.World.HasFly; };
             Note(lifePanel,"Molts and courtship wait for a quiet moment. Disabling an option prevents future events; an event already under way finishes. Each brood is capped and babies do not reproduce.");
+            KeepBabiesCheck=Toggle(lifePanel,"Let babies stay and build their own nests",host.World.KeepBabies);
+            KeepBabiesCheck.Checked+=delegate { host.World.SetKeepBabies(true);Changed(); };KeepBabiesCheck.Unchecked+=delegate { host.World.SetKeepBabies(false);Changed(); };
+            ResidentLimitSlider=Range(lifePanel,"Maximum resident offspring",1,World.MaxResidents,1,host.World.ResidentLimit,"",delegate(double v) { host.World.SetResidentLimit((int)v); });
+            Note(lifePanel,"Residents grow, build species-appropriate nests on free desktop edges, and move independently. They keep their own species when you change yours. They do not breed or claim your cursor. Extra young leave if the limit or available space is reached; switching this off sends existing residents away gradually.");
             AddTab("Life & home",lifePanel);
 
             var fingerPanel=new Grid { Margin=new Thickness(20) };
@@ -128,7 +135,7 @@ namespace CornerSpider {
             encounterTimer.Tick+=delegate { WebVisitButton.IsEnabled=host.World.HuntsSpiders && host.World.WebVisits && !host.World.HasFly && host.World.WebStage==WebVisit.None;encounterStatus.Text=host.World.GuestStatus+(host.World.WebStage==WebVisit.Building?" — "+(host.World.GuestProgress*100).ToString("F0")+"% woven":""); };encounterTimer.Start();
             FliesCheck=Toggle(behavior,"Occasional prey",host.World.AutoFeed);
             FlySlider=Range(behavior,"Time between prey",30,300,5,host.World.FlyInterval," s",delegate(double v) { host.World.FlyInterval=v;host.World.NextFly=host.World.Clock+v; });
-            Note(behavior,"Timing varies around this value. Portia gets a mix of small spiders and flies; other skins get flies. Only one prey animal is present at a time.");
+            Note(behavior,"Timing varies around this value. Food varies by species; Portia favors small spiders and web dwellers favor winged insects. Only one prey animal is present at a time.");
             RidesCheck=Toggle(behavior,"Cursor attention and finger rides",host.World.CursorPlay);
             InviteSlider=Range(behavior,"Finger appears after",2,10,.1,host.World.InviteDelay," s",delegate(double v) { host.World.InviteDelay=v;host.World.Resume(); });
             AttentionSlider=Range(behavior,"Approach distance",60,400,5,host.World.AttentionDistance," px",delegate(double v) {
@@ -159,10 +166,12 @@ namespace CornerSpider {
             var reset=new Button { Content="Reset preferences",HorizontalAlignment=HorizontalAlignment.Left,Padding=new Thickness(14,7,14,7),Margin=new Thickness(0,12,0,8) };desktop.Children.Add(reset);reset.Click+=delegate { ResetPreferences(); };
             Note(desktop,"Restores appearance, interaction and screen defaults. Keeps your hammock progress, meals and Windows startup choice.");
             AddTab("Desktop",desktop);
+            Action unsubscribeUpdates;AddTab("Updates",UpdateSettings.Create(host,out AutoUpdatesCheck,out PreviewUpdatesCheck,out CheckUpdateButton,out InstallUpdateButton,out unsubscribeUpdates));
+            Closed+=delegate { unsubscribeUpdates(); };
             var help=NewPanel();help.Children.Add(Text("A quiet little desktop companion",21));
             Note(help,"Approach an awake spider and hold still for the configured invitation delay. The finger fades in; the spider can jump on, hang, climb and wander. Move gently to carry it. A click lets it plan an upward hop; a fast move startles it. The finger holds still until takeoff, and your pointer returns immediately. Your clicks still reach your apps.");
             Note(help,"It watches from corners, stalks occasional flies and returns to its silk retreat. Use the tray's quick actions to feed, call it home, wake or pause it. Double-click the tray icon to reopen these settings.");
-            Note(help,"Corner Spider 1.1 alpha\nFree software under the MIT License. The pet works offline with no accounts or telemetry. Optional support shows a Cash App QR code to scan with your phone. This preview saves in LocalAppData\\CornerSpider-Next, separately from 1.0. See README.txt for removal and manual checks.");
+            Note(help,"Corner Spider 1.1 alpha\nFree software under the MIT License. The pet works offline with no accounts or telemetry. Optional GitHub update checks are controlled in Updates. Optional support shows a Cash App QR code to scan with your phone. This preview saves in LocalAppData\\CornerSpider-Next, separately from 1.0. See README.txt for removal and manual checks.");
             Note(help,"Future ideas: custom colors by body region; more species-specific courtship and web construction; an optional background with depth to explore.");AddTab("About & play",help);
             saveTimer.Tick+=delegate { saveTimer.Stop();host.Save();saveStatus.Text=host.Settings.LastError.Length==0?"Saved. Changes are live on your desktop.":"Could not save preferences. Check that your save folder is writable."; };
             Closed+=delegate { IsClosed=true;saveTimer.Stop();encounterTimer.Stop();Preview.Dispose();host.Save(); };
@@ -177,6 +186,7 @@ namespace CornerSpider {
             MonitorSelector.SelectedIndex=selected;syncing=false;
         }
         public void ResetPreferences() {
+            KeepBabiesCheck.IsChecked=false;ResidentLimitSlider.Value=6;AutoUpdatesCheck.IsChecked=false;PreviewUpdatesCheck.IsChecked=false;
             CategorySelector.SelectedItem="Jumping spiders";MoltingCheck.IsChecked=true;MatingCheck.IsChecked=true;MoltSlider.Value=6;MateSlider.Value=8;
             TraitsCheck.IsChecked=true;WebVisitsCheck.IsChecked=true;SpeciesSelector.SelectedItem=SkinCatalog.Get("Regal");SizeSlider.Value=100;WebSlider.Value=100;FingerToneSlider.Value=World.DefaultFingerTone*100;FlySlider.Value=100;InviteSlider.Value=4.5;ToleranceSlider.Value=850;
             AttentionSlider.Value=185;DismissSlider.Value=230;FliesCheck.IsChecked=true;RidesCheck.IsChecked=true;CornerSelector.SelectedIndex=1;AllMonitorsCheck.IsChecked=true;MonitorSelector.SelectedIndex=0;Changed();

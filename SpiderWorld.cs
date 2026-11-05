@@ -54,7 +54,7 @@ namespace CornerSpider {
         double attentionRearmAt;
         V? cornerWaypoint;
         public double BodyScale { get { return Scale*pixelScale*LifeSize; } }
-        public double HomeScale { get { return Scale*Areas[Math.Min(HomeArea,Areas.Count-1)].Dpi; } }
+        public double HomeScale { get { return (IsColonyResident?ResidentWebScale:Scale)*Areas[Math.Min(HomeArea,Areas.Count-1)].Dpi; } }
         // The retreat runs diagonally between the two adjacent desktop edges.
         public double NestAngle { get { return Corner.StartsWith("Top")?(Corner.EndsWith("Right")?135:225):(Corner.EndsWith("Right")?45:315); } }
         double nestRest;
@@ -90,7 +90,7 @@ namespace CornerSpider {
         }
         public double CornerDistance { get { int a=AreaAt(Spider);return (Spider-Perch(a,NearestCorner(a,Spider))).Length; } }
         void ChoosePerch() {
-            if(WebDweller) { Target=Clamp(Home+new V(Between(-48,48),Between(-48,48))*HomeScale);Enter(Mood.Walk);return; }
+            if(WebDweller || IsColonyResident) { Target=Clamp(Home+new V(Between(-48,48),Between(-48,48))*HomeScale);Enter(Mood.Walk);return; }
             int area=AreaAt(Spider),corner=NearestCorner(area,Spider);
             double choice=random.NextDouble();
             if(Areas.Count>1 && choice<.10) { area=(area+1)%Areas.Count;corner=NearestCorner(area,Spider); }
@@ -113,12 +113,13 @@ namespace CornerSpider {
             }
         }
         public void UpdateHome() {
+            if(IsColonyResident) { Home=ResidentHome;ResetNestRoute();return; }
             HomeArea=Math.Max(0,Math.Min(Areas.Count-1,HomeArea));var a=Areas[HomeArea];double s=HomeScale;
             // Leave room for a whole spider to line up outside either end. The
             // cocoon itself keeps its size and its silk remains attached to the corner.
             V home=a.Clamp(new V(Corner.EndsWith("Right")?a.X+a.W-160*s:a.X+160*s,Corner.StartsWith("Top")?a.Y+160*s:a.Y+a.H-160*s),160*s);
             if((home-Home).Length>.01) nestInside=false;
-            Home=home;ResetNestRoute();
+            bool moved=(home-Home).Length>.01;Home=home;ResetNestRoute();if(moved) ReflowResidents();
         }
         public void ConfigureDisplays(Area[] areas,int homeArea) {
             if(areas==null || areas.Length==0) return;
@@ -134,12 +135,12 @@ namespace CornerSpider {
             ResetTravel();GaitDirection=new V(0,-1);
             CancelWebVisit();ClearPlay();SilkOpacity=0;
             cornerWaypoint=null;
-            if(!Finite(Scale)) Scale=1;Scale=Math.Max(.2,Math.Min(1.8,Scale));UpdateHome();
+            if(!Finite(Scale)) Scale=1;Scale=Math.Max(IsColonyResident?.04:.2,Math.Min(1.8,Scale));UpdateHome();
             Spider=Clamp(Spider);Target=Clamp(Target);Fly=Clamp(Fly);JumpStart=Clamp(JumpStart);JumpEnd=Clamp(JumpEnd);
             if(State==Mood.Sleep) { Spider=Home;nestInside=true; }
             if(State==Mood.EnterNest || State==Mood.ExitNest) { nestInside=false;Target=Home;Enter(Mood.Return); }
             if(State==Mood.Return) PlanCornerRoute(Home);
-            pixelScale=Areas[AreaAt(Spider)].Dpi;ResetCursor();
+            pixelScale=Areas[AreaAt(Spider)].Dpi;ResetCursor();ReflowResidents();
             if(State==Mood.Ride || State==Mood.Jump || State==Mood.Crouch || State==Mood.Reach || State==Mood.Dismount) { RideCooldown=25;decision=2;Enter(Mood.Rest); }
         }
         public void SetScale(double scale) { Scale=scale;Reflow(); }
@@ -317,7 +318,7 @@ namespace CornerSpider {
             double cursorSpeed=TrackCursor(dt,cursor);RideCooldown=Math.Max(0,RideCooldown-dt);
             if(State!=Mood.Jump) pixelScale+=(Areas[AreaAt(Spider)].Dpi-pixelScale)*Math.Min(1,dt*8);
             double s=BodyScale;
-            if(TickLife(dt)) return;
+            TickResidents(dt);if(TickLife(dt)) return;
             TickWebVisit(dt);
             bool cursorInside=cursorValid && ChooseFingerSide(cursor);
             Scared=Math.Max(0,Scared-dt*.4);

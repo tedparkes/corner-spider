@@ -92,7 +92,7 @@ namespace CornerSpider {
                 case LifeStage.Gravid:if(l.StageAge>=GravidSeconds && LifeAvailable) { GoHome(false);LifeEnter(LifeStage.Laying); }break;
                 case LifeStage.Laying:if((Spider-Home).Length<3*HomeScale && l.StageAge>=30) { l.Broods++;LifeEnter(LifeStage.Incubating);Wake(); }break;
                 case LifeStage.Incubating:if(l.StageAge>=IncubationSeconds) { l.Babies=6;LifeEnter(LifeStage.Brood); }break;
-                case LifeStage.Brood:if(l.StageAge>=BroodSeconds) LifeEnter(LifeStage.Dispersing);break;
+                case LifeStage.Brood:if(l.StageAge>=BroodSeconds) { SettleBrood();LifeEnter(LifeStage.Dispersing); }break;
                 case LifeStage.Dispersing:if(l.StageAge>=DepartureSeconds) { l.Babies=0;l.NextMate=l.Age+MateHours*3600;LifeEnter(LifeStage.Quiet); }break;
             }
             return exclusive;

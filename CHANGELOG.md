@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+## 1.1.0-alpha.2
+
+- Add opt-in daily GitHub update checks, manual checks, stable/preview release
+  selection and an explicit Download and restart action. Never offer downgrades.
+- Validate release asset URLs, checksums, executable versions, ZIP paths and size
+  limits; stage updates before replacing files. A hidden helper waits for exit,
+  keeps backups, rolls back copy failures and restarts without administrator rights.
+- Add an optional resident-offspring mode. Young can travel to their own smaller
+  nests, grow, move and rest independently, and persist across sessions.
+- Add a 1-12 resident limit (default 6), free-edge placement, saved species and
+  ages, display reflow, gradual departures and nest fading when the option is off.
+- Keep residents from reproducing or claiming cursor/food slots; avoid overlap
+  between resident homes, the main retreat and Portia's web-building encounter.
+- Retain resident silk independently and share a bounded set of small body poses
+  to reduce colony redraw work, while preserving the main pet's animation.
+- Add updater safety and rollback fixtures, real GitHub download verification,
+  resident lifecycle tests, settings checks and a native colony load diagnostic.
+
 ## 1.1.0-alpha.1
 
 - Start the next development version from the preserved 1.0 release.

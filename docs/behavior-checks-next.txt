@@ -1,3 +1,5 @@
+PASS: 48 colony checks (adoption, separate homes, movement, growth, capacity, saved residents, monitor changes and graceful departure).
+PASS: 112 update checks (stable/preview versions, downgrade prevention, trusted asset links, checksums, hostile paths, package versions and rollback).
 PASS: 4989 life/family/food checks (46 skins, 7 foods, 5 categories, full molt and brood cycle, both mating outcomes, per-skin saves and bounded growth).
 CORNER BEHAVIOR: 94.9% near a corner; 92.2% stationary (8 seeds, 80 simulated minutes, no prey/cursor).
 PASS: 192577 regression assertions (hunt phases, jitter, rides, nest, mixed-DPI geometry, unplug, 40-minute simulation, persistence).

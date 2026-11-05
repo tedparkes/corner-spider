@@ -68,3 +68,23 @@ release body together. Keep earlier versions in the changelog.
 Version sources: AssemblyVersion/FileVersion and AssemblyInformationalVersion in JumpingSpider.cs, displayed app/about text,
 README files and CHANGELOG. Package.ps1 reads the version from the compiled app.
 Prior releases and hashes should be retained rather than silently replaced.
+
+## Update compatibility
+
+Keep the public release tag and executable ProductVersion in semantic-version
+agreement (for example v1.1.0 and 1.1.0, or v1.1.0-alpha.2 and 1.1.0-alpha.2).
+Attach CornerSpider-v<VERSION>-Windows.zip and SHA256SUMS.txt. The checksum file
+must contain one SHA-256 entry with that exact ZIP filename. Mark previews as
+prereleases. Do not replace existing published ZIP bytes.
+
+The updater reads public release metadata, filters stable/preview channels,
+compares versions, and only accepts this repository's matching Windows asset.
+It verifies ZIP paths, file counts, expanded size, checksum and executable version.
+Before publication, test an upgrade in an isolated writable installation, including
+backup/rollback, normal shutdown, shortcut continuity and saved life/colony data.
+Changing the save-folder policy requires an explicit migration; the updater leaves
+personal saves outside the app folder untouched. A 1.0 build has no updater, so its
+first upgrade to 1.1 still needs a normal ZIP download.
+
+The runtime stays usable offline. Describe optional GitHub access accurately in
+release text rather than carrying forward an unconditional no-network claim.

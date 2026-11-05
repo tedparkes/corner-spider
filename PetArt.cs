@@ -35,16 +35,19 @@ namespace CornerSpider {
             d.DrawImage(cached.Image,cached.Bounds);
         }
         static CachedArt CacheArt(DrawingGroup drawing) {
+            return CacheArt(drawing,4);
+        }
+        static CachedArt CacheArt(DrawingGroup drawing,double resolution) {
             // Generate a 4x cache from vectors, not an external asset. Fine fur
             // and silk needn't be retessellated each frame on high-DPI desktops.
             Rect bounds=drawing.Bounds;bounds.Inflate(.5,.5);
             var visual=new DrawingVisual();using(var c=visual.RenderOpen()) {
-                c.PushTransform(new ScaleTransform(4,4));c.PushTransform(new TranslateTransform(-bounds.X,-bounds.Y));
+                c.PushTransform(new ScaleTransform(resolution,resolution));c.PushTransform(new TranslateTransform(-bounds.X,-bounds.Y));
                 c.DrawDrawing(drawing);c.Pop();c.Pop();
             }
-            int width=(int)Math.Ceiling(bounds.Width*4),height=(int)Math.Ceiling(bounds.Height*4);
+            int width=(int)Math.Ceiling(bounds.Width*resolution),height=(int)Math.Ceiling(bounds.Height*resolution);
             var bitmap=new RenderTargetBitmap(width,height,96,96,PixelFormats.Pbgra32);bitmap.Render(visual);bitmap.Freeze();
-            return new CachedArt { Image=bitmap,Bounds=new Rect(bounds.X,bounds.Y,width/4.0,height/4.0) };
+            return new CachedArt { Image=bitmap,Bounds=new Rect(bounds.X,bounds.Y,width/resolution,height/resolution) };
         }
         static void Line(DrawingContext d,string color,double width,double x,double y,double a,double b) { d.DrawLine(P(color,width),new Point(x,y),new Point(a,b)); }
         static void Curve(DrawingContext d,string color,double width,Point a,Point b,Point c,Point end) {

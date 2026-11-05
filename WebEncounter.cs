@@ -104,6 +104,7 @@ namespace CornerSpider {
                 // approach lane on small work areas or at large pet sizes.
                 double factor=Math.Min(3,(Math.Min(a.W,a.H)/s-220)/188);
                 double extent=188*s*factor;
+                bool occupied=false;foreach(var resident in Residents) if(InGuestBox(resident.Actor.Home,edge,inward,extent,150*resident.Actor.HomeScale)) occupied=true;if(occupied) continue;
                 if(InGuestBox(Home,edge,inward,extent,150*HomeScale) || InGuestBox(Spider,edge,inward,extent,SpiderPose.Radius*BodyScale+12*s)) continue;
                 V hub=GuestWebPattern.Hub;
                 V center=edge+new V(inward.X*hub.X,inward.Y*hub.Y)*(s*factor);

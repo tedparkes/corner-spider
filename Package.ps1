@@ -56,13 +56,13 @@ try {
     $releaseLog = ($releaseLog -replace '\A## Unreleased\s*(?=## )', '').Trim()
     $downloadRoot = 'https://github.com/tedparkes/corner-spider/releases/download/v' + $releaseVersion
     $intro = @(
-        'A free spider companion for your actual Windows desktop. This 1.1 preview adds 46 choices in five categories, living webs, occasional molts, female life cycles and seven foods. The published 1.0 release remains unchanged.'
+        'A free spider companion for your actual Windows desktop. This 1.1 preview adds 46 choices in five categories, living webs, occasional molts, female life cycles, resident offspring, seven foods and optional GitHub updates. The published 1.0 release remains unchanged.'
         ''
         ('Windows package: **CornerSpider-v' + $releaseVersion + '-Windows.zip**. These are draft notes; no release is published by this script.')
         ''
         'Extract the entire Windows ZIP, then open **JumpingSpider.exe** inside the CornerSpider folder. Windows 10/11 with .NET Framework 4.8. No installer or administrator rights needed. Startup is opt-in.'
         ''
-        'This is an unsigned community build. The pet works offline, with local saves and no telemetry. Optional support is a bundled Cash App QR. See the included verification notes for tested behavior and remaining hardware-specific limits.'
+        'This is an unsigned community build. The pet works offline, with local saves and no telemetry; optional update checks contact GitHub. Optional support is a bundled Cash App QR. See the included verification notes for tested behavior and remaining hardware-specific limits.'
         ''
         ('Also included: CornerSpider-v' + $releaseVersion + '-Source.zip, SHA256SUMS.txt and CHANGELOG.md. See docs/VERIFICATION-NEXT.md in the package.')
         ''

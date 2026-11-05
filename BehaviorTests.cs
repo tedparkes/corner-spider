@@ -32,7 +32,7 @@ class BehaviorTests {
                 Assert(w.Spider.X>=0 && w.Spider.X<=w.Width && w.Spider.Y>=0 && w.Spider.Y<=w.Height,"Long run bounds");
             }
             Assert(w.Meals>0,"Automatic feeding should work");
-            LifeTests.Run();BehaviorRegressionTests.Run();
+            ColonyTests.Run();UpdateTests.Run();LifeTests.Run();BehaviorRegressionTests.Run();
             NaturalMotionTests.Run();
             TravelMotionTests.Run();
             PounceTests.Run();EncounterTests.Run();GuestWebTests.Run();

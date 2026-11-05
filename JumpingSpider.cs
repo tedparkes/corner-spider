@@ -13,7 +13,7 @@ using Forms=System.Windows.Forms;
 [assembly:System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.8")]
 [assembly:System.Reflection.AssemblyVersion("1.1.0.0")]
 [assembly:System.Reflection.AssemblyFileVersion("1.1.0.0")]
-[assembly:System.Reflection.AssemblyInformationalVersion("1.1.0-alpha.1")]
+[assembly:System.Reflection.AssemblyInformationalVersion("1.1.0-alpha.2")]
 [assembly:System.Reflection.AssemblyTitle("Corner Spider")]
 [assembly:System.Reflection.AssemblyProduct("Corner Spider")]
 [assembly:System.Reflection.AssemblyDescription("A local jumping-spider companion for the Windows desktop.")]
@@ -111,6 +111,7 @@ namespace CornerSpider {
         bool suspended,sessionLocked;
         public bool TestMode;
         public PetSettingsWindow SettingsWindow;
+        public readonly UpdateController Updates;
         public readonly MouseClicks Clicks=new MouseClicks();
         public readonly CursorVeil CursorVisibility=new CursorVeil();
         public PetHost(string folder,bool testMode) {
@@ -125,6 +126,8 @@ namespace CornerSpider {
             World.FingerTone=Settings.FingerTone;World.WebVisibility=Settings.WebVisibility;
             World.AttentionDistance=Settings.AttentionDistance;World.DismissDistance=Settings.DismissDistance;World.NextFly=Math.Min(35,World.FlyInterval);
             BuildTray();RefreshDisplays();World.Spider=World.Home;World.RestoreLife();
+            World.KeepBabies=Settings.KeepBabies;World.ResidentLimit=Settings.ResidentLimit;World.RestoreResidents(Settings.Colonists);
+            Updates=new UpdateController(this);
             timer.Interval=TimeSpan.FromMilliseconds(33);timer.Tick+=OnTick;
             displayTimer.Interval=TimeSpan.FromMilliseconds(350);displayTimer.Tick+=delegate { displayTimer.Stop();if(!Disposed) RefreshDisplays(); };
             Microsoft.Win32.SystemEvents.DisplaySettingsChanged+=DisplayChanged;
@@ -183,7 +186,9 @@ namespace CornerSpider {
                 World.Tick(dt,cursor,clicked);Render();
             }
             if(now-lastSave>30) { Save();lastSave=now; }
+            Updates.Tick();
             double ms=Paused?250:World.State==Mood.Sleep?83:World.State==Mood.Rest || World.State==Mood.Groom?50:33;
+            if(!Paused) foreach(var resident in World.Residents) if(resident.Actor.Speed>1 || resident.Record.Leaving) ms=Math.Min(ms,50);
             if(Math.Abs(timer.Interval.TotalMilliseconds-ms)>1) timer.Interval=TimeSpan.FromMilliseconds(ms);
         }
         public void Render() {
@@ -202,7 +207,7 @@ namespace CornerSpider {
                 if(World.GuestOpacity>0) animate|=visible.Contains(new Point(World.GuestCenter.X,World.GuestCenter.Y));
                 if(previousGuest) animate|=visible.Contains(new Point(previousGuestCenter.X,previousGuestCenter.Y));
                 if(previousHasFly) animate|=visible.Contains(new Point(previousFly.X,previousFly.Y));
-                w.Canvas.Species=Settings.Species;if(all || animate) w.Canvas.InvalidateVisual();
+                w.Canvas.Species=Settings.Species;w.Canvas.UpdateColonyVisuals();if(all || animate) w.Canvas.InvalidateVisual();
             }
             previousSpider=spider;previousFly=World.Fly;previousHasFly=World.HasFly;previousHome=World.Home;previousWeb=web;previousScale=World.Scale;previousWebVisibility=World.WebVisibility;previousSpecies=Settings.Species;
             previousGuest=World.GuestOpacity>0;previousGuestCenter=World.GuestCenter;
@@ -213,6 +218,7 @@ namespace CornerSpider {
             Settings.Scale=World.Scale;Settings.Corner=World.Corner;Settings.Web=World.Web;Settings.Meals=World.Meals;
             Settings.MoltingEnabled=World.MoltingEnabled;Settings.MatingEnabled=World.MatingEnabled;Settings.MoltHours=World.MoltHours;Settings.MateHours=World.MateHours;
             Settings.Lives.Clear();foreach(var life in World.Lives) Settings.Lives[life.Key]=life.Value;
+            Settings.KeepBabies=World.KeepBabies;Settings.ResidentLimit=World.ResidentLimit;Settings.Colonists.Clear();foreach(var pet in World.Residents) Settings.Colonists.Add(pet.Record);
             Settings.SpeciesTraits=World.SpeciesTraits;Settings.WebVisits=World.WebVisits;
             Settings.AutoFeed=World.AutoFeed;Settings.CursorPlay=World.CursorPlay;
             Settings.FlyInterval=World.FlyInterval;Settings.InviteDelay=World.InviteDelay;Settings.CarryTolerance=World.CarryTolerance;
@@ -272,7 +278,7 @@ namespace CornerSpider {
         void BuildTray() {
             Menu=new Forms.ContextMenuStrip();Menu.Opening+=delegate { CursorVisibility.Release(); };Menu.Items.Add(new Forms.ToolStripMenuItem("CORNER SPIDER  1.1 ALPHA") { Enabled=false });
             var status=new Forms.ToolStripMenuItem { Enabled=false };Menu.Items.Add(status);
-            Menu.Opening+=delegate { status.Text=(World.GuestStatus.Length>0?World.GuestStatus:World.State.ToString())+"  |  "+World.Meals+" prey caught"+(Settings.LastError.Length>0?"  |  Save failed":""); };
+            Menu.Opening+=delegate { status.Text=(World.GuestStatus.Length>0?World.GuestStatus:World.State.ToString())+"  |  "+World.Meals+" prey caught"+(Settings.LastError.Length>0?"  |  Save failed":"")+(Updates!=null && Updates.Available!=null?"  |  Update available":""); };
             Menu.Items.Add(new Forms.ToolStripSeparator());
             var feed=Item("feed",World.HuntsSpiders?"Release a small spider":"Release a fly",delegate { World.Feed(); });Menu.Items.Add(feed);Menu.Opening+=delegate { feed.Enabled=!World.HasFly && !Paused; };
             var foodMenu=new Forms.ToolStripMenuItem("Choose food");Menu.Items.Add(foodMenu);
@@ -294,6 +300,7 @@ namespace CornerSpider {
         public static string FoodName(PreyKind food) { return food==PreyKind.SmallSpider?"Small spider":food==PreyKind.Mealworm?"Mealworm":food.ToString(); }
         public void Dispose() {
             if(Disposed) return;Disposed=true;CursorVisibility.Dispose();timer.Stop();displayTimer.Stop();timer.Tick-=OnTick;Clicks.Dispose();
+            if(Updates!=null) Updates.Dispose();
             if(SettingsWindow!=null) SettingsWindow.Close();
             Microsoft.Win32.SystemEvents.DisplaySettingsChanged-=DisplayChanged;Microsoft.Win32.SystemEvents.PowerModeChanged-=PowerChanged;Microsoft.Win32.SystemEvents.SessionSwitch-=SessionChanged;Application.Current.SessionEnding-=SessionEnding;
             Save();if(Tray!=null) { Tray.Visible=false;Tray.Dispose(); }if(Menu!=null) Menu.Dispose();if(icon!=null) icon.Dispose();
@@ -302,13 +309,14 @@ namespace CornerSpider {
     }
     static class Program {
         [STAThread] static int Main(string[] args) {
+            if(args.Length==1 && args[0]=="--apply-update") return UpdateCore.RunInstaller();
             if(args.Length==3 && args[0]=="--cursor-guard") return CursorVeil.Guard(args);
             if(args.Length==2 && args[0]=="--cursor-lease-fixture") return CursorVeil.Fixture(args[1]);
             const string quitEvent="Local\\CornerSpiderPet_Quit_v2";
             if(args.Length>0 && args[0]=="--quit") {
                 try { using(var signal=EventWaitHandle.OpenExisting(quitEvent)) signal.Set(); } catch(WaitHandleCannotBeOpenedException) {}return 0;
             }
-            bool test=args.Length>0 && (args[0]=="--self-test" || args[0]=="--desktop-test" || args[0]=="--render-preview" || args[0]=="--finger-preview" || args[0]=="--prey-preview" || args[0]=="--encounter-preview" || args[0]=="--travel-preview" || args[0]=="--life-preview" || args[0]=="--release-preview" || args[0]=="--hammock-preview" || args[0]=="--silk-test" || args[0]=="--dismount-preview" || args[0]=="--nest-preview");
+            bool test=args.Length>0 && (args[0]=="--colony-load-test" || args[0]=="--self-test" || args[0]=="--desktop-test" || args[0]=="--render-preview" || args[0]=="--finger-preview" || args[0]=="--prey-preview" || args[0]=="--encounter-preview" || args[0]=="--travel-preview" || args[0]=="--life-preview" || args[0]=="--release-preview" || args[0]=="--hammock-preview" || args[0]=="--silk-test" || args[0]=="--dismount-preview" || args[0]=="--nest-preview");
             bool created;using(var mutex=new Mutex(true,test?"Local\\CornerSpiderPet_Tests":"Local\\CornerSpiderPet_v1",out created)) {
                 if(!created) return 0;
                 PetHost host=null;try {

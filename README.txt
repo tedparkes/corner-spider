@@ -1,4 +1,4 @@
-CORNER SPIDER 1.1.0-alpha.1 - NEXT VERSION PREVIEW
+CORNER SPIDER 1.1.0-alpha.2 - NEXT VERSION PREVIEW
 
 Extract the whole Windows ZIP, then open JumpingSpider.exe or Start-Spider.cmd.
 Requires Windows 10/11 and .NET Framework 4.8. No installer or admin rights.
@@ -49,5 +49,12 @@ Read CHANGELOG.md for the complete version-by-version development history.
 Plain-background galleries are in docs\new-families.png, living-webs.png,
 life-cycle.png and skins-light.png. No desktop screenshots are included.
 
-Free MIT-licensed software. Everything stays local; no telemetry or services.
+Free MIT-licensed software. Pet data stays local; no telemetry. Optional update
+checks contact GitHub. Automatic checks are off by default.
 The optional support button shows only the original Cash App QR.
+
+ALPHA 2: Updates tab adds Check now, optional daily checks and preview releases,
+and a verified Download and restart button. Automatic checks do not install.
+Life & home adds Let babies stay and build their own nests, with a 1-12 resident
+limit. Residents grow, move independently and persist across sessions. Switching
+it off sends them away gradually. README.md explains updates and resident homes.

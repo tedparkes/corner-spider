@@ -14,6 +14,10 @@ namespace CornerSpider {
         public bool MoltingEnabled=true,MatingEnabled=true;
         public double MoltHours=6,MateHours=8;
         public readonly Dictionary<string,LifeRecord> Lives=new Dictionary<string,LifeRecord>();
+        public bool KeepBabies,AutoUpdateCheck,PreviewUpdates;
+        public int ResidentLimit=6;
+        public long LastUpdateCheckTicks;
+        public readonly List<ColonyRecord> Colonists=new List<ColonyRecord>();
         public static readonly string[] SpeciesNames=SkinCatalog.Names;
         public static readonly string[] Corners={"TopLeft","TopRight","BottomLeft","BottomRight"};
         public string LastError="";
@@ -52,14 +56,23 @@ namespace CornerSpider {
                 if(k=="moltHours" && double.TryParse(v,NumberStyles.Float,CultureInfo.InvariantCulture,out n) && World.Finite(n)) MoltHours=Math.Max(2,Math.Min(24,n));
                 if(k=="mateHours" && double.TryParse(v,NumberStyles.Float,CultureInfo.InvariantCulture,out n) && World.Finite(n)) MateHours=Math.Max(4,Math.Min(48,n));
                 if(k.StartsWith("life.") && SkinCatalog.Contains(k.Substring(5))) { var life=LifeRecord.Unpack(v);if(life!=null) Lives[k.Substring(5)]=life; }
+                if(k=="keepBabies" && (v=="true" || v=="false")) KeepBabies=v=="true";
+                if(k=="residentLimit" && int.TryParse(v,out count)) ResidentLimit=Math.Max(1,Math.Min(World.MaxResidents,count));
+                if(k=="autoUpdateCheck" && (v=="true" || v=="false")) AutoUpdateCheck=v=="true";
+                if(k=="previewUpdates" && (v=="true" || v=="false")) PreviewUpdates=v=="true";
+                long ticks;if(k=="lastUpdateCheck" && long.TryParse(v,out ticks) && ticks>=0 && ticks<=DateTime.MaxValue.Ticks) LastUpdateCheckTicks=ticks;
+                if(k.StartsWith("colony.") && Colonists.Count<World.MaxResidents) { var resident=ColonyRecord.Unpack(v);if(resident!=null) Colonists.Add(resident); }
             }
             DismissDistance=Math.Max(AttentionDistance+20,DismissDistance);
         }
         public bool Save(string folder) {
             try {
                 Directory.CreateDirectory(folder);string path=Path.Combine(folder,"settings.txt"),temp=path+".new";
-                File.WriteAllLines(temp,new string[]{"version=7","webVisibility="+WebVisibility.ToString(CultureInfo.InvariantCulture),"speciesTraits="+SpeciesTraits.ToString().ToLowerInvariant(),"webVisits="+WebVisits.ToString().ToLowerInvariant(),"corner="+Corner,"species="+Species,"homeMonitor="+HomeMonitor,"allMonitors="+AllMonitors.ToString().ToLowerInvariant(),"scale="+Scale.ToString(CultureInfo.InvariantCulture),"fingerTone="+FingerTone.ToString(CultureInfo.InvariantCulture),"web="+Web.ToString(CultureInfo.InvariantCulture),"flies="+AutoFeed.ToString().ToLowerInvariant(),"rides="+CursorPlay.ToString().ToLowerInvariant(),"meals="+Meals,"flyInterval="+FlyInterval.ToString(CultureInfo.InvariantCulture),"inviteDelay="+InviteDelay.ToString(CultureInfo.InvariantCulture),"carryTolerance="+CarryTolerance.ToString(CultureInfo.InvariantCulture),"attentionDistance="+AttentionDistance.ToString(CultureInfo.InvariantCulture),"dismissDistance="+DismissDistance.ToString(CultureInfo.InvariantCulture)});
+                File.WriteAllLines(temp,new string[]{"version=8","webVisibility="+WebVisibility.ToString(CultureInfo.InvariantCulture),"speciesTraits="+SpeciesTraits.ToString().ToLowerInvariant(),"webVisits="+WebVisits.ToString().ToLowerInvariant(),"corner="+Corner,"species="+Species,"homeMonitor="+HomeMonitor,"allMonitors="+AllMonitors.ToString().ToLowerInvariant(),"scale="+Scale.ToString(CultureInfo.InvariantCulture),"fingerTone="+FingerTone.ToString(CultureInfo.InvariantCulture),"web="+Web.ToString(CultureInfo.InvariantCulture),"flies="+AutoFeed.ToString().ToLowerInvariant(),"rides="+CursorPlay.ToString().ToLowerInvariant(),"meals="+Meals,"flyInterval="+FlyInterval.ToString(CultureInfo.InvariantCulture),"inviteDelay="+InviteDelay.ToString(CultureInfo.InvariantCulture),"carryTolerance="+CarryTolerance.ToString(CultureInfo.InvariantCulture),"attentionDistance="+AttentionDistance.ToString(CultureInfo.InvariantCulture),"dismissDistance="+DismissDistance.ToString(CultureInfo.InvariantCulture)});
                 var lifeLines=new List<string>();
+                lifeLines.Add("keepBabies="+KeepBabies.ToString().ToLowerInvariant());lifeLines.Add("residentLimit="+ResidentLimit);
+                lifeLines.Add("autoUpdateCheck="+AutoUpdateCheck.ToString().ToLowerInvariant());lifeLines.Add("previewUpdates="+PreviewUpdates.ToString().ToLowerInvariant());lifeLines.Add("lastUpdateCheck="+LastUpdateCheckTicks);
+                for(int i=0;i<Math.Min(World.MaxResidents,Colonists.Count);i++) lifeLines.Add("colony."+i+"="+Colonists[i].Pack());
                 lifeLines.Add("molting="+MoltingEnabled.ToString().ToLowerInvariant());lifeLines.Add("mating="+MatingEnabled.ToString().ToLowerInvariant());
                 lifeLines.Add("moltHours="+MoltHours.ToString(CultureInfo.InvariantCulture));lifeLines.Add("mateHours="+MateHours.ToString(CultureInfo.InvariantCulture));
                 foreach(var entry in Lives) if(SkinCatalog.Contains(entry.Key)) lifeLines.Add("life."+entry.Key+"="+entry.Value.Pack());

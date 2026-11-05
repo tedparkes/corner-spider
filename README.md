@@ -1,6 +1,6 @@
 # Corner Spider 1.1 preview
 
-An offline spider companion for your actual Windows desktop. This is **1.1.0-alpha.1**,
+A spider companion for your actual Windows desktop. This is **1.1.0-alpha.2**,
 a local preview of the next version. The published [1.0 release](https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0)
 remains available and unchanged. This preview has not been published on GitHub.
 
@@ -21,7 +21,9 @@ opt-in. This community build is unsigned.
 - **Female life cycles:** a same-species male approaches, courts and mates. He
   usually leaves; some real-species visits end in a meal. The female becomes
   visibly gravid, lays an egg sac, and six tiny spiderlings hatch, grow near home
-  and eventually disperse off screen. Babies do not reproduce.
+  and eventually disperse off screen. Babies and resident offspring do not reproduce.
+- **Optional resident offspring:** let babies stay, grow and build independent nests. A slider caps resident offspring at 1–12 (default 6); new young disperse if space or the limit is reached. Residents do not reproduce or take over cursor play.
+- **GitHub updates:** manual checks and opt-in daily checks, with a stable/preview channel and a verified download-and-restart button.
 - **Seven foods:** fly, gnat, moth, cricket, mealworm, beetle and small spider.
   Select one from the tray's **Choose food** submenu. Automatic food varies by
   spider type. Only one prey animal is present at a time.
@@ -43,11 +45,14 @@ it. A single pet runs per Windows session, shared between 1.0 and this preview.
   web artwork as the desktop.
 - **Life & home:** enable or disable future molts and mating visits, adjust their
   intervals, read the current stage, or **Invite a mate** for an available female.
+  Allow offspring to stay and set the resident limit.
 - **Finger:** skin tone from deep brown to pale, with a live preview.
 - **Behavior:** occasional prey, finger play, interaction distances, hover delay,
   movement tolerance, species personalities and Portia's web encounter.
 - **Desktop:** nest corner and home monitor, one/all monitors, optional startup.
   The rightmost monitor remains the default home.
+- **Updates:** check GitHub, opt into daily checks or previews, and install a
+  newer release with Download and restart.
 
 Defaults use **active simulation time**, not elapsed time while the PC is off:
 
@@ -65,7 +70,7 @@ Molt interval is adjustable from 2–24 hours; mating interval from 4–48 hours
 Pausing, sleeping/locking Windows and closing the app stop the clocks. Switching
 skins pauses that skin's life history. Returning to it restores progress. Disabling
 an option prevents future events; an event already under way finishes. Resetting
-preferences keeps accumulated silk, meals and life history.
+preferences keeps accumulated silk, meals and life history; it also turns resident mode off and sends resident offspring away.
 
 These are species-inspired illustrations and deliberately compressed life events.
 The repeating molt/size cycle is fictional, and mating outcome weights are artistic
@@ -101,7 +106,7 @@ triggers an immediate escape with a silk dragline. Clicks still reach your apps.
 The pointer returns on departure, pause or exit, with a watchdog for interruptions.
 
 Life events briefly take priority over food and finger offers. A male visitor and
-up to six babies are family decorations with behavior, separate from the single
+up to six babies are family members with behavior, separate from the single
 prey slot. Feeding does not replace live prey. The quick tray feed remains a fly
 (or a small spider for Portia); **Choose food** exposes all seven foods for any
 species. Automatic web-dweller food is mainly winged insects and beetles; jumpers
@@ -113,6 +118,49 @@ Portia approaches an anchored side, plucks five times, watches the resident cree
 closer, then attacks directly and briefly struggles with it. That web stays until
 Portia leaves. The encounter shares the single prey slot and waits during life events.
 
+## Updates and resident offspring
+
+**Settings > Updates** has Check now, an opt-in daily check, an optional preview
+channel, and Download and restart when a newer compatible release is available.
+Automatic checks never install or restart on their own. The default channel is
+stable; a local 1.1 preview will not downgrade to public 1.0.
+
+Checks read the public GitHub releases API for `tedparkes/corner-spider`; downloads
+come from that repository and GitHub's asset servers. No pet history, settings or
+personal files are uploaded. With automatic checks off, the application contacts
+GitHub only when you use an update button. An unavailable network or GitHub rate
+limit leaves the pet running and can be retried later.
+
+Before installing, the app saves progress, downloads the Windows ZIP and release
+checksums, verifies SHA-256 and the executable version, and validates archive
+paths and size limits. A hidden helper waits for the app to exit, backs up replaced
+files and installs into the same folder. It restarts the pet afterward. Copy errors
+roll back the changed files. Saves, startup paths and Desktop shortcuts are kept.
+Updates require a writable app folder, not administrator privileges. Results and
+backups live under `%LOCALAPPDATA%\CornerSpider-Next\updates`; old staging folders
+are pruned on later downloads, retaining the two most recent folders before staging
+a new download. These unsigned releases rely on the project's GitHub account and
+HTTPS; checksum validation is not code signing.
+
+**Settings > Life & home > Let babies stay and build their own nests** is off by
+default. At the end of the brood phase, available places are assigned along real
+outer desktop edges. Young travel there, grow over about two active hours to 65%
+of the main pet's selected size, and weave species-appropriate smaller homes.
+They move, rest and groom independently, keeping their species and progress when
+you change the main pet. This applies to future brood departures; it does not
+summon offspring instantly. Their automatic feeding and cursor play are disabled
+so the desktop retains one prey slot and one finger interaction.
+
+The limit is global across species, up to 12 resident offspring in addition to the
+main pet and its temporary family. Smaller displays may have fewer suitable sites.
+New residents avoid the main retreat and Portia's reserved prey web; Portia also
+avoids building a prey web over an established resident home. Lowering the limit
+sends excess residents away; unchecking the option sends all residents away over
+about a minute, fading their empty nests after they leave. Display changes relocate
+homes or send residents away if no space remains. Population and homes are saved.
+
+![Independent resident nests on a plain background](docs/resident-colony.png)
+
 ## Saves, privacy and removal
 
 This preview uses **%LOCALAPPDATA%\CornerSpider-Next\settings.txt** and a previous-save
@@ -121,7 +169,7 @@ This preview uses **%LOCALAPPDATA%\CornerSpider-Next\settings.txt** and a previo
 save untouched. Normal quit saves progress. Use **Stop-Spider.cmd** or Quit in the
 tray. To switch back to 1.0, quit the preview and start the original installation.
 
-Everything runs locally. No telemetry, accounts, network calls, keyboard logging
+The pet simulation runs locally. No telemetry, accounts, keyboard logging
 or mouse injection. The optional **Buy me a coffee / Monster** button opens the
 original bundled Cash App QR only, with no username label or payment link.
 [Support details](docs/SUPPORT.md). Support is optional.
@@ -141,6 +189,7 @@ packages or external artwork dependencies. Quit the pet before rebuilding.
 Build.cmd
 JumpingSpider.exe --self-test "C:\Temp\CornerSpiderChecks"
 JumpingSpider.exe --life-preview "C:\Temp\CornerSpiderLife"
+JumpingSpider.exe --colony-load-test "C:\Temp\CornerSpiderColony"
 JumpingSpider.exe --release-preview "C:\Temp\CornerSpiderArt"
 JumpingSpider.exe --desktop-test "C:\Temp\CornerSpiderManual"
 ```

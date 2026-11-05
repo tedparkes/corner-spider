@@ -78,6 +78,7 @@ namespace CornerSpider {
                         // both desktop edges, rather than crossing the capture spiral.
                         for(int i=0;i<16;i++) { double t=(i/2+.5)/8.0,a=i%2==0?Math.PI*.68+t*Math.PI*.55:Math.PI*1.23+t*Math.PI*.55;
                             V anchor=i%2==0?new V(-ex,-ey+(ey+radius)*t):new V(-ex+(ex+radius)*t,-ey);
+                            if(w.IsColonyResident) anchor=ColonyAnchor(ex,ey,i/15.0,radius*1.25);
                             V rim=new V(Math.Cos(a)*radius,Math.Sin(a)*radius);Line(c,silk,1.2,anchor.X,anchor.Y,rim.X,rim.Y);
                         }
                         int rings=5+(int)(10*growth)+layers/3;
@@ -88,9 +89,11 @@ namespace CornerSpider {
                         var random=new Random(1127+(int)skin.WebKind);int count=(skin.WebKind==WebKind.Sheet?65:42)+(int)(growth*35)+layers*3;
                         // Every cross-line terminates on two anchored tension ribs.
                         V[] anchors={new V(-ex,-ey),new V(-ex,55),new V(55,-ey),new V(-ex,-30),new V(-30,-ey)};
+                        if(w.IsColonyResident) for(int i=0;i<anchors.Length;i++) anchors[i]=ColonyAnchor(ex,ey,i/4.0,120);
                         V hub=new V(65,65);
                         foreach(var a in anchors) Line(c,silk,.8,a.X,a.Y,hub.X,hub.Y);
                         for(int i=0;i<16;i++) { double t=(i/2+.5)/8.0;V a=i%2==0?new V(-ex,-ey+(ey+55)*t):new V(-ex+(ex+55)*t,-ey);
+                            if(w.IsColonyResident) a=ColonyAnchor(ex,ey,i/15.0,120);
                             V end=anchors[i%anchors.Length]+(hub-anchors[i%anchors.Length])*.75;Line(c,silk,1.2,a.X,a.Y,end.X,end.Y); }
                         for(int i=0;i<count;i++) { V a=anchors[random.Next(anchors.Length)],b=anchors[random.Next(anchors.Length)];double t=random.NextDouble();double u=skin.WebKind==WebKind.Sheet?t:random.NextDouble();V p=a+(hub-a)*t,q=b+(hub-b)*u;Curve(c,silk,.28,new Point(p.X,p.Y),new Point(p.X*.6+q.X*.4,p.Y*.6+q.Y*.4+5),new Point(p.X*.4+q.X*.6,p.Y*.4+q.Y*.6+5),new Point(q.X,q.Y)); }
                         if(skin.WebKind==WebKind.Sheet) for(int i=0;i<14;i++) { double r=4+i*1.5;c.DrawEllipse(null,P(silk,.45),new Point(-37,-37),r,r*.6); }
@@ -100,6 +103,7 @@ namespace CornerSpider {
                     var ageRandom=new Random(9041);
                     for(int i=0;i<layers*5;i++) {
                         V start=i%2==0?new V(-ex,-ey+ageRandom.NextDouble()*(ey+30)):new V(-ex+ageRandom.NextDouble()*(ex+30),-ey);
+                        if(w.IsColonyResident) start=ColonyAnchor(ex,ey,ageRandom.NextDouble(),120);
                         V end=new V(Math.Cos(i*2.4)*38,Math.Sin(i*2.4)*48);
                         if(skin.WebKind==WebKind.Orb || skin.WebKind==WebKind.Crystal) { double angle=Math.PI+(i%13)*Math.PI/24;end=new V(Math.Cos(angle)*radius,Math.Sin(angle)*radius); }
                         Curve(c,"#6ce4e9df",.35,new Point(start.X,start.Y),new Point(start.X*.55,start.Y*.55),new Point(end.X-4,end.Y-4),new Point(end.X,end.Y));
