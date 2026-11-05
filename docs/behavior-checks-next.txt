@@ -1,0 +1,19 @@
+PASS: 4989 life/family/food checks (46 skins, 7 foods, 5 categories, full molt and brood cycle, both mating outcomes, per-skin saves and bounded growth).
+CORNER BEHAVIOR: 94.9% near a corner; 92.2% stationary (8 seeds, 80 simulated minutes, no prey/cursor).
+PASS: 192577 regression assertions (hunt phases, jitter, rides, nest, mixed-DPI geometry, unplug, 40-minute simulation, persistence).
+PASS: 126978 natural-motion checks (bursts, paired upward reach, spatial hinges, fixed leg lengths, full-limb bounds and DPI edge clearance).
+PASS: 833950 travel checks / 418 routes, 346 with lateral scuttles; moving bouts 2.1-411.7 logical pixels, peak 358.3 px/s (all skins, sizes, DPI, frame rates, directions, edges and fixed leg lengths).
+PASS: 1436511 pounce checks / 5224 hunts (all 22 jumping-spider skins, both prey, 8 directions, 20-180% size, 100-200% DPI, 16/33/100 ms steps, ceiling and monitor seam). Actual long leaps: 188.2-200.0 logical pixels at 100%.
+PASS: 2233028 species/encounter checks, 56 full-length web hunts (timing, original prey limit, all skins, poses, naps, finger play, cleanup and persistence).
+PASS: 183430 corner-web checks (connected spiral, curved spans, true spoke junctions, shared construction path, bounds, sizes/DPI and plucking anchor).
+PASS: 5324 play checks (distant hunts, five-second offer, suspension, finger walking/waves, click/fast departures, silk cleanup, edges and frame rates).
+PASS: 220653 finger-boarding checks (varied surface landings, side-only catches, mirrored fingers, sizes/DPI, settling, interruptions and pointer drift).
+PASS: 2116 patrol attention checks (prior greetings, return trips, retained routes, stillness/jitter, sizes/DPIs, edges and priority).
+PASS: 566 settings checks (46 skins, finger tones and migration, 20% size, configured delay/distance/tolerance, mixed DPI and persistence).
+PASS: 3117249 species anatomy checks (46 profiles, original IDs, 23 sex pairs, legacy joint bounds and alternating eye/chelicera grooming; native tests cover the new family renderer).
+PASS: 27753 Portia prey checks (mixed spawn, species routing, single slot, full hunts, crawl/pause, held meal, size/DPI and cleanup).
+PASS: 365372 hammock checks (four corners, turn then tuck, fixed hinges, 20-180% sizes, mixed DPI, return, wake and reflow).
+PASS: 24335 planned-dismount checks (upward targets, turn/brace, catch/climb exits, frozen pad, ceiling/edges, silk, interruption and mixed DPI).
+PASS: 774706 end-entry checks (approach sides, axis alignment, crawl, silk occlusion, exit, four corners, size/DPI/frame steps and interruptions).
+PASS: corners, hunting, cursor boarding, fast dismount, disabled rides, naps, 10-minute simulation.
+        1 file(s) copied.

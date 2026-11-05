@@ -1,7 +1,7 @@
 using System;
 
 namespace CornerSpider {
-    public enum PreyKind { Fly, SmallSpider }
+    public enum PreyKind { Fly, SmallSpider, Gnat, Moth, Cricket, Mealworm, Beetle }
     public partial class World {
         public const double SmallSpiderSize=1.5;
         // Fly/HasFly retain the original single-slot API used by saves/tests.
@@ -20,13 +20,19 @@ namespace CornerSpider {
             if(!SkinCatalog.Contains(id) || species==id) return;
             if(WebStage!=WebVisit.None) CancelWebVisit();
             if(State==Mood.SpeciesAct) { decision=2;Enter(Mood.Rest); }
+            bool previousBusy=LifeBusy;
             species=id;behavior=BehaviorCatalog.Get(id);nextSpeciesMoment=Clock+28;NextWebVisit=Clock+100;
+            if(previousBusy) { nestInside=false;Wake(); }
+            RestoreLife();
         }
         public void Feed() { if(HuntsSpiders) SpawnSmallSpider();else SpawnFly(); }
         public void SpawnSmallSpider() { if(HuntsSpiders) Spawn(PreyKind.SmallSpider); }
+        public void Feed(PreyKind kind) { if(Enum.IsDefined(typeof(PreyKind),kind)) Spawn(kind); }
         public void SpawnPrey() {
             if(HasFly) return;
-            Spawn(HuntsSpiders && random.NextDouble()<.65?PreyKind.SmallSpider:PreyKind.Fly);
+            if(HuntsSpiders && random.NextDouble()<.65) { Spawn(PreyKind.SmallSpider);return; }
+            PreyKind[] choices=WebDweller?new[]{PreyKind.Fly,PreyKind.Gnat,PreyKind.Moth,PreyKind.Beetle}:new[]{PreyKind.Fly,PreyKind.Gnat,PreyKind.Moth,PreyKind.Cricket,PreyKind.Mealworm,PreyKind.Beetle};
+            Spawn(choices[random.Next(choices.Length)]);
         }
         void BeginPrey(PreyKind kind) {
             Prey=kind;preyOrigin=Fly;PreyAngle=FlyPhase*180/Math.PI;PreySteps=0;PreyWalking=false;
@@ -34,6 +40,8 @@ namespace CornerSpider {
         void MovePrey(double dt,double scale,bool linedUp) {
             PreyWalking=false;
             if(linedUp) return;
+            if(WebDweller) { PreyWalking=true;PreySteps+=dt*8;return; } // trapped silk vibration, no jumping hunt
+            if(Prey!=PreyKind.Fly && Prey!=PreyKind.SmallSpider) { MoveFood(dt,scale);return; }
             if(Prey==PreyKind.Fly) {
                 Fly=Clamp(Fly+new V(Math.Sin(Clock*4+FlyPhase)*18,Math.Cos(Clock*5+FlyPhase)*14)*(dt*scale));return;
             }
@@ -50,6 +58,17 @@ namespace CornerSpider {
             V next=Clamp(Fly+new V(Math.Sin(a),-Math.Cos(a))*(12.5*dt*s));
             double distance=(next-Fly).Length;Fly=next;PreyWalking=distance>.001;
             PreySteps+=distance/Math.Max(.01,1.6*s*SmallSpiderSize);
+        }
+        void MoveFood(double dt,double scale) {
+            double phase=(FlyAge+FlyPhase)%3.1;
+            if(Prey==PreyKind.Gnat || Prey==PreyKind.Moth) {
+                double speed=Prey==PreyKind.Gnat?23:12;
+                Fly=Clamp(Fly+new V(Math.Sin(FlyAge*3+FlyPhase),Math.Cos(FlyAge*4))*speed*dt*scale);return;
+            }
+            if(phase<.7) return;
+            V toward=preyOrigin-Fly;double a=toward.Length>48*scale?Math.Atan2(toward.Y,toward.X):FlyPhase+Math.Sin(FlyAge*.3)*.4;
+            double speed2=Prey==PreyKind.Cricket?(phase>2.5?95:12):Prey==PreyKind.Mealworm?5:9;
+            Fly=Clamp(Fly+new V(Math.Cos(a),Math.Sin(a))*speed2*dt*scale);PreyAngle=a*180/Math.PI+90;PreyWalking=true;PreySteps+=dt*speed2/4;
         }
     }
 }

@@ -37,13 +37,15 @@ namespace CornerSpider {
         static readonly SilkProfile tan=new SilkProfile("Low bark sleeve","A long, flattened slit with lengthwise seams, inspired by bark and crevice use.",1,1.26,.67,.28,7393,RetreatStyle.Bark);
         static readonly SilkProfile red=new SilkProfile("Tubular retreat","A long, narrow tube with layered walls, inspired by documented P. johnsoni nests.",1,1.28,1.1,.44,8117,RetreatStyle.LongTube);
         static readonly SilkProfile redMale=new SilkProfile("Light tubular retreat","The same long tube with lighter silk, reflecting observations of less dense male P. johnsoni nests.",1,1.28,.70,.44,8117,RetreatStyle.LongTube);
-        static readonly SilkProfile emerald=new SilkProfile("Layered leaf shelter","A broad folded envelope with an overlapping silk seam, inspired by leaf-side shelters; no eggs are simulated.",1,1.03,1.12,.65,9127,RetreatStyle.Leaf);
+        static readonly SilkProfile emerald=new SilkProfile("Layered leaf shelter","A broad folded envelope with an overlapping silk seam, inspired by leaf-side shelters.",1,1.03,1.12,.65,9127,RetreatStyle.Leaf);
         static readonly SilkProfile wall=new SilkProfile("Flat crevice cell","A short, flat-sided cell with a low cover; the outline is a habitat-inspired illustration.",1,.87,.77,.32,10103,RetreatStyle.Cell);
         static readonly SilkProfile pantropical=new SilkProfile("Tangled tube shelter","A rounded tube enclosed in an irregular silk mesh, inspired by complex P. paykulli nests.",1,.96,1.22,1.35,11213,RetreatStyle.Tangle);
         static readonly SilkProfile apache=new SilkProfile("Plant-side tube","A tapered sleeve with a narrow end and converging seams; this is an artistic variation.",1,1.18,.96,.58,12049,RetreatStyle.Taper);
         static readonly SilkProfile portia=new SilkProfile("Platform and scaffold","An open, asymmetric silk platform with a funnel-like corner scaffold, inspired by Portia webs.",1,1.05,.55,1.15,13109,RetreatStyle.Platform);
         static readonly SilkProfile hyllus=new SilkProfile("Broad silk pocket","A roomy, rounded pouch with a reinforced rim, fitted to the larger body; exact architecture is illustrative.",1,1.18,1.05,.7,14207,RetreatStyle.Pocket);
         public static SilkProfile Get(string species) {
+            var skin=SkinCatalog.Get(species);
+            if(skin.WebKind!=WebKind.Retreat) return skin.WebKind==WebKind.Orb?new SilkProfile("Orb capture web","Radial spokes and a close spiral, supported from both corner edges.",1,1,1,1,1511,RetreatStyle.Platform):skin.WebKind==WebKind.Sheet?new SilkProfile("Sheet and funnel","A low silk sheet leading to a sheltered funnel entrance.",1,1,1,1,1611,RetreatStyle.Platform):new SilkProfile(skin.WebKind==WebKind.Crystal?"Crystal lattice":"Tangle web",skin.WebKind==WebKind.Crystal?"An imaginary angular crystalline web.":"An irregular anchored capture network with a sheltered resting point.",1,1,1,1,1711,RetreatStyle.Platform);
             switch(species) {
                 case "Bold":case "BoldFemale":return bold;
                 case "Zebra":case "ZebraMale":return zebra;
@@ -54,8 +56,8 @@ namespace CornerSpider {
                 case "GrayWall":case "GrayWallMale":return wall;
                 case "Pantropical":case "PantropicalFemale":return pantropical;
                 case "Apache":case "ApacheFemale":return apache;
-                case "PortiaLabiata":return portia;
-                case "HyllusDiardiGreen":return hyllus;
+                case "PortiaLabiata":case "PortiaLabiataMale":return portia;
+                case "HyllusDiardiGreen":case "HyllusDiardiMale":return hyllus;
                 default:return regal;
             }
         }

@@ -5,7 +5,7 @@ static class SettingsTests {
     static int checks;
     static void Check(bool condition,string why) { checks++;if(!condition) throw new Exception("Settings: "+why); }
     public static void Run() {
-        Check(SkinCatalog.All.Length==20,"twenty skin profiles");
+        Check(SkinCatalog.All.Length==46,"forty-six skin profiles in five families");
         var ids=new System.Collections.Generic.HashSet<string>();
         var oldSave=new Settings();oldSave.Parse(new[]{"version=3","web=.76","meals=12","species=Bold"});
         Check(oldSave.FingerTone==World.DefaultFingerTone && oldSave.Web==.76 && oldSave.Meals==12 && oldSave.Species=="Bold","old saves keep the original finger tone and pet progress");
@@ -57,6 +57,6 @@ static class SettingsTests {
             foreach(double tone in new[]{0,.01,.37,.8,.99,1}) { parsed.FingerTone=tone;Check(parsed.Save(folder),"save finger shade");loaded=Settings.Load(folder);Check(loaded.FingerTone==tone && loaded.Species=="Emerald" && loaded.Scale==.2,"exact finger shade survives reload alongside existing preferences"); }
         }
         finally { foreach(string file in new[]{"settings.txt","settings.txt.bak","settings.txt.new"}) { string path=Path.Combine(folder,file);if(File.Exists(path)) File.Delete(path); }if(Directory.Exists(folder)) Directory.Delete(folder); }
-        Console.WriteLine("PASS: "+checks+" settings checks (twenty skins, finger tones and migration, 20% size, configured delay/distance/tolerance, mixed DPI and persistence).");
+        Console.WriteLine("PASS: "+checks+" settings checks (46 skins, finger tones and migration, 20% size, configured delay/distance/tolerance, mixed DPI and persistence).");
     }
 }

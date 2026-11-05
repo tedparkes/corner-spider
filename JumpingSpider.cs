@@ -11,9 +11,9 @@ using System.Windows.Interop;
 using Forms=System.Windows.Forms;
 
 [assembly:System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.8")]
-[assembly:System.Reflection.AssemblyVersion("1.0.0.0")]
-[assembly:System.Reflection.AssemblyFileVersion("1.0.0.0")]
-[assembly:System.Reflection.AssemblyInformationalVersion("1.0.0")]
+[assembly:System.Reflection.AssemblyVersion("1.1.0.0")]
+[assembly:System.Reflection.AssemblyFileVersion("1.1.0.0")]
+[assembly:System.Reflection.AssemblyInformationalVersion("1.1.0-alpha.1")]
 [assembly:System.Reflection.AssemblyTitle("Corner Spider")]
 [assembly:System.Reflection.AssemblyProduct("Corner Spider")]
 [assembly:System.Reflection.AssemblyDescription("A local jumping-spider companion for the Windows desktop.")]
@@ -104,6 +104,8 @@ namespace CornerSpider {
         bool previousHasFly,previousFinger,previousSilk,previousGuest;
         V previousGuestCenter;
         int previousWeb=-1;
+        int previousLayers=-1;
+        LifeStage previousLifeStage;
         double previousScale,previousWebVisibility=-1;
         string previousSpecies="";
         bool suspended,sessionLocked;
@@ -117,10 +119,12 @@ namespace CornerSpider {
             World.SetSpecies(Settings.Species);
             World.Scale=Settings.Scale;World.Web=Settings.Web;World.Meals=Settings.Meals;World.Corner=Settings.Corner;World.AutoFeed=Settings.AutoFeed;World.CursorPlay=Settings.CursorPlay;
             World.SpeciesTraits=Settings.SpeciesTraits;World.WebVisits=Settings.WebVisits;
+            World.MoltingEnabled=Settings.MoltingEnabled;World.MatingEnabled=Settings.MatingEnabled;World.MoltHours=Settings.MoltHours;World.MateHours=Settings.MateHours;
+            foreach(var life in Settings.Lives) World.Lives[life.Key]=life.Value;
             World.FlyInterval=Settings.FlyInterval;World.InviteDelay=Settings.InviteDelay;World.CarryTolerance=Settings.CarryTolerance;
             World.FingerTone=Settings.FingerTone;World.WebVisibility=Settings.WebVisibility;
             World.AttentionDistance=Settings.AttentionDistance;World.DismissDistance=Settings.DismissDistance;World.NextFly=Math.Min(35,World.FlyInterval);
-            BuildTray();RefreshDisplays();World.Spider=World.Home;
+            BuildTray();RefreshDisplays();World.Spider=World.Home;World.RestoreLife();
             timer.Interval=TimeSpan.FromMilliseconds(33);timer.Tick+=OnTick;
             displayTimer.Interval=TimeSpan.FromMilliseconds(350);displayTimer.Tick+=delegate { displayTimer.Stop();if(!Disposed) RefreshDisplays(); };
             Microsoft.Win32.SystemEvents.DisplaySettingsChanged+=DisplayChanged;
@@ -186,13 +190,14 @@ namespace CornerSpider {
             CursorVisibility.Update(!Paused && !suspended && !sessionLocked && World.CursorPlay && World.FingerActive && World.FingerBlend>=.65 && (World.Cursor-World.FingerOrigin).Length<12*World.BodyScale && !Menu.Visible && (SettingsWindow==null || !SettingsWindow.IsVisible));
             V spider=new V(World.Spider.X,World.Spider.Y-World.Lift);
             int web=(int)(World.Web*30);
-            bool all=World.WebVisibility!=previousWebVisibility || web!=previousWeb || (World.Home-previousHome).Length>0 || World.Scale!=previousScale || Settings.Species!=previousSpecies || World.State==Mood.Jump || World.FingerBlend>0 || previousFinger || World.SilkOpacity>0 || previousSilk;
+            bool all=World.WebLayers!=previousLayers || World.WebVisibility!=previousWebVisibility || web!=previousWeb || (World.Home-previousHome).Length>0 || World.Scale!=previousScale || Settings.Species!=previousSpecies || World.State==Mood.Jump || World.FingerBlend>0 || previousFinger || World.SilkOpacity>0 || previousSilk;
             double margin=130;
-            foreach(var area in World.Areas) margin=Math.Max(margin,SpiderPose.Radius*World.Scale*area.Dpi+8);
+            foreach(var area in World.Areas) margin=Math.Max(margin,SpiderPose.Radius*World.Scale*World.LifeSize*area.Dpi+8);
             foreach(var w in Windows) {
                 var r=w.Screen.WorkingArea;
                 var visible=new Rect(r.Left-Origin.X-margin,r.Top-Origin.Y-margin,r.Width+margin*2,r.Height+margin*2);
                 bool animate=visible.Contains(new Point(spider.X,spider.Y)) || visible.Contains(new Point(previousSpider.X,previousSpider.Y));
+                if(World.Life.Stage!=LifeStage.Quiet || previousLifeStage!=LifeStage.Quiet) animate|=visible.Contains(new Point(World.Home.X,World.Home.Y));
                 if(World.HasFly) animate|=visible.Contains(new Point(World.Fly.X,World.Fly.Y));
                 if(World.GuestOpacity>0) animate|=visible.Contains(new Point(World.GuestCenter.X,World.GuestCenter.Y));
                 if(previousGuest) animate|=visible.Contains(new Point(previousGuestCenter.X,previousGuestCenter.Y));
@@ -202,9 +207,12 @@ namespace CornerSpider {
             previousSpider=spider;previousFly=World.Fly;previousHasFly=World.HasFly;previousHome=World.Home;previousWeb=web;previousScale=World.Scale;previousWebVisibility=World.WebVisibility;previousSpecies=Settings.Species;
             previousGuest=World.GuestOpacity>0;previousGuestCenter=World.GuestCenter;
             previousFinger=World.FingerBlend>0;previousSilk=World.SilkOpacity>0;
+            previousLayers=World.WebLayers;previousLifeStage=World.Life.Stage;
         }
         public void Save() {
             Settings.Scale=World.Scale;Settings.Corner=World.Corner;Settings.Web=World.Web;Settings.Meals=World.Meals;
+            Settings.MoltingEnabled=World.MoltingEnabled;Settings.MatingEnabled=World.MatingEnabled;Settings.MoltHours=World.MoltHours;Settings.MateHours=World.MateHours;
+            Settings.Lives.Clear();foreach(var life in World.Lives) Settings.Lives[life.Key]=life.Value;
             Settings.SpeciesTraits=World.SpeciesTraits;Settings.WebVisits=World.WebVisits;
             Settings.AutoFeed=World.AutoFeed;Settings.CursorPlay=World.CursorPlay;
             Settings.FlyInterval=World.FlyInterval;Settings.InviteDelay=World.InviteDelay;Settings.CarryTolerance=World.CarryTolerance;
@@ -262,11 +270,14 @@ namespace CornerSpider {
             }
         }
         void BuildTray() {
-            Menu=new Forms.ContextMenuStrip();Menu.Opening+=delegate { CursorVisibility.Release(); };Menu.Items.Add(new Forms.ToolStripMenuItem("CORNER SPIDER  1.0") { Enabled=false });
+            Menu=new Forms.ContextMenuStrip();Menu.Opening+=delegate { CursorVisibility.Release(); };Menu.Items.Add(new Forms.ToolStripMenuItem("CORNER SPIDER  1.1 ALPHA") { Enabled=false });
             var status=new Forms.ToolStripMenuItem { Enabled=false };Menu.Items.Add(status);
             Menu.Opening+=delegate { status.Text=(World.GuestStatus.Length>0?World.GuestStatus:World.State.ToString())+"  |  "+World.Meals+" prey caught"+(Settings.LastError.Length>0?"  |  Save failed":""); };
             Menu.Items.Add(new Forms.ToolStripSeparator());
             var feed=Item("feed",World.HuntsSpiders?"Release a small spider":"Release a fly",delegate { World.Feed(); });Menu.Items.Add(feed);Menu.Opening+=delegate { feed.Enabled=!World.HasFly && !Paused; };
+            var foodMenu=new Forms.ToolStripMenuItem("Choose food");Menu.Items.Add(foodMenu);
+            foreach(PreyKind food in Enum.GetValues(typeof(PreyKind))) { PreyKind selected=food;foodMenu.DropDownItems.Add(Item("food-"+food,FoodName(food),delegate { World.Feed(selected); })); }
+            Menu.Opening+=delegate { foodMenu.Enabled=!World.HasFly && !World.LifeBusy && !Paused;feed.Enabled=foodMenu.Enabled; };
             Menu.Items.Add(Item("home","Go to hammock",delegate { World.GoHome(); }));
             Menu.Items.Add(Item("wake","Wake up",delegate { World.Wake(); }));
             var pause=Item("pause","Pause",delegate { Paused=!Paused;ResumeClock(); });Menu.Items.Add(pause);Menu.Opening+=delegate { pause.Text=Paused?"Resume":"Pause"; };
@@ -280,6 +291,7 @@ namespace CornerSpider {
         public static bool ReadStartup() {
             try { using(var key=Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run")) return key!=null && key.GetValue("CornerSpider")!=null; } catch { return false; }
         }
+        public static string FoodName(PreyKind food) { return food==PreyKind.SmallSpider?"Small spider":food==PreyKind.Mealworm?"Mealworm":food.ToString(); }
         public void Dispose() {
             if(Disposed) return;Disposed=true;CursorVisibility.Dispose();timer.Stop();displayTimer.Stop();timer.Tick-=OnTick;Clicks.Dispose();
             if(SettingsWindow!=null) SettingsWindow.Close();
@@ -296,13 +308,17 @@ namespace CornerSpider {
             if(args.Length>0 && args[0]=="--quit") {
                 try { using(var signal=EventWaitHandle.OpenExisting(quitEvent)) signal.Set(); } catch(WaitHandleCannotBeOpenedException) {}return 0;
             }
-            bool test=args.Length>0 && (args[0]=="--self-test" || args[0]=="--desktop-test" || args[0]=="--render-preview" || args[0]=="--finger-preview" || args[0]=="--prey-preview" || args[0]=="--encounter-preview" || args[0]=="--travel-preview" || args[0]=="--release-preview" || args[0]=="--hammock-preview" || args[0]=="--silk-test" || args[0]=="--dismount-preview" || args[0]=="--nest-preview");
+            bool test=args.Length>0 && (args[0]=="--self-test" || args[0]=="--desktop-test" || args[0]=="--render-preview" || args[0]=="--finger-preview" || args[0]=="--prey-preview" || args[0]=="--encounter-preview" || args[0]=="--travel-preview" || args[0]=="--life-preview" || args[0]=="--release-preview" || args[0]=="--hammock-preview" || args[0]=="--silk-test" || args[0]=="--dismount-preview" || args[0]=="--nest-preview");
             bool created;using(var mutex=new Mutex(true,test?"Local\\CornerSpiderPet_Tests":"Local\\CornerSpiderPet_v1",out created)) {
                 if(!created) return 0;
                 PetHost host=null;try {
                     var app=new Application { ShutdownMode=ShutdownMode.OnExplicitShutdown };
                     if(test) return RuntimeTests.Run(app,args);
-                    string folder=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"CornerSpider");
+                    string folder=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"CornerSpider-Next");
+                    if(!File.Exists(Path.Combine(folder,"settings.txt"))) {
+                        string previous=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"CornerSpider","settings.txt");
+                        if(File.Exists(previous)) { Directory.CreateDirectory(folder);File.Copy(previous,Path.Combine(folder,"settings.txt"),false); }
+                    }
                     using(var signal=new EventWaitHandle(false,EventResetMode.AutoReset,quitEvent)) {
                         host=new PetHost(folder,false);app.Exit+=delegate { host.Dispose(); };
                         var registration=ThreadPool.RegisterWaitForSingleObject(signal,delegate { app.Dispatcher.BeginInvoke(new Action(delegate { host.Dispose();app.Shutdown(); })); },null,Timeout.Infinite,false);

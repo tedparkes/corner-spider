@@ -10,6 +10,10 @@ namespace CornerSpider {
     }
     public static class BehaviorCatalog {
         public static BehaviorProfile Get(string id) {
+            var skin=SkinCatalog.Get(id);
+            if(skin.WebDweller) return new BehaviorProfile(skin.Fictional?"An imaginary silk engineer":"Web-side watcher",skin.Fictional?"An original fantasy species that tends its web and follows vibrations.":"Stays near its capture web, follows a struggling insect along the silk, then wraps and eats it.",SpeciesGesture.WebWatch) { PatrolSpeed=95,HomeAffinity=.95,Duration=6 };
+            if(id=="PortiaLabiataMale") return Get("PortiaLabiata");
+            if(id=="HyllusDiardiMale") return Get("HyllusDiardiGreen");
             switch(id) {
                 case "RegalMale":return new BehaviorProfile("Silk-tapping gentleman","Small foreleg taps echo documented nest courtship. This solo display is a playful adaptation.",SpeciesGesture.SilkTap);
                 case "Regal":return new BehaviorProfile("Palm-frond lookout","Deliberate look-around pauses, inspired by its elevated plant and palm-frond retreats.",SpeciesGesture.Lookout);
@@ -19,7 +23,7 @@ namespace CornerSpider {
                 case "Tan":case "TanMale":return new BehaviorProfile("Bark sitter","Lowers its body and holds still between short trips, inspired by its flat bark-dwelling form and less active foraging.",SpeciesGesture.BarkPause) { PatrolSpeed=135,Duration=6 };
                 case "RedBack":return new BehaviorProfile("Zigzag dancer","A short raised-foreleg sidestep echoes the male's documented visual courtship dance.",SpeciesGesture.Zigzag);
                 case "RedBackFemale":return new BehaviorProfile("Retreat regular","Returns to inspect its silk retreat more often, inspired by documented nest fidelity.",SpeciesGesture.NestCheck) { HomeAffinity=.45 };
-                case "Emerald":return new BehaviorProfile("Nest-side sentinel","Checks and tends its retreat. Inspired by female nest guarding; no eggs or breeding simulation are added.",SpeciesGesture.NestCheck) { HomeAffinity=.65,Duration=5 };
+                case "Emerald":return new BehaviorProfile("Nest-side sentinel","Checks and tends its retreat. Inspired by female nest guarding; the life cycle adds a guarded brood.",SpeciesGesture.NestCheck) { HomeAffinity=.65,Duration=5 };
                 case "EmeraldMale":return new BehaviorProfile("Silk-side visitor","Pauses to inspect silk, inspired by observations of males visiting female molting retreats.",SpeciesGesture.SilkTap) { HomeAffinity=.2 };
                 case "GrayWall":case "GrayWallMale":return new BehaviorProfile("Wall-side watcher","Short wall-like edge patrols and watchful pauses, inspired by observations around insect nest entrances.",SpeciesGesture.WallWatch) { PatrolSpeed=180 };
                 case "Pantropical":return new BehaviorProfile("Face-forward salutes","Brief foreleg salutes echo its visual displays. Its dense-nest lifestyle inspires silk checks.",SpeciesGesture.Drum) { HomeAffinity=.2 };

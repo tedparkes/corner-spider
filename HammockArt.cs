@@ -200,9 +200,13 @@ namespace CornerSpider {
             if(!w.UnderNestSilk) DrawHammock(d,w,true,species);
             DrawSpider(d,w,species);
             if(w.UnderNestSilk) DrawHammock(d,w,true,species);
+            DrawLifeScene(d,w);
         }
         public void DrawHammock(DrawingContext d,World w,bool front,string species=null,bool vectorPreview=false) {
             if(w.WebVisibility<=0) return;
+            species=species??Species;
+            if(!front) DrawLivingSilk(d,w,species);
+            if(SkinCatalog.Get(species).WebKind!=WebKind.Retreat) return;
             d.PushOpacity(w.WebVisibility);
             species=species??Species;
             var a=w.Areas[w.HomeArea];double scale=w.HomeScale;

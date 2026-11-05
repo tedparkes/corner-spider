@@ -210,6 +210,7 @@ namespace CornerSpider {
                 d.PushOpacity(w.SilkOpacity*w.WebVisibility);SilkLine(d,.75*w.BodyScale,w.SilkStart,w.SilkEnd);d.Pop();
             }
             DrawSpider(d,w,Species);
+            DrawLifeScene(d,w);
             if(w.UnderNestSilk) DrawHammock(d,w,true);d.Pop();d.Pop();
         }
         static void DrawFly(DrawingContext d,World w) {
@@ -221,6 +222,7 @@ namespace CornerSpider {
             Line(d,"#434a45",.8,-1,2,-4,5);Line(d,"#434a45",.8,1,2,4,5);d.Pop();d.Pop();
         }
         public static void DrawSpider(DrawingContext d,World w,string species) {
+            if(SkinCatalog.Get(species).Category!="Jumping spiders") { DrawFamilySpider(d,w,SkinCatalog.Get(species));return; }
             d.PushTransform(new TranslateTransform(w.Spider.X,w.Spider.Y));
             Oval(d,B("#16000000"),0,12*w.BodyScale,18*w.BodyScale,9*w.BodyScale);
             d.PushTransform(new TranslateTransform(0,-w.Lift));d.PushTransform(new ScaleTransform(w.BodyScale,w.BodyScale));
@@ -231,7 +233,7 @@ namespace CornerSpider {
             d.PushTransform(new TranslateTransform(0,(1-w.Squash)*19));
             double breathing=1+Math.Sin(w.Clock*1.5)*.003;
             d.PushTransform(new ScaleTransform(breathing,w.Squash));
-            DrawArt(d,Body(species));
+            d.PushTransform(new ScaleTransform(1+w.GravidAmount*.18,1+w.GravidAmount*.12,0,16));DrawArt(d,Body(species));d.Pop();
             DrawArt(d,Head(species));
             // Raised forelegs pass in front of the face, instead of vanishing under it.
             d.Pop();d.Pop();

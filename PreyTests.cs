@@ -21,9 +21,9 @@ static class PreyTests {
         foreach(var skin in SkinCatalog.All) {
             var w=New(7);w.SetSpecies(skin.Id);w.Feed();
             Check(w.Prey==(skin.SpiderPrey?PreyKind.SmallSpider:PreyKind.Fly),"manual feeding matches species: "+skin.Id);
-            w.HasFly=false;w.SpawnSmallSpider();Check(w.HasFly==skin.SpiderPrey,"only Portia can release spider prey");
+            w.HasFly=false;w.SpawnSmallSpider();Check(w.HasFly==skin.SpiderPrey,"Portia quick-feed compatibility");
             w.HasFly=false;w.NextFly=0;w.AutoFeed=true;w.State=Mood.Rest;w.Tick(.025,away);
-            Check(w.HasFly && (skin.SpiderPrey || w.Prey==PreyKind.Fly),"automatic spawner respects selected species");
+            Check(w.HasFly && (skin.SpiderPrey || w.Prey!=PreyKind.SmallSpider),"automatic spawner respects selected species");
         }
         foreach(double dt in new[]{.016,.033,.1}) for(int seed=0;seed<32;seed++) {
             var w=New(seed);w.SpawnSmallSpider();var seen=new HashSet<Mood>();

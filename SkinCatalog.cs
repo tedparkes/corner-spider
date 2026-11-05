@@ -4,6 +4,10 @@ namespace CornerSpider {
     // Named regions are kept separate so a future custom-color editor can reuse
     // this palette contract. No custom colors or external skin files are loaded yet.
     public sealed class SkinProfile {
+        public string Category="Jumping spiders",MateId="";
+        public WebKind WebKind=WebKind.Retreat;
+        public double MateRisk=.06;
+        public bool Fictional,WebDweller;
         public string Id,Name,Scientific,Description,Pattern="Spots",Sex="Female",Shape="Rounded";
         public string Body="#293034",BodyShade="#090c10",Head="#30373a",HeadShade="#0b1014";
         public string Legs="#343b3c",LegShade="#0b1012",Hair="#959c94",Mark="#eeeadd";
@@ -19,7 +23,7 @@ namespace CornerSpider {
         internal SkinProfile Variant(string id,string name,string sex) { var copy=(SkinProfile)MemberwiseClone();copy.Id=id;copy.Name=name;copy.Sex=sex;return copy; }
         public override string ToString() { return Name; }
     }
-    public static class SkinCatalog {
+    public static partial class SkinCatalog {
         public static readonly SkinProfile[] All=Create();
         static SkinProfile[] Create() {
         var original=new SkinProfile[]{
@@ -69,7 +73,7 @@ namespace CornerSpider {
         portia.CoatDensity=.40;portia.HairLength=.48;portia.LegHair=.24;portia.FrontBulk=.70;portia.MiddleEye=1.2;
         portia.BodyWidth=8.5;portia.BodyLength=16;portia.BodyTaper=.24;
         portia.Description="Angular high front body, narrow mottled abdomen and very fine, irregularly brushed legs. Large side eyes and a pale female moustache. Hunts spiders and flies.";
-        return new[]{regal,regalMale,boldFemale,bold,zebra,zebraMale,tan,tanMale,redFemale,red,emerald,emeraldMale,wall,wallMale,pantropicalFemale,pantropical,apacheFemale,apache,portia,hyllus};
+        return Extend(new[]{regal,regalMale,boldFemale,bold,zebra,zebraMale,tan,tanMale,redFemale,red,emerald,emeraldMale,wall,wallMale,pantropicalFemale,pantropical,apacheFemale,apache,portia,hyllus});
         }
         public static SkinProfile Get(string id) { foreach(var skin in All) if(skin.Id==id) return skin;return All[0]; }
         public static string[] Names { get { var ids=new string[All.Length];for(int i=0;i<ids.Length;i++) ids[i]=All[i].Id;return ids; } }

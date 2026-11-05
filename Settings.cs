@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Globalization;
+using System.Collections.Generic;
 
 namespace CornerSpider {
     public class Settings {
@@ -10,6 +11,9 @@ namespace CornerSpider {
         public double FingerTone=World.DefaultFingerTone,WebVisibility=1;
         public double FlyInterval=100,InviteDelay=4.5,CarryTolerance=850,AttentionDistance=185,DismissDistance=230;
         public int Meals;
+        public bool MoltingEnabled=true,MatingEnabled=true;
+        public double MoltHours=6,MateHours=8;
+        public readonly Dictionary<string,LifeRecord> Lives=new Dictionary<string,LifeRecord>();
         public static readonly string[] SpeciesNames=SkinCatalog.Names;
         public static readonly string[] Corners={"TopLeft","TopRight","BottomLeft","BottomRight"};
         public string LastError="";
@@ -43,13 +47,23 @@ namespace CornerSpider {
                 // v1's monitor key is intentionally not the home preference: v2 defaults to the right screen.
                 if(k=="homeMonitor") HomeMonitor=v;
                 if(k=="meals" && int.TryParse(v,out count)) Meals=Math.Max(0,count);
+                if(k=="molting" && (v=="true" || v=="false")) MoltingEnabled=v=="true";
+                if(k=="mating" && (v=="true" || v=="false")) MatingEnabled=v=="true";
+                if(k=="moltHours" && double.TryParse(v,NumberStyles.Float,CultureInfo.InvariantCulture,out n) && World.Finite(n)) MoltHours=Math.Max(2,Math.Min(24,n));
+                if(k=="mateHours" && double.TryParse(v,NumberStyles.Float,CultureInfo.InvariantCulture,out n) && World.Finite(n)) MateHours=Math.Max(4,Math.Min(48,n));
+                if(k.StartsWith("life.") && SkinCatalog.Contains(k.Substring(5))) { var life=LifeRecord.Unpack(v);if(life!=null) Lives[k.Substring(5)]=life; }
             }
             DismissDistance=Math.Max(AttentionDistance+20,DismissDistance);
         }
         public bool Save(string folder) {
             try {
                 Directory.CreateDirectory(folder);string path=Path.Combine(folder,"settings.txt"),temp=path+".new";
-                File.WriteAllLines(temp,new string[]{"version=6","webVisibility="+WebVisibility.ToString(CultureInfo.InvariantCulture),"speciesTraits="+SpeciesTraits.ToString().ToLowerInvariant(),"webVisits="+WebVisits.ToString().ToLowerInvariant(),"corner="+Corner,"species="+Species,"homeMonitor="+HomeMonitor,"allMonitors="+AllMonitors.ToString().ToLowerInvariant(),"scale="+Scale.ToString(CultureInfo.InvariantCulture),"fingerTone="+FingerTone.ToString(CultureInfo.InvariantCulture),"web="+Web.ToString(CultureInfo.InvariantCulture),"flies="+AutoFeed.ToString().ToLowerInvariant(),"rides="+CursorPlay.ToString().ToLowerInvariant(),"meals="+Meals,"flyInterval="+FlyInterval.ToString(CultureInfo.InvariantCulture),"inviteDelay="+InviteDelay.ToString(CultureInfo.InvariantCulture),"carryTolerance="+CarryTolerance.ToString(CultureInfo.InvariantCulture),"attentionDistance="+AttentionDistance.ToString(CultureInfo.InvariantCulture),"dismissDistance="+DismissDistance.ToString(CultureInfo.InvariantCulture)});
+                File.WriteAllLines(temp,new string[]{"version=7","webVisibility="+WebVisibility.ToString(CultureInfo.InvariantCulture),"speciesTraits="+SpeciesTraits.ToString().ToLowerInvariant(),"webVisits="+WebVisits.ToString().ToLowerInvariant(),"corner="+Corner,"species="+Species,"homeMonitor="+HomeMonitor,"allMonitors="+AllMonitors.ToString().ToLowerInvariant(),"scale="+Scale.ToString(CultureInfo.InvariantCulture),"fingerTone="+FingerTone.ToString(CultureInfo.InvariantCulture),"web="+Web.ToString(CultureInfo.InvariantCulture),"flies="+AutoFeed.ToString().ToLowerInvariant(),"rides="+CursorPlay.ToString().ToLowerInvariant(),"meals="+Meals,"flyInterval="+FlyInterval.ToString(CultureInfo.InvariantCulture),"inviteDelay="+InviteDelay.ToString(CultureInfo.InvariantCulture),"carryTolerance="+CarryTolerance.ToString(CultureInfo.InvariantCulture),"attentionDistance="+AttentionDistance.ToString(CultureInfo.InvariantCulture),"dismissDistance="+DismissDistance.ToString(CultureInfo.InvariantCulture)});
+                var lifeLines=new List<string>();
+                lifeLines.Add("molting="+MoltingEnabled.ToString().ToLowerInvariant());lifeLines.Add("mating="+MatingEnabled.ToString().ToLowerInvariant());
+                lifeLines.Add("moltHours="+MoltHours.ToString(CultureInfo.InvariantCulture));lifeLines.Add("mateHours="+MateHours.ToString(CultureInfo.InvariantCulture));
+                foreach(var entry in Lives) if(SkinCatalog.Contains(entry.Key)) lifeLines.Add("life."+entry.Key+"="+entry.Value.Pack());
+                File.AppendAllLines(temp,lifeLines);
                 if(File.Exists(path)) File.Replace(temp,path,path+".bak");else File.Move(temp,path);
                 LastError="";return true;
             } catch(IOException ex) { LastError=ex.Message;return false; }

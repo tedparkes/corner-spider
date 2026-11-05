@@ -76,13 +76,13 @@ static class MorphologyTests {
             }
         }
         int paired=0;foreach(var item in sexes) if(item.Value.Count==2) paired++;
-        Check(paired==9 && sexes.Count==11,"all nine original species have male and female options, plus two new species");
+        Check(paired==23 && sexes.Count==23,"all 23 natural and fictional varieties have male and female options");
         foreach(var female in SkinCatalog.All) foreach(var male in SkinCatalog.All) if(!female.Male && male.Male && female.Scientific==male.Scientific) {
             Check(female.BodyWidth*female.BodyLength>male.BodyWidth*male.BodyLength,"female has a fuller abdomen: "+female.Scientific);
             Check(male.PalpWidth>female.PalpWidth*1.4,"adult male terminal bulbs differ from female palps");
         }
         Check(SkinCatalog.Get("PortiaLabiata").RearLeg>1.4 && SkinCatalog.Get("PortiaLabiata").LegWidth<.6,"Portia has longer, slimmer supporting limbs");
         Check(SkinCatalog.Get("HyllusDiardiGreen").BodyLength/SkinCatalog.Get("HyllusDiardiGreen").BodyWidth>1.4,"Hyllus female retains its long full abdomen");
-        Console.WriteLine("PASS: "+checks+" species anatomy checks (20 profiles, original IDs, nine sex pairs, fixed joints, all-state bounds and alternating eye/chelicera grooming).");
+        Console.WriteLine("PASS: "+checks+" species anatomy checks (46 profiles, original IDs, 23 sex pairs, legacy joint bounds and alternating eye/chelicera grooming; native tests cover the new family renderer).");
     }
 }

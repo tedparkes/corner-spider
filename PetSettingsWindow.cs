@@ -12,6 +12,9 @@ namespace CornerSpider {
         readonly DispatcherTimer encounterTimer=new DispatcherTimer { Interval=TimeSpan.FromMilliseconds(500) };
         public readonly Slider SizeSlider,WebSlider,FingerToneSlider,FlySlider,InviteSlider,ToleranceSlider,AttentionSlider,DismissSlider;
         public readonly ComboBox SpeciesSelector,CornerSelector,MonitorSelector;
+        public readonly ComboBox CategorySelector;
+        public readonly CheckBox MoltingCheck,MatingCheck;
+        public readonly Slider MoltSlider,MateSlider;
         public readonly CheckBox FliesCheck,RidesCheck,AllMonitorsCheck,StartupCheck,TraitsCheck,WebVisitsCheck;
         public readonly Button WebVisitButton,SupportButton;
         public readonly SettingsPreview Preview=new SettingsPreview();
@@ -61,7 +64,8 @@ namespace CornerSpider {
             var appearance=new Grid { Margin=new Thickness(20) };
             appearance.ColumnDefinitions.Add(new ColumnDefinition { Width=new GridLength(285) });appearance.ColumnDefinitions.Add(new ColumnDefinition { Width=new GridLength(1,GridUnitType.Star) });
             var options=new StackPanel { Margin=new Thickness(0,0,20,0) };appearance.Children.Add(options);
-            SpeciesSelector=Select(options,"Skin");SpeciesSelector.MaxDropDownHeight=340;SpeciesSelector.ItemsSource=SkinCatalog.All;SpeciesSelector.SelectedItem=SkinCatalog.Get(host.Settings.Species);
+            CategorySelector=Select(options,"Spider family");CategorySelector.ItemsSource=SkinCatalog.Categories;CategorySelector.SelectedItem=SkinCatalog.Get(host.Settings.Species).Category;
+            SpeciesSelector=Select(options,"Skin");SpeciesSelector.MaxDropDownHeight=340;SpeciesSelector.ItemsSource=SkinCatalog.InCategory((string)CategorySelector.SelectedItem);SpeciesSelector.SelectedItem=SkinCatalog.Get(host.Settings.Species);
             speciesNote=Text("",13);speciesNote.MinHeight=105;options.Children.Add(speciesNote);
             CheckBox detail=null;
             SizeSlider=Range(options,"Desktop size",20,180,5,host.World.Scale*100,"%",delegate(double v) { host.World.SetScale(v/100);Preview.PetScale=v/100;if(detail!=null) detail.IsChecked=false;host.Render();Preview.InvalidateVisual(); });
@@ -78,7 +82,22 @@ namespace CornerSpider {
             Note(previewColumn,"The selected species' silk retreat is fitted to the upper-right corner. Preview angle turns the spider; size and background update both.");
             Action refreshSkin=delegate { var skin=(SkinProfile)SpeciesSelector.SelectedItem;Preview.Species=skin.Id;var personality=BehaviorCatalog.Get(skin.Id);speciesNote.Text=skin.Scientific+"\n\n"+skin.Description+"\n\n"+personality.Title+" — "+personality.Note+"\n\nSilk: "+SilkProfile.Get(skin.Id).Note;Preview.InvalidateVisual(); };
             refreshSkin();SpeciesSelector.SelectionChanged+=delegate { if(SpeciesSelector.SelectedItem==null || syncing) return;refreshSkin();host.SetSpecies(((SkinProfile)SpeciesSelector.SelectedItem).Id); };
+            CategorySelector.SelectionChanged+=delegate { if(CategorySelector.SelectedItem==null) return;SpeciesSelector.ItemsSource=SkinCatalog.InCategory((string)CategorySelector.SelectedItem);SpeciesSelector.SelectedIndex=0; };
             AddTab("Appearance",appearance);
+            var lifePanel=NewPanel();lifePanel.Children.Add(Text("A home that changes slowly",21));
+            Note(lifePanel,"Silk gathers reinforcement, repairs and tiny remains over hours of active use. Each skin keeps its own nest age and life cycle when you switch. Closed sessions and Pause stop these clocks.");
+            MoltingCheck=Toggle(lifePanel,"Occasional molts",host.World.MoltingEnabled);MoltingCheck.Checked+=delegate { host.World.MoltingEnabled=true;Changed(); };MoltingCheck.Unchecked+=delegate { host.World.MoltingEnabled=false;Changed(); };
+            MoltSlider=Range(lifePanel,"Time between molts",2,24,1,host.World.MoltHours," active hours",delegate(double v) { host.World.SetLifeIntervals(v,host.World.MateHours); });
+            Note(lifePanel,"After shedding, your pet is 16% larger. It returns gradually to its chosen size before the next molt. This repeating cycle is a gentle fictional adaptation; your size slider stays the same.");
+            MatingCheck=Toggle(lifePanel,"Occasional female mating visits",host.World.MatingEnabled);MatingCheck.Checked+=delegate { host.World.MatingEnabled=true;Changed(); };MatingCheck.Unchecked+=delegate { host.World.MatingEnabled=false;Changed(); };
+            MateSlider=Range(lifePanel,"Time between mating visits",4,48,1,host.World.MateHours," active hours",delegate(double v) { host.World.SetLifeIntervals(host.World.MoltHours,v); });
+            Note(lifePanel,"A same-species male courts the female, mates and usually leaves. Some real-species visits end in a meal; the chance varies by species. Fictional males always leave. A female gradually becomes gravid, lays a sac, and raises six visible spiderlings near her nest until they disperse off screen. Timing is compressed for the desktop.");
+            var inviteMate=new Button { Content="Invite a mate",HorizontalAlignment=HorizontalAlignment.Left,Padding=new Thickness(12,6,12,6) };lifePanel.Children.Add(inviteMate);
+            inviteMate.Click+=delegate { saveStatus.Text=host.World.InviteMate()?"A male is approaching the nest.":"Choose an available female, enable visits, and finish any current prey or life-cycle event.";host.Render(); };
+            var lifeStatus=Text("",14);lifeStatus.Margin=new Thickness(0,12,0,0);lifePanel.Children.Add(lifeStatus);
+            encounterTimer.Tick+=delegate { lifeStatus.Text=host.World.LifeStatus;inviteMate.IsEnabled=host.World.MatingEnabled && !SkinCatalog.Get(host.World.Species).Male && host.World.Life.Stage==LifeStage.Quiet && !host.World.HasFly; };
+            Note(lifePanel,"Molts and courtship wait for a quiet moment. Disabling an option prevents future events; an event already under way finishes. Each brood is capped and babies do not reproduce.");
+            AddTab("Life & home",lifePanel);
 
             var fingerPanel=new Grid { Margin=new Thickness(20) };
             fingerPanel.ColumnDefinitions.Add(new ColumnDefinition { Width=new GridLength(265) });fingerPanel.ColumnDefinitions.Add(new ColumnDefinition { Width=new GridLength(1,GridUnitType.Star) });
@@ -143,8 +162,8 @@ namespace CornerSpider {
             var help=NewPanel();help.Children.Add(Text("A quiet little desktop companion",21));
             Note(help,"Approach an awake spider and hold still for the configured invitation delay. The finger fades in; the spider can jump on, hang, climb and wander. Move gently to carry it. A click lets it plan an upward hop; a fast move startles it. The finger holds still until takeoff, and your pointer returns immediately. Your clicks still reach your apps.");
             Note(help,"It watches from corners, stalks occasional flies and returns to its silk retreat. Use the tray's quick actions to feed, call it home, wake or pause it. Double-click the tray icon to reopen these settings.");
-            Note(help,"Corner Spider 1.0\nFree software under the MIT License. The pet works offline with no accounts or telemetry. Optional support shows a Cash App QR code to scan with your phone. Preferences are stored in LocalAppData\\CornerSpider. See README.txt for removal and manual checks.");
-            Note(help,"Future ideas: custom colors by body region; crickets, mealworms and other prey; additional spider species; an optional background with depth to explore.");AddTab("About & play",help);
+            Note(help,"Corner Spider 1.1 alpha\nFree software under the MIT License. The pet works offline with no accounts or telemetry. Optional support shows a Cash App QR code to scan with your phone. This preview saves in LocalAppData\\CornerSpider-Next, separately from 1.0. See README.txt for removal and manual checks.");
+            Note(help,"Future ideas: custom colors by body region; more species-specific courtship and web construction; an optional background with depth to explore.");AddTab("About & play",help);
             saveTimer.Tick+=delegate { saveTimer.Stop();host.Save();saveStatus.Text=host.Settings.LastError.Length==0?"Saved. Changes are live on your desktop.":"Could not save preferences. Check that your save folder is writable."; };
             Closed+=delegate { IsClosed=true;saveTimer.Stop();encounterTimer.Stop();Preview.Dispose();host.Save(); };
         }
@@ -158,6 +177,7 @@ namespace CornerSpider {
             MonitorSelector.SelectedIndex=selected;syncing=false;
         }
         public void ResetPreferences() {
+            CategorySelector.SelectedItem="Jumping spiders";MoltingCheck.IsChecked=true;MatingCheck.IsChecked=true;MoltSlider.Value=6;MateSlider.Value=8;
             TraitsCheck.IsChecked=true;WebVisitsCheck.IsChecked=true;SpeciesSelector.SelectedItem=SkinCatalog.Get("Regal");SizeSlider.Value=100;WebSlider.Value=100;FingerToneSlider.Value=World.DefaultFingerTone*100;FlySlider.Value=100;InviteSlider.Value=4.5;ToleranceSlider.Value=850;
             AttentionSlider.Value=185;DismissSlider.Value=230;FliesCheck.IsChecked=true;RidesCheck.IsChecked=true;CornerSelector.SelectedIndex=1;AllMonitorsCheck.IsChecked=true;MonitorSelector.SelectedIndex=0;Changed();
         }

@@ -48,7 +48,7 @@ namespace CornerSpider {
                 var v=new DrawingVisual();using(var d=v.RenderOpen()) {
                     Color ink=dark?Color.FromRgb(229,237,227):Color.FromRgb(29,48,44);
                     d.DrawRectangle(new SolidColorBrush(dark?Color.FromRgb(29,41,47):Color.FromRgb(234,238,228)),null,new Rect(0,0,1500,height));
-                    Text(d,"CORNER SPIDER / TWENTY COATS",26,18,26,ink);
+                    Text(d,"CORNER SPIDER / "+SkinCatalog.All.Length+" SKINS",26,18,26,ink);
                     Text(d,"Original procedural artwork  -  species proportions, male/female pairs and articulated palps",28,56,14,ink);
                     for(int i=0;i<SkinCatalog.All.Length;i++) {
                         var skin=SkinCatalog.All[i];double x=150+(i%5)*300,y=200+(i/5)*325;
@@ -66,8 +66,9 @@ namespace CornerSpider {
             }
         }
         static void RenderSkinSizes(string folder) {
+            int height=65+((SkinCatalog.All.Length+3)/4)*195;
             var visual=new DrawingVisual();using(var d=visual.RenderOpen()) {
-                d.DrawRectangle(BPreview("#e8ede3"),null,new Rect(0,0,1200,1050));
+                d.DrawRectangle(BPreview("#e8ede3"),null,new Rect(0,0,1200,height));
                 Text(d,"SKIN READABILITY / 100% AND 20%",20,12,24,Color.FromRgb(30,50,44));
                 for(int i=0;i<SkinCatalog.All.Length;i++) {
                     var skin=SkinCatalog.All[i];double x=i%4*300,y=65+i/4*195;
@@ -81,7 +82,7 @@ namespace CornerSpider {
                     Text(d,"100%",70,137,11,ink);Text(d,"20%",208,137,11,ink);
                     Text(d,skin.Name,12,168,14,Color.FromRgb(30,50,44));d.Pop();
                 }
-            }SavePng(visual,1200,1050,Path.Combine(folder,"skins-sizes.png"));
+            }SavePng(visual,1200,height,Path.Combine(folder,"skins-sizes.png"));
         }
         static void CheckSkinRendering() {
             var hashes=new System.Collections.Generic.HashSet<string>();

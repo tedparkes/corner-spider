@@ -62,8 +62,8 @@ namespace CornerSpider {
                 Check(vertical>25 && horizontal>25,"retreat has multiple visible attachments to both desktop edges: "+skin.Id+" / "+corner);
                 int far=(top?350:10)*360+(right?10:350);
                 Check(pixels[far*4+3]==0,"retreat preserves clear desktop outside its corner: "+skin.Id+" / "+corner);
-                int builds=canvas.NestBuilds;SilkBitmap(canvas,w,skin.Id);
-                Check(canvas.NestBuilds==builds,"static silk reuses its retained artwork: "+skin.Id+" / "+corner);
+                int builds=canvas.NestBuilds+canvas.LivingSilkBuilds;SilkBitmap(canvas,w,skin.Id);
+                Check(canvas.NestBuilds+canvas.LivingSilkBuilds==builds,"static silk reuses its retained artwork: "+skin.Id+" / "+corner);
             }
             int before=canvas.NestBuilds;SilkBitmap(canvas,w,"Regal");SilkBitmap(canvas,w,"PortiaLabiata");
             Check(canvas.NestBuilds==before+2,"switching species replaces the retained silk style immediately");
@@ -97,8 +97,9 @@ namespace CornerSpider {
             }
             // The same renderer is used by the settings thumbnail, without image
             // caches. Exercise every skin in the preview and at the supported size extremes.
+            int galleryHeight=55+((SkinCatalog.All.Length+4)/5)*275;
             var gallery=new DrawingVisual();using(var d=gallery.RenderOpen()) {
-                d.DrawRectangle(BPreview("#e6ebe1"),null,new Rect(0,0,1200,1160));
+                d.DrawRectangle(BPreview("#e6ebe1"),null,new Rect(0,0,1200,galleryHeight));
                 Text(d,"RETREAT VARIETY / EMPTY SHELTER AND SETTINGS PREVIEW",18,12,22,Color.FromRgb(30,50,44));
                 for(int i=0;i<SkinCatalog.All.Length;i++) {
                     var skin=SkinCatalog.All[i];double x=i%5*240,y=55+i/5*275;
@@ -109,7 +110,7 @@ namespace CornerSpider {
                     d.DrawImage(bitmap,new Rect(0,0,236,250));preview.Dispose();
                     Text(d,skin.Name,8,254,12,Color.FromRgb(30,50,44));d.Pop();
                 }
-            }SavePng(gallery,1200,1160,Path.Combine(folder,"retreat-settings.png"));
+            }SavePng(gallery,1200,galleryHeight,Path.Combine(folder,"retreat-settings.png"));
             var canvas=new PetCanvas();
             foreach(var skin in SkinCatalog.All) foreach(double size in new[]{.2,1.0,1.8}) {
                 // A large offscreen work area prevents the small-screen scale fit

@@ -53,7 +53,7 @@ namespace CornerSpider {
         Mood inspectionResume=Mood.Rest;
         double attentionRearmAt;
         V? cornerWaypoint;
-        public double BodyScale { get { return Scale*pixelScale; } }
+        public double BodyScale { get { return Scale*pixelScale*LifeSize; } }
         public double HomeScale { get { return Scale*Areas[Math.Min(HomeArea,Areas.Count-1)].Dpi; } }
         // The retreat runs diagonally between the two adjacent desktop edges.
         public double NestAngle { get { return Corner.StartsWith("Top")?(Corner.EndsWith("Right")?135:225):(Corner.EndsWith("Right")?45:315); } }
@@ -73,7 +73,7 @@ namespace CornerSpider {
         public V Clamp(V p) {
             var a=Areas[AreaAt(p)];
             // No inset at a shared seam: the spider can walk across contiguous monitors.
-            double margin=SpiderPose.Radius*Scale*Math.Max(a.Dpi,pixelScale);
+            double margin=SpiderPose.Radius*Scale*LifeSize*Math.Max(a.Dpi,pixelScale);
             V bounded=a.Clamp(p,0),safe=a.Clamp(p,margin);
             if(InsideAny(new V(bounded.X-margin,bounded.Y)) && InsideAny(new V(bounded.X+margin,bounded.Y))) safe.X=bounded.X;
             if(InsideAny(new V(bounded.X,bounded.Y-margin)) && InsideAny(new V(bounded.X,bounded.Y+margin))) safe.Y=bounded.Y;
@@ -90,6 +90,7 @@ namespace CornerSpider {
         }
         public double CornerDistance { get { int a=AreaAt(Spider);return (Spider-Perch(a,NearestCorner(a,Spider))).Length; } }
         void ChoosePerch() {
+            if(WebDweller) { Target=Clamp(Home+new V(Between(-48,48),Between(-48,48))*HomeScale);Enter(Mood.Walk);return; }
             int area=AreaAt(Spider),corner=NearestCorner(area,Spider);
             double choice=random.NextDouble();
             if(Areas.Count>1 && choice<.10) { area=(area+1)%Areas.Count;corner=NearestCorner(area,Spider); }
@@ -173,12 +174,13 @@ namespace CornerSpider {
         }
         public void SpawnFly() { Spawn(PreyKind.Fly); }
         void Spawn(PreyKind kind) {
-            if(HasFly) return;
+            if(HasFly || LifeBusy) return;
             V best=Spider;double distance=0;bool far=random.NextDouble()<.4;
             for(int i=0;i<12;i++) {
                 double a=Between(0,Math.PI*2);V p=Clamp(Spider+new V(Math.Cos(a),Math.Sin(a))*Between(far?320:145,far?540:270)*BodyScale);
                 if((p-Spider).Length>distance) { best=p;distance=(p-Spider).Length; }
             }
+            if(WebDweller) best=Clamp(Home+new V(Between(-85,85),Between(-85,85))*HomeScale);
             Fly=best;HasFly=true;FlyAge=0;FlyPhase=Between(0,6.28);NextFly=Clock+Between(.7,1.3)*FlyInterval;
             BeginPrey(kind);
             if(UnderNestSilk) { StartNestExit();napAfter=Clock+Between(100,170); }
@@ -315,6 +317,7 @@ namespace CornerSpider {
             double cursorSpeed=TrackCursor(dt,cursor);RideCooldown=Math.Max(0,RideCooldown-dt);
             if(State!=Mood.Jump) pixelScale+=(Areas[AreaAt(Spider)].Dpi-pixelScale)*Math.Min(1,dt*8);
             double s=BodyScale;
+            if(TickLife(dt)) return;
             TickWebVisit(dt);
             bool cursorInside=cursorValid && ChooseFingerSide(cursor);
             Scared=Math.Max(0,Scared-dt*.4);
@@ -324,18 +327,18 @@ namespace CornerSpider {
                 if(!GuestPrey) MovePrey(dt,s,linedUp);
                 if(FlyAge>60 && !GuestPrey) { HasFly=false;if(State==Mood.Notice || State==Mood.Stalk || State==Mood.Aim) Wake(); }
             }
-            bool free=State==Mood.Rest || State==Mood.Walk || State==Mood.Groom || State==Mood.Inspect || State==Mood.SpeciesAct;
+            bool free=!LifeBusy && (State==Mood.Rest || State==Mood.Walk || State==Mood.Groom || State==Mood.Inspect || State==Mood.SpeciesAct);
             if(AutoFeed && HuntsSpiders && WebVisits && !HasFly && WebStage==WebVisit.None && Clock>=NextWebVisit && free) StartWebVisit();
             if(AutoFeed && !HasFly && Clock>NextFly && free) SpawnPrey();
             if(GuestPrey && WebStage==WebVisit.Waiting && GuestStageAge>=GuestWaitTime && free && !FingerActive) BeginWebApproach();
             else if(HasFly && !GuestPrey && free) Enter(Mood.Notice);
-            bool canOffer=free || State==Mood.Return;
+            bool canOffer=!LifeBusy && (free || State==Mood.Return);
             double cursorDistance=(cursor-Spider).Length;
             UpdateInvitation(dt,cursor,cursorSpeed,cursorInside,canOffer,clicked);
             if(!cursorValid || cursorDistance>DismissRadius) { cursorNearby=false;attentionRearmAt=0; }
             bool passing=(State==Mood.Walk || State==Mood.Return) && cursorDistance<AttentionRadius && Clock>=attentionRearmAt;
             bool greeting=free && State!=Mood.Inspect && cursorDistance<AttentionRadius && !cursorNearby && Clock>=nextInspection;
-            if(CursorPlay && cursorValid && !clicked && !PreyBlocksPlay && (passing || greeting)) {
+            if(!LifeBusy && CursorPlay && cursorValid && !clicked && !PreyBlocksPlay && (passing || greeting)) {
                 InspectCursor(cursor);
             }
             if(InviteTime>=InviteDelay+.7 && FingerBlend>.94 && canOffer) {
@@ -386,6 +389,7 @@ namespace CornerSpider {
                 case Mood.Notice: Face(Fly);if(StateTime>.65) Enter(Mood.Stalk);break;
                 case Mood.Stalk:
                     if(!HasFly) { Wake();break; }Face(Fly);
+                    if(WebDweller) { if(Move(Fly,115,dt)) { Meal=Prey;HasFly=false;holdingMeal=true;if(Meals<int.MaxValue) Meals++;Enter(Mood.Struggle); }break; }
                     if((Fly-Spider).Length<PreyPounceRange*s) Enter(Mood.Aim);
                     else { double distance=(Fly-Spider).Length/s;BurstMove(Fly,HuntingSpeed(distance),dt,true); }break;
                 case Mood.Aim: Face(Fly);if(!HasFly) Wake();else if(StateTime>.6) PrepareJump(Fly,"fly");break;

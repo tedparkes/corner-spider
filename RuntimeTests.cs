@@ -18,7 +18,7 @@ namespace CornerSpider {
         static void Check(bool b,string message) { log.AppendLine((b?"PASS: ":"FAIL: ")+message);if(!b) failures++; }
         public static int Run(Application app,string[] args) {
             string folder=args.Length>1?Path.GetFullPath(args[1]):Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"diagnostics");Directory.CreateDirectory(folder);
-            if(args[0]=="--desktop-test") return Desktop(app,folder);
+            if(args[0]=="--life-preview") { RenderLifePreview(folder);return 0; }if(args[0]=="--desktop-test") return Desktop(app,folder);
             if(args[0]=="--encounter-preview") { RenderEncounterPreview(folder);return 0; }
             if(args[0]=="--travel-preview") { RenderTravelPreview(folder);return 0; }
             if(args[0]=="--prey-preview") { RenderPreyPreview(folder);return 0; }
@@ -79,8 +79,14 @@ namespace CornerSpider {
                         Check(!own,"OS hit testing passes through the illustrated finger");host.World.FingerBlend=0;host.Render();
                         host.Commands["pause"].PerformClick();Check(host.Paused,"pause tray handler");host.Commands["pause"].PerformClick();Check(!host.Paused,"resume tray handler");
                         host.Commands["feed"].PerformClick();Check(host.World.HasFly,"feed tray handler");host.Commands["home"].PerformClick();Check(host.World.State==Mood.Return,"home tray handler");
-                        Check(host.Commands.Count==6 && host.Commands.ContainsKey("settings"),"tray contains quick actions and a single settings entry");
+                        Check(host.Commands.Count==13 && host.Commands.ContainsKey("settings"),"tray contains quick actions, seven food choices and a single settings entry");
+                        foreach(PreyKind food in Enum.GetValues(typeof(PreyKind))) { host.World.HasFly=false;host.Commands["food-"+food].PerformClick();Check(host.World.HasFly && host.World.Prey==food,"tray food selection: "+food); }host.World.HasFly=false;
                         var settingsPanel=new PetSettingsWindow(host);
+                        foreach(string family in SkinCatalog.Categories) { settingsPanel.CategorySelector.SelectedItem=family;Check(settingsPanel.SpeciesSelector.Items.Count==SkinCatalog.InCategory(family).Length && SkinCatalog.Get(host.World.Species).Category==family,"category filters skins and updates the live pet: "+family); }
+                        settingsPanel.CategorySelector.SelectedItem="Jumping spiders";
+                        settingsPanel.MoltSlider.Value=12;settingsPanel.MateSlider.Value=24;Check(host.World.MoltHours==12 && host.World.MateHours==24,"life interval sliders update the world");
+                        settingsPanel.MoltingCheck.IsChecked=false;settingsPanel.MatingCheck.IsChecked=false;Check(!host.World.MoltingEnabled && !host.World.MatingEnabled,"life switches disable future events");
+                        settingsPanel.MoltingCheck.IsChecked=true;settingsPanel.MatingCheck.IsChecked=true;
                         settingsPanel.CornerSelector.SelectedIndex=2;Check(host.World.Corner=="BottomLeft","settings corner selector");settingsPanel.CornerSelector.SelectedIndex=1;
                         settingsPanel.SizeSlider.Value=125;Check(Math.Abs(host.World.Scale-1.25)<.001,"live size slider updates the shared pet scale");
                         settingsPanel.SizeSlider.Value=180;Check(host.World.Scale==1.8,"size slider upper limit");
@@ -93,6 +99,7 @@ namespace CornerSpider {
                         settingsPanel.WebSlider.Value=45;Check(host.World.WebVisibility==.45 && settingsPanel.Preview.WebVisibility==.45,"web visibility applies live to world and preview");
                         settingsPanel.AllMonitorsCheck.IsChecked=false;Check(host.Windows.Count==1,"settings single-monitor option");settingsPanel.AllMonitorsCheck.IsChecked=true;Check(host.Windows.Count==Forms.Screen.AllScreens.Length,"settings restore all-monitor roaming");
                         foreach(var skin in SkinCatalog.All) {
+                            settingsPanel.CategorySelector.SelectedItem=skin.Category;
                             settingsPanel.SpeciesSelector.SelectedItem=skin;Check(host.Settings.Species==skin.Id && host.World.Species==skin.Id && settingsPanel.Preview.Species==skin.Id,"skin selection applies to pet, behavior and preview: "+skin.Id);
                             host.Save();Check(Settings.Load(host.Folder).Species==skin.Id,"selected skin survives native settings reload: "+skin.Id);
                         }
@@ -113,7 +120,7 @@ namespace CornerSpider {
                         CaptureSettings(host,folder);settingsPanel.SizeSlider.Value=125;settingsPanel.Close();
                         Check(Settings.Load(host.Folder).Scale==1.25,"closing settings saves slider size");
                         Check(settingsPanel.IsClosed && !settingsPanel.Preview.Running,"closing settings stops its preview timer");host.World.SetScale(1);
-                        CheckSkinRendering();CheckFingerTones();RenderSkinGallery(folder);RenderFingerPreview(folder);RenderHammockGallery(folder);
+                        CheckSkinRendering();CheckLivingArt();RenderLifePreview(folder);CheckFingerTones();RenderSkinGallery(folder);RenderFingerPreview(folder);RenderHammockGallery(folder);
                         CheckPortiaPrey(host,folder);CheckEncounterSettings(host,folder);CheckClickDismount(host);
                         CheckNestEntry(host);CheckSilkArt(folder);
                         host.World.Cursor=host.World.FingerOrigin=host.World.Spider;host.World.InviteTime=5;host.World.FingerBlend=1;host.Render();

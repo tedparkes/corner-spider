@@ -2,6 +2,30 @@
 
 ## Unreleased
 
+## 1.1.0-alpha.1
+
+- Start the next development version from the preserved 1.0 release.
+- Add five category filters and 46 skins: 22 jumpers, eight orb weavers, six
+  widows, four house spiders and six original fictional variants. Every variety
+  has female and male options, including Portia and Hyllus.
+- Add radial orb webs, anchored tangle webs, sheet/funnel webs and crystalline
+  fantasy silk. Web dwellers approach trapped prey along the silk.
+- Persist long-term reinforcement, repairs and tiny remains independently for
+  each skin. Silk growth is bounded and counts active time near home.
+- Add occasional retreat molts, a shed skin and recovery. Each completed molt
+  adds 16% temporary size, easing back to the selected size before the next cycle.
+- Add same-species male visits, courtship, mating, departure or occasional
+  cannibalism, gradual gravid development, egg sacs and six growing spiderlings
+  that eventually disperse beyond the screen edges. Fictional males leave safely.
+- Add Life & home settings with event switches and interval sliders, and an
+  immediate mate invitation when an available female is selected.
+- Add flies, gnats, moths, crickets, mealworms, beetles and small spiders to the
+  food submenu. Random prey varies with the selected spider family.
+- Preserve the single-prey limit, click-through overlay and cursor cleanup.
+  Use a separate preview save folder, initially copied from 1.0 preferences.
+- Add deterministic food, family, save/reload and multi-cycle checks, plus
+  galleries rendered from the app for the new families, silk and life stages.
+
 ## 1.0.0
 
 - Publish the first public Windows release, with portable and source packages,

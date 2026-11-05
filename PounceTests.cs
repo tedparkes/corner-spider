@@ -57,7 +57,7 @@ static class PounceTests {
         hunts++;
     }
     public static void Run() {
-        foreach(var skin in SkinCatalog.All) foreach(double size in new[]{.2,1,1.8}) foreach(double dpi in new[]{1,1.5,2}) foreach(double dt in new[]{.016,.033,.1}) for(int direction=0;direction<8;direction++) {
+        foreach(var skin in SkinCatalog.InCategory("Jumping spiders")) foreach(double size in new[]{.2,1,1.8}) foreach(double dpi in new[]{1,1.5,2}) foreach(double dt in new[]{.016,.033,.1}) for(int direction=0;direction<8;direction++) {
             var w=New(skin.Id,size,dpi);double angle=direction*Math.PI/4;
             FeedAt(w,false,w.Spider+new V(Math.Cos(angle),Math.Sin(angle))*450*w.BodyScale);
             Hunt(w,dt,true,false,true);
@@ -66,7 +66,7 @@ static class PounceTests {
                 Hunt(w,dt,true,true,true);
             }
         }
-        foreach(var skin in SkinCatalog.All) {
+        foreach(var skin in SkinCatalog.InCategory("Jumping spiders")) {
             var near=New(skin.Id,1,1);FeedAt(near,false,near.Spider+new V(100,0));Hunt(near,.025,false,false,true);
         }
         foreach(double size in new[]{.2,1,1.8}) foreach(double dt in new[]{.016,.033,.1}) {
@@ -85,6 +85,6 @@ static class PounceTests {
         }
         var switched=New("PortiaLabiata",1,1);jump.Invoke(switched,new object[]{switched.Spider+new V(200,0),"fly"});switched.JumpTime=switched.JumpDuration/2;switched.SetSpecies("Bold");
         Check(Math.Abs(switched.Lift-5)<.001 && switched.JumpDuration<.2,"midair species change does not reshape an attack");
-        Console.WriteLine("PASS: "+checks+" pounce checks / "+hunts+" hunts (all 20 skins, both prey, 8 directions, 20-180% size, 100-200% DPI, 16/33/100 ms steps, ceiling and monitor seam). Actual long leaps: "+shortest.ToString("F1")+"-"+longest.ToString("F1")+" logical pixels at 100%.");
+        Console.WriteLine("PASS: "+checks+" pounce checks / "+hunts+" hunts (all 22 jumping-spider skins, both prey, 8 directions, 20-180% size, 100-200% DPI, 16/33/100 ms steps, ceiling and monitor seam). Actual long leaps: "+shortest.ToString("F1")+"-"+longest.ToString("F1")+" logical pixels at 100%.");
     }
 }
