@@ -4,6 +4,8 @@
 
 ## 1.1.0-alpha.2
 
+- Publish the first 1.1 community prerelease, with updated launch/update guidance
+  and extra gallery spacing so long-legged species do not overlap their labels.
 - Add opt-in daily GitHub update checks, manual checks, stable/preview release
   selection and an explicit Download and restart action. Never offer downgrades.
 - Validate release asset URLs, checksums, executable versions, ZIP paths and size

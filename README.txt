@@ -55,6 +55,9 @@ The optional support button shows only the original Cash App QR.
 
 ALPHA 2: Updates tab adds Check now, optional daily checks and preview releases,
 and a verified Download and restart button. Automatic checks do not install.
+Enable Include preview releases to receive future prereleases. Existing alpha.2
+copies report up to date while alpha.2 is the newest release. Version 1.0 needs
+one manual ZIP upgrade because it has no updater.
 Life & home adds Let babies stay and build their own nests, with a 1-12 resident
 limit. Residents grow, move independently and persist across sessions. Switching
 it off sends them away gradually. README.md explains updates and resident homes.

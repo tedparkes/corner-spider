@@ -1,7 +1,8 @@
 # Verification: 1.1.0-alpha.2
 
-Local Windows development preview, November 5, 2026. Published 1.0 and alpha.1
-packages remain preserved. This preview has not been published on GitHub.
+Windows prerelease verification, November 5, 2026. Published 1.0 and the earlier
+local preview packages remain preserved. These checks were completed before
+publication; the GitHub release page records subsequent live updater checks.
 
 ## Completed
 
@@ -54,9 +55,10 @@ every ZIP entry against its staged source and emits SHA-256 checksums.
 - Use finger play and click-through at 20%, 100% and 180%. Test two physical
   monitors with mixed DPI, changing the home screen, display reconnect, lock/unlock
   and sleep/resume. Check resident homes as well as the main pet.
-- When a newer release is published, use Download and restart from a normal
-  installation. The helper was tested locally; a future public upgrade cannot be
-  exercised against the currently older public 1.0 package.
+- Use Download and restart from a normal installation when a newer preview is
+  available. Alpha.2 is the first public build with an updater; an existing alpha.2
+  installation should report up to date. A controlled older-version fixture is
+  used to exercise the public download without downgrading personal saves.
 - Try manual checks offline and automatic checking over an actual day. Version and
   channel decisions are tested; a day-long native scheduling/outage test is pending.
 

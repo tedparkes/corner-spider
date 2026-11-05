@@ -43,7 +43,7 @@ namespace CornerSpider {
         static Brush BPreview(string color) { return (Brush)new BrushConverter().ConvertFromString(color); }
         public static void RenderSkinGallery(string folder) {
             RenderSkinSizes(folder);
-            RenderPalpGallery(folder);int height=100+((SkinCatalog.All.Length+4)/5)*325;
+            RenderPalpGallery(folder);int height=100+((SkinCatalog.All.Length+4)/5)*380;
             foreach(bool dark in new[]{false,true}) {
                 var v=new DrawingVisual();using(var d=v.RenderOpen()) {
                     Color ink=dark?Color.FromRgb(229,237,227):Color.FromRgb(29,48,44);
@@ -51,9 +51,9 @@ namespace CornerSpider {
                     Text(d,"CORNER SPIDER / "+SkinCatalog.All.Length+" SKINS",26,18,26,ink);
                     Text(d,"Original procedural artwork  -  species proportions, male/female pairs and articulated palps",28,56,14,ink);
                     for(int i=0;i<SkinCatalog.All.Length;i++) {
-                        var skin=SkinCatalog.All[i];double x=150+(i%5)*300,y=200+(i/5)*325;
-                        var w=new World(1500,height,42);w.Scale=2.4;w.Spider=new V(x,y);w.Angle=180;w.State=Mood.Rest;
-                        PetCanvas.DrawSpider(d,w,skin.Id);Text(d,skin.Name,x-125,y+112,19,ink);Text(d,skin.Scientific,x-125,y+143,13,ink);
+                        var skin=SkinCatalog.All[i];double x=150+(i%5)*300,y=235+(i/5)*380;
+                        var w=new World(1500,height,42);w.Scale=2;w.Spider=new V(x,y);w.Angle=180;w.State=Mood.Rest;
+                        PetCanvas.DrawSpider(d,w,skin.Id);Text(d,skin.Name,x-125,y+148,19,ink);Text(d,skin.Scientific,x-125,y+178,13,ink);
                     }
                 }SavePng(v,1500,height,Path.Combine(folder,"skins-"+(dark?"dark":"light")+".png"));
             }
