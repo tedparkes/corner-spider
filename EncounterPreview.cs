@@ -25,6 +25,7 @@ namespace CornerSpider {
             throw new InvalidOperationException("Encounter preview did not reach panel "+panel);
         }
         public static void RenderEncounterPreview(string folder) {
+            RenderGuestConstructionPreview(folder);
             string[] labels={"Anchors, frame and radial spokes","Weaving the curved capture spiral","The resident waits at the center","Stepping onto the anchored edge","One foreleg plucks the silk","The prey advances, then listens","Another pluck draws it closer","The web-side ambush","A brief struggle; silk stays until departure"};
             var image=new DrawingVisual();using(var d=image.RenderOpen()) {
                 d.DrawRectangle(BPreview("#e6ebe1"),null,new Rect(0,0,1260,1210));
@@ -84,6 +85,26 @@ namespace CornerSpider {
                 }
             }SavePng(image,1400,1340,Path.Combine(folder,"species-personalities.png"));
         }
+        static void RenderGuestConstructionPreview(string folder) {
+            double frame=GuestWebPattern.FrameCompleteAt,supports=GuestWebPattern.SupportsCompleteAt;
+            double spiral=GuestWebPattern.SpiralStartsAt,done=GuestWebPattern.SilkCompleteAt;
+            double[] stages={frame*.65,frame+(supports-frame)*.48,(supports+spiral)*.5,spiral+(done-spiral)*.15,spiral+(done-spiral)*.65,1};
+            string[] labels={"1 / Anchor the outer frame","2 / Lay long radial supports","3 / All 16 spokes in place","4 / Start the outer capture turns","5 / Weave steadily inward","6 / Return along silk to the hub"};
+            var image=new DrawingVisual();using(var d=image.RenderOpen()) {
+                d.DrawRectangle(BPreview("#e6ebe1"),null,new Rect(0,0,1200,950));
+                Text(d,"PREY WEB / SUPPORTS FIRST, THEN THE SPIRAL",20,16,25,Color.FromRgb(30,50,44));
+                Text(d,"Actual construction states from the app. The finished corner shape stays the same.",20,52,16,Color.FromRgb(30,50,44));
+                for(int i=0;i<stages.Length;i++) {
+                    var w=new World(2400,1600,4);w.AutoFeed=w.CursorPlay=false;w.SetSpecies("PortiaLabiata");w.StartWebVisit();
+                    while(w.WebStage==WebVisit.Building && w.GuestProgress<stages[i]) w.Tick(.025,new V(-10000,-10000));
+                    d.PushTransform(new TranslateTransform(i%3*400+20,96+i/3*420));
+                    d.DrawRectangle(BPreview("#24313a"),null,new Rect(0,0,360,360));
+                    DrawGuestAtCorner(d,w,0,360,true);
+                    Text(d,labels[i],0,369,16,Color.FromRgb(30,50,44));
+                    Text(d,"Elapsed "+(w.GuestProgress*w.GuestBuildTime).ToString("0")+" seconds",0,391,13,Color.FromRgb(60,80,70));d.Pop();
+                }
+            }SavePng(image,1200,950,Path.Combine(folder,"prey-web-construction.png"));
+        }
         static void DrawGuestAtCorner(DrawingContext d,World w,int corner,double size,bool prey) {
             bool right=corner==1 || corner==3,bottom=corner>=2;
             double zoom=size/w.GuestWebExtent;
@@ -124,6 +145,17 @@ namespace CornerSpider {
         }
         static void CheckGuestSilkRendering() {
             var w=GuestScene(2);var visual=new DrawingVisual();
+            foreach(double start in new[]{GuestWebPattern.SupportsCompleteAt,GuestWebPattern.SilkCompleteAt}) {
+                double end=start==GuestWebPattern.SupportsCompleteAt?GuestWebPattern.SpiralStartsAt:1;
+                w.GuestProgress=start+.00000001;byte[] before=GuestSilkPixels(w);
+                int buildsBefore=PetCanvas.GuestSilkBuilds(w);
+                w.GuestProgress=end-.00000001;byte[] after=GuestSilkPixels(w);bool same=true;
+                for(int i=0;i<before.Length;i++) if(before[i]!=after[i]) { same=false;break; }
+                Check(same,"walking along finished supports leaves the rendered web unchanged: "+(end==1?"return to hub":"before spiral"));
+                Check(PetCanvas.GuestSilkBuilds(w)==buildsBefore,"supported travel reuses the retained silk image");
+            }
+            // The following cache-count checks start from a fresh world.
+            w=GuestScene(2);
             long previous=long.MaxValue;
             foreach(double visibility in new[]{1,.5,0}) {
                 w.WebVisibility=visibility;var opacityVisual=new DrawingVisual();
@@ -190,6 +222,11 @@ namespace CornerSpider {
                 if(!GuestWebPattern.InsideSilk(insideProbe)) unsupported++;
             }
             Check(unsupported==0,"plucking adds no tether strands outside the existing concave web");
+        }
+        static byte[] GuestSilkPixels(World w) {
+            var visual=new DrawingVisual();using(var d=visual.RenderOpen()) { DrawGuestAtCorner(d,w,0,360,false); }
+            var bitmap=new RenderTargetBitmap(360,360,96,96,PixelFormats.Pbgra32);bitmap.Render(visual);
+            byte[] pixels=new byte[360*360*4];bitmap.CopyPixels(pixels,1440,0);return pixels;
         }
     }
 }

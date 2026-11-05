@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+## 1.1.0-alpha.3 (local preview)
+
+- Make the prey spider build the complete outer frame and all 16 straight radial
+  supports before weaving the interior capture spiral. Lay the long edge supports
+  first, then fill in the radial fan.
+- Retrace finished spokes between weaving runs instead of walking across empty
+  sectors. Return to the central perch along existing silk without drawing an
+  extra support after the spiral. Preserve the finished concave corner silhouette.
+- Add construction-order and supported-travel regression checks, native rendering
+  checks and an app-rendered six-stage construction preview.
+
 ## 1.1.0-alpha.2
 
 - Publish the first 1.1 community prerelease, with updated launch/update guidance

@@ -1,5 +1,8 @@
 # Verification: 1.1.0-alpha.2
 
+For the subsequent local prey-web correction, see [alpha.3 checks](VERIFICATION-WEB-BUILD.md).
+The results below are the preserved alpha.2 verification record.
+
 Windows prerelease verification, November 5, 2026. Published 1.0 and the earlier
 local preview packages remain preserved. These checks were completed before
 publication; the GitHub release page records subsequent live updater checks.

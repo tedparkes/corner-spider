@@ -1,4 +1,7 @@
-Corner Spider RC11 targeted WPF web checks
+PASS: walking along finished supports leaves the rendered web unchanged: before spiral
+PASS: supported travel reuses the retained silk image
+PASS: walking along finished supports leaves the rendered web unchanged: return to hub
+PASS: supported travel reuses the retained silk image
 PASS: resident web obeys visibility without affecting its construction: 1
 PASS: resident web obeys visibility without affecting its construction: 0.5
 PASS: resident web obeys visibility without affecting its construction: 0
@@ -14,4 +17,4 @@ PASS: rendered silk touches both desktop edges in BottomLeft
 PASS: rendered silk touches both desktop edges in BottomRight
 PASS: repeated plucks reuse the retained web image while only the contacted spoke ripples
 PASS: plucking adds no tether strands outside the existing concave web
-RESULT: PASS (0 failures).
+RESULT: PASS (0 failures)

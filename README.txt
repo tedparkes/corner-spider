@@ -1,8 +1,11 @@
-CORNER SPIDER 1.1.0-alpha.2 - NEXT VERSION PREVIEW
+CORNER SPIDER 1.1.0-alpha.3 - LOCAL PREVIEW (NOT YET PUBLISHED)
 
 Extract the whole Windows ZIP, then open JumpingSpider.exe or Start-Spider.cmd.
 Requires Windows 10/11 and .NET Framework 4.8. No installer or admin rights.
 This unsigned preview is separate from the published 1.0 release.
+Prey webs now complete their frame and straight spokes before the interior
+spiral. The builder travels along existing silk and returns to the center.
+See docs/VERIFICATION-WEB-BUILD.md for checks specific to this local change.
 
 Right-click the spider tray icon > Settings, or double-click the icon.
 Appearance: five categories, 46 male/female choices, 20-180% size and web opacity.

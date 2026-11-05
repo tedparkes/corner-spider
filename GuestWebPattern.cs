@@ -22,19 +22,28 @@ namespace CornerSpider {
         static readonly V[] rim=MakeRim();
         static readonly GuestStrand[] strands=MakeStrands();
         static readonly double[] starts=new double[strands.Length],travel=new double[strands.Length],lengths=new double[strands.Length];
-        static readonly double total;
+        static readonly double total,weaveEnd,returnLength;
         public static int Count { get { return strands.Length; } }
+        public static double FrameCompleteAt { get { return starts[Spokes]/total; } }
+        public static double SupportsCompleteAt { get { return starts[Spokes*2]/total; } }
+        public static double SpiralStartsAt { get { return (starts[Spokes*2]+travel[Spokes*2])/total; } }
+        public static double SilkCompleteAt { get { return weaveEnd/total; } }
         public static V Rim(int i) { return rim[(i%Spokes+Spokes)%Spokes]; }
         public static GuestStrand Strand(int i) { return strands[Math.Max(0,Math.Min(Count-1,i))]; }
         static GuestWebPattern() {
             double sum=0;
             for(int i=0;i<Count;i++) {
-                starts[i]=sum;travel[i]=i==0?0:(strands[i].A-strands[i-1].D).Length;
+                starts[i]=sum;
+                if(i>Spokes && i<=Spokes*2) {
+                    // Return along the completed spoke, then use the hub to
+                    // reach the next start. Never walk across an unbuilt gap.
+                    travel[i]=(strands[i-1].D-Hub).Length+(strands[i].A-Hub).Length;
+                } else travel[i]=i==0?0:(strands[i].A-strands[i-1].D).Length;
                 V before=strands[i].A;
                 for(int j=1;j<=16;j++) { V at=strands[i].Point(j/16.0);lengths[i]+=(at-before).Length;before=at; }
                 sum+=travel[i]+lengths[i];
             }
-            total=sum;
+            weaveEnd=sum;returnLength=(strands[Count-1].D-Hub).Length;total=sum+returnLength;
         }
         static V[] MakeRim() {
             // The frame is held by both desktop edges, like silk across a
@@ -79,7 +88,12 @@ namespace CornerSpider {
             // frame along the two real edges before adding spokes and silk.
             for(int i=0;i<bridgeTimes.Length-1;i++) list.Add(Bridge(bridgeTimes[i],bridgeTimes[i+1]));
             for(int i=3;i<13;i++) list.Add(Scallop(Rim(i),Rim(i+1),0,.018));
-            for(int i=0;i<Spokes;i++) list.Add(i%2==0?Line(Hub,Rim(i),1):Line(Rim(i),Hub,1));
+            // Begin at the frame's last real attachment. Add the longest
+            // edge supports first, then fill out the remaining radial fan.
+            // The first spoke establishes the hub; all later spokes start
+            // there after retracing the preceding, already completed thread.
+            int[] order={13,3,8,0,11,5,15,9,2,7,14,4,10,1,6,12};
+            for(int i=0;i<Spokes;i++) list.Add(i==0?Line(Rim(order[i]),Hub,1):Line(Hub,Rim(order[i]),1));
             // A continuous, inward winding capture spiral. Each join lies on
             // an actual spoke, with modest spacing variation and inward sag.
             int count=Spokes*Turns;
@@ -88,23 +102,34 @@ namespace CornerSpider {
                 V a=Hub+(Rim(i)-Hub)*r0,b=Hub+(Rim(i+1)-Hub)*r1;
                 list.Add(Scallop(a,b,2,.065+.012*Math.Sin(i*1.8)));
             }
-            list.Add(Line(list[list.Count-1].D,Hub,1));return list.ToArray();
+            return list.ToArray();
         }
         static double SpiralRadius(int i,int count) { return .94-.82*i/count+.007*Math.Sin(i*.81); }
         public static int Active(double progress) {
             double distance=Math.Max(0,Math.Min(1,progress))*total;
+            // Count means all silk is complete. The final walk to the hub
+            // follows an existing radial and must not draw a new thread.
+            if(distance>=weaveEnd) return Count;
             int low=0,high=Count-1;
             while(low<high) { int mid=(low+high+1)/2;if(starts[mid]<=distance) low=mid;else high=mid-1; }
             return low;
         }
         public static double Fraction(int index,double progress) {
+            if(index>=Count) return 0;
             index=Math.Max(0,Math.Min(Count-1,index));
             return Math.Max(0,Math.Min(1,(Math.Max(0,Math.Min(1,progress))*total-starts[index]-travel[index])/lengths[index]));
         }
         public static V Builder(double progress) {
-            int index=Active(progress);double distance=Math.Max(0,Math.Min(1,progress))*total-starts[index];
+            int index=Active(progress);double distance=Math.Max(0,Math.Min(1,progress))*total;
+            if(index==Count) return strands[Count-1].D+(Hub-strands[Count-1].D)*Math.Max(0,Math.Min(1,(distance-weaveEnd)/returnLength));
+            distance-=starts[index];
             if(distance<travel[index]) {
                 V before=index==0?strands[0].A:strands[index-1].D;
+                if(index>Spokes && index<=Spokes*2) {
+                    double toHub=(Hub-before).Length;
+                    if(distance<toHub) return before+(Hub-before)*(distance/toHub);
+                    return Hub+(strands[index].A-Hub)*((distance-toHub)/Math.Max(.000001,travel[index]-toHub));
+                }
                 return before+(strands[index].A-before)*(distance/travel[index]);
             }
             return strands[index].Point(Fraction(index,progress));

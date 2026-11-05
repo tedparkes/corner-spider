@@ -20,7 +20,11 @@ namespace CornerSpider {
             string folder=args.Length>1?Path.GetFullPath(args[1]):Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"diagnostics");Directory.CreateDirectory(folder);
             if(args[0]=="--colony-load-test") return ColonyLoad(app,folder);
             if(args[0]=="--life-preview") { RenderLifePreview(folder);return 0; }if(args[0]=="--desktop-test") return Desktop(app,folder);
-            if(args[0]=="--encounter-preview") { RenderEncounterPreview(folder);return 0; }
+            if(args[0]=="--encounter-preview") {
+                log=new StringBuilder();failures=0;CheckGuestSilkRendering();RenderEncounterPreview(folder);
+                log.AppendLine("RESULT: "+(failures==0?"PASS":"FAIL")+" ("+failures+" failures)");
+                File.WriteAllText(Path.Combine(folder,"web-render-checks.txt"),log.ToString());return failures==0?0:1;
+            }
             if(args[0]=="--travel-preview") { RenderTravelPreview(folder);return 0; }
             if(args[0]=="--prey-preview") { RenderPreyPreview(folder);return 0; }
             if(args[0]=="--release-preview") { RenderSkinGallery(folder);RenderFingerPreview(folder);RenderHammockGallery(folder);return 0; }
@@ -41,7 +45,7 @@ namespace CornerSpider {
                 using(var icon=PetHost.MakeIcon("Bold")) using(var file=File.Create(Path.Combine(folder,"CornerSpider.ico"))) icon.Save(file);
                 return 0;
             }
-            log=new StringBuilder();log.AppendLine("Corner Spider 1.1 alpha 2 Windows runtime checks "+DateTime.Now.ToString("s"));
+            log=new StringBuilder();log.AppendLine("Corner Spider "+FileVersionInfo.GetVersionInfo(typeof(RuntimeTests).Assembly.Location).ProductVersion+" Windows runtime checks "+DateTime.Now.ToString("s"));
             string testSettings=Path.Combine(folder,"settings");Check(new Settings { FingerTone=.37,Species="PortiaLabiata" }.Save(testSettings),"seed isolated finger-tone and Portia preferences");
             IntPtr foreground=Native.GetForegroundWindow();var host=new PetHost(testSettings,true);
             IntPtr afterCreation=Native.GetForegroundWindow();uint foregroundPid,afterCreationPid;

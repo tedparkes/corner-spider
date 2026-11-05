@@ -4,7 +4,31 @@ using CornerSpider;
 static class GuestWebTests {
     static int checks;
     static void Check(bool ok,string why) { checks++;if(!ok) throw new Exception("Corner web: "+why); }
+    static double DistanceToSegment(V p,V a,V b) {
+        V line=b-a;double t=((p.X-a.X)*line.X+(p.Y-a.Y)*line.Y)/(line.X*line.X+line.Y*line.Y);
+        return (p-(a+line*Math.Max(0,Math.Min(1,t)))).Length;
+    }
     public static void Run() {
+        int lastKind=0,radials=0;
+        for(int i=0;i<GuestWebPattern.Count;i++) {
+            var strand=GuestWebPattern.Strand(i);
+            Check(strand.Kind>=lastKind,"build all frame and radial supports before the capture spiral; never add another support afterward");
+            lastKind=strand.Kind;if(strand.Kind==1) radials++;
+            if(strand.Kind==2) Check(radials==GuestWebPattern.Spokes,"every radial is finished before any interior weaving starts");
+        }
+        for(int spoke=0;spoke<GuestWebPattern.Spokes;spoke++) {
+            int matches=0;
+            for(int i=0;i<GuestWebPattern.Count;i++) {
+                var strand=GuestWebPattern.Strand(i);if(strand.Kind!=1) continue;
+                if(((strand.A-GuestWebPattern.Hub).Length<.000001 && (strand.D-GuestWebPattern.Rim(spoke)).Length<.000001) ||
+                    ((strand.D-GuestWebPattern.Hub).Length<.000001 && (strand.A-GuestWebPattern.Rim(spoke)).Length<.000001)) matches++;
+                Check((strand.Point(.5)-(strand.A+strand.D)*.5).Length<.000001,"long radial supports remain straight");
+            }
+            Check(matches==1,"each rim anchor has one complete hub-to-frame support");
+        }
+        Check(GuestWebPattern.FrameCompleteAt>0 && GuestWebPattern.FrameCompleteAt<GuestWebPattern.SupportsCompleteAt &&
+            GuestWebPattern.SupportsCompleteAt<GuestWebPattern.SpiralStartsAt && GuestWebPattern.SpiralStartsAt<GuestWebPattern.SilkCompleteAt && GuestWebPattern.SilkCompleteAt<1,
+            "construction has distinct frame, complete skeleton, spiral and return stages");
         int topAnchors=0,sideAnchors=0;
         for(int i=0;i<GuestWebPattern.Spokes;i++) {
             V rim=GuestWebPattern.Rim(i);if(rim.Y==0) topAnchors++;if(rim.X==0) sideAnchors++;
@@ -69,13 +93,24 @@ static class GuestWebTests {
         }
         Check(anchors>=5 && spiral>=128 && curved>=128,"anchored radial web has enough curved winding silk to read clearly");
         Check((GuestWebPattern.Builder(1)-GuestWebPattern.Hub).Length<.000001,"finished builder reaches its central waiting hub");
-        int active=-1;
+        int active=-1,retracing=0,returning=0;
         for(int j=0;j<=10000;j++) {
             double progress=j/10000.0;int next=GuestWebPattern.Active(progress);
             Check(next>=active,"construction never removes or rearranges earlier threads");active=next;
             double fraction=GuestWebPattern.Fraction(next,progress);
             if(fraction>0) Check((GuestWebPattern.Builder(progress)-GuestWebPattern.Strand(next).Point(fraction)).Length<.000001,"weaving motion and visible tip share the same curved path");
+            if(fraction==0 && next>GuestWebPattern.Spokes && next<=GuestWebPattern.Spokes*2) {
+                double nearest=double.MaxValue;
+                for(int i=0;i<next;i++) { var silk=GuestWebPattern.Strand(i);if(silk.Kind==1) nearest=Math.Min(nearest,DistanceToSegment(GuestWebPattern.Builder(progress),silk.A,silk.D)); }
+                Check(nearest<.000001,"between radial threads the builder walks on completed silk, never across an empty sector");retracing++;
+            }
+            if(next==GuestWebPattern.Count) {
+                var last=GuestWebPattern.Strand(next-1);
+                Check(progress>=GuestWebPattern.SilkCompleteAt && fraction==0,"return to the hub does not add or restart a thread");
+                Check(DistanceToSegment(GuestWebPattern.Builder(progress),last.D,GuestWebPattern.Hub)<.000001,"finished builder follows the existing inner radial to the hub");returning++;
+            }
         }
+        Check(retracing>100 && returning>0,"sampled construction exercises both supported transit and the final silk-free walk");
         foreach(double size in new[]{.2,1,1.8}) foreach(double dpi in new[]{1,1.5,2}) for(int corner=0;corner<4;corner++) {
             double s=size*dpi;var w=new World(2400*s,1600*s,corner);w.ConfigureDisplays(new[]{new Area(0,0,2400*s,1600*s,dpi)},0);w.SetScale(size);
             w.Corner=Settings.Corners[corner];w.UpdateHome();w.Spider=w.Home;w.SetSpecies("PortiaLabiata");w.AutoFeed=w.CursorPlay=false;
@@ -108,6 +143,6 @@ static class GuestWebTests {
             }
             Check((w.Fly-w.GuestCenter).Length<.000001,"construction finishes at the resident's central perch");
         }
-        Console.WriteLine("PASS: "+checks+" corner-web checks (connected spiral, curved spans, true spoke junctions, shared construction path, bounds, sizes/DPI and plucking anchor).");
+        Console.WriteLine("PASS: "+checks+" corner-web checks (supports before spiral, travel on existing silk, central return, connected curves, bounds, sizes/DPI and plucking anchor).");
     }
 }

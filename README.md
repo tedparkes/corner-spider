@@ -1,14 +1,17 @@
 # Corner Spider 1.1 preview
 
-A spider companion for your actual Windows desktop. This is **1.1.0-alpha.2**,
-a prerelease for community testing. The [1.0 release](https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0)
-remains the stable version. [Download this preview and read its release notes](https://github.com/tedparkes/corner-spider/releases/tag/v1.1.0-alpha.2).
+A spider companion for your actual Windows desktop. This is **1.1.0-alpha.3**,
+an unpublished local preview with corrected prey-web construction. The [1.0 release](https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0)
+remains the stable version. [Published community preview and release notes](https://github.com/tedparkes/corner-spider/releases/tag/v1.1.0-alpha.2).
 
 Extract the Windows ZIP and open **JumpingSpider.exe**. Windows 10/11 with .NET
 Framework 4.8; no installer, administrator rights or asset downloads. Startup is
 opt-in. This community build is unsigned.
 
 ## New in this preview
+
+Alpha.3 corrects prey-web construction: complete the frame and all straight spokes,
+then weave the interior spiral. [Construction preview and checks](docs/VERIFICATION-WEB-BUILD.md).
 
 - **46 choices in five categories:** Jumping spiders, Orb weavers, Widows, House
   spiders and Fictional. All 23 varieties have male and female options.
