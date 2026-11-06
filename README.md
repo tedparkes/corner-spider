@@ -1,8 +1,8 @@
 # Corner Spider 1.1 preview
 
 A spider companion for your actual Windows desktop. This is **1.1.0-alpha.8**,
-an unpublished local preview with roomier corner cocoons. The [1.0 release](https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0)
-remains the stable version. [Published community preview and release notes](https://github.com/tedparkes/corner-spider/releases/tag/v1.1.0-alpha.2).
+a prerelease for community testing. The [1.0 release](https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0)
+remains the stable version. [Download this preview and read its release notes](https://github.com/tedparkes/corner-spider/releases/tag/v1.1.0-alpha.8).
 
 Extract the Windows ZIP and open **JumpingSpider.exe**. Windows 10/11 with .NET
 Framework 4.8; no installer, administrator rights or asset downloads. Startup is
@@ -142,12 +142,11 @@ Portia leaves. The encounter shares the single prey slot and waits during life e
 **Settings > Updates** has Check now, an opt-in daily check, an optional preview
 channel, and Download and restart when a newer compatible release is available.
 Automatic checks never install or restart on their own. The default channel is
-stable; a local 1.1 preview will not downgrade to public 1.0.
+stable; a 1.1 preview will not downgrade to public 1.0.
 
-Enable **Include preview releases** to receive future prereleases. An installed
-alpha.2 correctly reports no newer preview when alpha.2 is the newest release.
-Version 1.0 has no updater: download and extract this Windows ZIP once to move
-to the preview. Quit the previous pet first.
+To update Alpha 2, enable **Include preview releases** and select **Check now**.
+Version 1.0 users can move to the preview by quitting the previous pet and
+extracting this Windows ZIP.
 
 Checks read the public GitHub releases API for `tedparkes/corner-spider`; downloads
 come from that repository and GitHub's asset servers. No pet history, settings or

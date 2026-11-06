@@ -2,10 +2,12 @@
 
 ## Unreleased
 
-## 1.1.0-alpha.8 (local preview)
+## 1.1.0-alpha.8
 
 - Widen and lengthen cocoon sleeves so they read as shelters for the spider.
   The longer end extends into the room and the silk ties meet the larger sleeve.
+- Publish the corner web, silk rendering, and cocoon improvements from Alpha 3
+  through Alpha 8 as a community prerelease.
 
 ## 1.1.0-alpha.7 (local preview)
 

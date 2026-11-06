@@ -1,4 +1,17 @@
-# Verification: 1.1.0-alpha.2
+# Verification: Corner Spider 1.1 previews
+
+## 1.1.0-alpha.8
+
+- The Windows build and deterministic behavior suite passed. The local Alpha 8
+  executable passed 1,829 native silk checks. The desktop launch and normal quit
+  passed, and the desktop shortcut and saved preferences were verified.
+- [Same-scale cocoon comparison](roomier-cocoon.png),
+  [corner web design review](VERIFICATION-CORNER-WEBS.md), and
+  [web sampling checks](VERIFICATION-WEB-AA.md).
+- Physical mixed-DPI transitions, sleep/resume and long-term colony use remain
+  open for hands-on testing.
+
+## 1.1.0-alpha.2
 
 For the subsequent local prey-web correction, see [alpha.3 checks](VERIFICATION-WEB-BUILD.md).
 The results below are the preserved alpha.2 verification record.

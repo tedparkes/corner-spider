@@ -1,4 +1,4 @@
-CORNER SPIDER 1.1.0-alpha.8 - LOCAL PREVIEW (NOT YET PUBLISHED)
+CORNER SPIDER 1.1.0-alpha.8 - COMMUNITY PRERELEASE
 
 Extract the whole Windows ZIP, then open JumpingSpider.exe or Start-Spider.cmd.
 Requires Windows 10/11 and .NET Framework 4.8. No installer or admin rights.
@@ -9,7 +9,7 @@ Web strands now use supersampling and higher-quality downscaling for smoother
 edges. See docs/VERIFICATION-WEB-AA.md for this build's rendering checks.
 Prey webs now complete their frame and straight spokes before the interior
 spiral. The builder travels along existing silk and returns to the center.
-See docs/VERIFICATION-WEB-BUILD.md for checks specific to this local change.
+See docs/VERIFICATION-WEB-BUILD.md for checks on prey-web construction.
 
 Right-click the spider tray icon > Settings, or double-click the icon.
 Appearance: five categories, 46 male/female choices, 20-180% size and web opacity.
@@ -51,7 +51,7 @@ Run Build.cmd. It runs the behavior tests before compiling the WPF executable.
 Package.ps1 creates verified Windows and Source ZIPs and checksums, without
 publishing. README.md has the complete instructions and diagnostics commands.
 
-Read docs\VERIFICATION-NEXT.md for actual tests and remaining manual checks.
+Read docs\VERIFICATION-NEXT.md for test results and remaining manual checks.
 Read CHANGELOG.md for the complete version-by-version development history.
 Plain-background galleries are in docs\new-families.png, living-webs.png,
 life-cycle.png and skins-light.png. No desktop screenshots are included.
@@ -60,11 +60,10 @@ Free MIT-licensed software. Pet data stays local; no telemetry. Optional update
 checks contact GitHub. Automatic checks are off by default.
 The optional support button shows only the original Cash App QR.
 
-ALPHA 2: Updates tab adds Check now, optional daily checks and preview releases,
-and a verified Download and restart button. Automatic checks do not install.
-Enable Include preview releases to receive future prereleases. Existing alpha.2
-copies report up to date while alpha.2 is the newest release. Version 1.0 needs
-one manual ZIP upgrade because it has no updater.
+UPDATES: Settings > Updates offers Check now, optional daily checks and
+Download and restart. Automatic checks only look for updates. To update Alpha 2,
+enable Include preview releases and select Check now. Version 1.0 users can move
+to the preview with a manual ZIP download.
 Life & home adds Let babies stay and build their own nests, with a 1-12 resident
 limit. Residents grow, move independently and persist across sessions. Switching
 it off sends them away gradually. README.md explains updates and resident homes.
