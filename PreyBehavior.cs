@@ -48,10 +48,11 @@ namespace CornerSpider {
             if(!SkinCatalog.Contains(id) || species==id) return;
             if(WebStage!=WebVisit.None) CancelWebVisit();
             if(State==Mood.SpeciesAct) { decision=2;Enter(Mood.Rest); }
-            bool previousBusy=LifeBusy,previousWebDweller=WebDweller,previousCornerSleeve=HasCornerSleeve,previousLargeOrb=HasLargeOrb;
+            bool previousBusy=LifeBusy,previousWebDweller=WebDweller,previousCornerSleeve=HasCornerSleeve,previousOrbLayout=HasOrbHomeLayout,previousOrbMate=OrbMateSeeker;
             species=id;behavior=BehaviorCatalog.Get(id);nextSpeciesMoment=Clock+28;NextWebVisit=Clock+100;
+            ResetOrbEscort();
             if(previousBusy) { nestInside=false;Wake(); }
-            if((previousWebDweller!=WebDweller || previousCornerSleeve!=HasCornerSleeve || previousLargeOrb!=HasLargeOrb) && !IsColonyResident) {
+            if((previousWebDweller!=WebDweller || previousCornerSleeve!=HasCornerSleeve || previousOrbLayout!=HasOrbHomeLayout || previousOrbMate!=OrbMateSeeker) && !IsColonyResident) {
                 bool goingHome=State==Mood.Return || State==Mood.EnterNest || State==Mood.ExitNest || State==Mood.Sleep;
                 UpdateHome();
                 if(goingHome) GoHome(false);
@@ -73,7 +74,7 @@ namespace CornerSpider {
         void MovePrey(double dt,double scale,bool linedUp) {
             PreyWalking=false;
             if(linedUp) return;
-            if(WebDweller) { PreyWalking=true;PreySteps+=dt*8;return; } // trapped silk vibration, no jumping hunt
+            if(WebDweller && !OrbMateSeeker) { PreyWalking=true;PreySteps+=dt*8;return; } // trapped silk vibration, no jumping hunt
             if(Prey!=PreyKind.Fly && Prey!=PreyKind.SmallSpider) { MoveFood(dt,scale);return; }
             if(Prey==PreyKind.Fly) {
                 Fly=Clamp(Fly+new V(Math.Sin(Clock*4+FlyPhase)*18,Math.Cos(Clock*5+FlyPhase)*14)*(dt*scale));return;

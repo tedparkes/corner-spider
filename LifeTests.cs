@@ -24,7 +24,8 @@ static class LifeTests {
         w.Corner="BottomLeft";
         w.UpdateHome();
         w.SetSpecies("CrossOrbMale");
-        Check(w.SilkScale==1 && w.Home.X==160 && w.Home.Y==1040,"switching to the male restores the travel silk inset");
+        Check(w.SilkScale==2 && w.Home.X==320 && w.Home.Y==880 && w.OrbEscortOpacity==0,
+            "male leaves room for a female's orb and starts with no web");
         w.SetSpecies("CrossOrb");
         Check(w.SilkScale==2 && w.Home.X==320 && w.Home.Y==880,"switching back restores the enlarged capture web");
         w.SetSpecies("SouthernWidow");
@@ -72,8 +73,29 @@ static class LifeTests {
             }
         }
     }
+    static void CheckMaleOrbVisits() {
+        foreach(var skin in SkinCatalog.InCategory("Orb weavers")) {
+            if(!skin.Male) continue;
+            var w=Pet(skin.Id);w.Life.SilkSeconds=7200;double silk=w.Web;
+            Check(w.OrbMateSeeker && w.OrbEscortOpacity==0 && w.WebLayers==0 && !w.InviteMate(),
+                "an adult male starts without a personal web or female life event");
+            bool searched=false,approached=false;
+            for(int i=0;i<1500 && w.LifeStatus!="Waiting at a female's web";i++) {
+                w.Tick(.1,away);
+                if(w.OrbEscortOpacity==0 && (w.Spider-w.Home).Length>100) searched=true;
+                if(w.OrbEscortOpacity>.01 && w.State==Mood.Walk) approached=true;
+            }
+            V perch=w.OrbEscortPerch;
+            Check(searched && approached && w.OrbEscortOpacity==1 && (w.Spider-perch).Length<.01 && (perch-w.Home).Length>60,
+                "male searches, approaches an occupied orb and waits on its outer frame: "+skin.Id);
+            Step(w,3);Check((w.Spider-perch).Length<.01 && w.State==Mood.Rest,"male waits at the edge through a quiet pause");
+            Check(w.Web==silk && w.Life.SilkSeconds==7200 && w.WebLayers==0,"roaming and visits add no personal silk");
+            w.MatingEnabled=false;Step(w,3);
+            Check(w.OrbEscortOpacity==0 && w.LifeStatus=="Searching for a mate","disabling visits removes the temporary orb and resumes search");
+        }
+    }
     public static void Run() {
-        CheckOrbLayout();CheckOrbTravel();
+        CheckOrbLayout();CheckOrbTravel();CheckMaleOrbVisits();
         Check(SkinCatalog.All.Length==46 && SkinCatalog.Categories.Length==5,"complete expanded catalog");
         foreach(var s in SkinCatalog.All) {
             Check(s.MateId.Length>0,"every species has both sexes: "+s.Id);

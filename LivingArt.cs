@@ -68,27 +68,50 @@ namespace CornerSpider {
             DrawMeal(d,w);d.Pop();d.Pop();d.Pop();
         }
         void DrawLivingSilk(DrawingContext d,World w,string species) {
-            var skin=SkinCatalog.Get(species);var area=w.Areas[w.HomeArea];double scale=w.SilkScale;
+            var skin=SkinCatalog.Get(species);
+            bool escort=skin.Male && skin.Category=="Orb weavers";
+            double opacity=w.WebVisibility;
+            if(escort) {
+                if(w.OrbEscortOpacity<=0) return;
+                skin=SkinCatalog.Get(skin.MateId);
+                opacity*=w.OrbEscortOpacity;
+            }
+            var area=w.Areas[w.HomeArea];double scale=w.SilkScale;
             double threadWidth=Math.Min(1,w.HomeScale/scale);
             double ex=Math.Abs((w.Corner.EndsWith("Right")?area.X+area.W:area.X)-w.Home.X)/scale;
             double ey=Math.Abs((w.Corner.StartsWith("Top")?area.Y:area.Y+area.H)-w.Home.Y)/scale;
-            int layers=w.WebLayers,baseLevel=(int)(w.Web*30);
+            int layers=escort?0:w.WebLayers,baseLevel=escort?30:(int)(w.Web*30);
             string key=species+":"+layers+":"+baseLevel+":"+ex.ToString("F1")+":"+ey.ToString("F1")+":"+threadWidth.ToString("F3")+":"+w.IsColonyResident;
             if(key!=livingSilkKey) {
                 LivingSilkBuilds++;
                 livingSilkKey=key;livingSilk=new DrawingGroup();using(var c=livingSilk.Open()) {
-                    double growth=.35+.65*w.Web;
+                    double growth=escort?1:.35+.65*w.Web;
                     if(skin.WebKind==WebKind.Orb || skin.WebKind==WebKind.Crystal)
-                        DrawCornerOrb(c,skin,ex,ey,growth,layers,w.IsColonyResident,threadWidth);
+                        DrawCornerOrb(c,skin,ex,ey,growth,layers,w.IsColonyResident,threadWidth,escort);
                     else if(skin.WebKind!=WebKind.Retreat)
                         DrawCornerSheet(c,skin,ex,ey,growth,layers,w.IsColonyResident);
                 }livingSilk.Freeze();livingSilkImage=new SilkImage();
             }
             if(livingSilkImage.Drawing==null || livingSilkScale!=scale) { livingSilkScale=scale;livingSilkImage=CacheSilk(livingSilk,scale); }
-            d.PushOpacity(w.WebVisibility);d.PushTransform(new TranslateTransform(w.Home.X,w.Home.Y));d.PushTransform(new ScaleTransform((w.Corner.EndsWith("Right")?-1:1)*scale,(w.Corner.StartsWith("Top")?1:-1)*scale));
+            d.PushOpacity(opacity);d.PushTransform(new TranslateTransform(w.Home.X,w.Home.Y));d.PushTransform(new ScaleTransform((w.Corner.EndsWith("Right")?-1:1)*scale,(w.Corner.StartsWith("Top")?1:-1)*scale));
             d.DrawDrawing(livingSilkImage.Drawing);d.Pop();d.Pop();d.Pop();
         }
         void DrawLifeScene(DrawingContext d,World w) {
+            if(w.OrbEscortOpacity>0) {
+                string female=SkinCatalog.Get(w.Species).MateId;
+                V outward=new V(w.Corner.EndsWith("Right")?-1:1,w.Corner.StartsWith("Top")?1:-1);
+                visitorArt.SetSpecies(female);
+                visitorArt.Spider=w.Home;
+                visitorArt.Scale=w.HomeScale;
+                visitorArt.Angle=Math.Atan2(outward.Y,outward.X)*180/Math.PI+90;
+                visitorArt.Clock=w.Clock;
+                visitorArt.State=Mood.Rest;
+                visitorArt.StateTime=0;
+                visitorArt.GaitBlend=0;
+                d.PushOpacity(w.OrbEscortOpacity);
+                DrawSpider(d,visitorArt,female);
+                d.Pop();
+            }
             var l=w.Life;
             if(w.MaleVisible) {
                 string mate=SkinCatalog.Get(w.Species).MateId;

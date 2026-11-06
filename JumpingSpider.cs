@@ -13,7 +13,7 @@ using Forms=System.Windows.Forms;
 [assembly:System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.8")]
 [assembly:System.Reflection.AssemblyVersion("1.1.0.0")]
 [assembly:System.Reflection.AssemblyFileVersion("1.1.0.0")]
-[assembly:System.Reflection.AssemblyInformationalVersion("1.1.0-alpha.11")]
+[assembly:System.Reflection.AssemblyInformationalVersion("1.1.0-alpha.12")]
 [assembly:System.Reflection.AssemblyTitle("Corner Spider")]
 [assembly:System.Reflection.AssemblyProduct("Corner Spider")]
 [assembly:System.Reflection.AssemblyDescription("A local jumping-spider companion for the Windows desktop.")]
@@ -106,7 +106,7 @@ namespace CornerSpider {
         int previousWeb=-1;
         int previousLayers=-1;
         LifeStage previousLifeStage;
-        double previousScale,previousWebVisibility=-1;
+        double previousScale,previousWebVisibility=-1,previousOrbEscort;
         string previousSpecies="";
         bool suspended,sessionLocked;
         public bool TestMode;
@@ -196,7 +196,7 @@ namespace CornerSpider {
             CursorVisibility.Update(!Paused && !suspended && !sessionLocked && World.CursorPlay && World.FingerActive && World.FingerBlend>=.65 && (World.Cursor-World.FingerOrigin).Length<12*World.BodyScale && !Menu.Visible && (SettingsWindow==null || !SettingsWindow.IsVisible));
             V spider=new V(World.Spider.X,World.Spider.Y-World.Lift);
             int web=(int)(World.Web*30);
-            bool all=World.WebLayers!=previousLayers || World.WebVisibility!=previousWebVisibility || web!=previousWeb || (World.Home-previousHome).Length>0 || World.Scale!=previousScale || Settings.Species!=previousSpecies || World.State==Mood.Jump || World.FingerBlend>0 || previousFinger || World.SilkOpacity>0 || previousSilk;
+            bool all=World.WebLayers!=previousLayers || World.WebVisibility!=previousWebVisibility || World.OrbEscortOpacity!=previousOrbEscort || web!=previousWeb || (World.Home-previousHome).Length>0 || World.Scale!=previousScale || Settings.Species!=previousSpecies || World.State==Mood.Jump || World.FingerBlend>0 || previousFinger || World.SilkOpacity>0 || previousSilk;
             double margin=130;
             foreach(var area in World.Areas) margin=Math.Max(margin,SpiderPose.Radius*World.Scale*World.LifeSize*area.Dpi+8);
             foreach(var w in Windows) {
@@ -212,6 +212,7 @@ namespace CornerSpider {
             }
             previousSpider=spider;previousFly=World.Fly;previousHasFly=World.HasFly;previousHome=World.Home;previousWeb=web;previousScale=World.Scale;previousWebVisibility=World.WebVisibility;previousSpecies=Settings.Species;
             previousGuest=World.GuestOpacity>0;previousGuestCenter=World.GuestCenter;
+            previousOrbEscort=World.OrbEscortOpacity;
             previousFinger=World.FingerBlend>0;previousSilk=World.SilkOpacity>0;
             previousLayers=World.WebLayers;previousLifeStage=World.Life.Stage;
         }

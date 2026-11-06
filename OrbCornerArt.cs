@@ -7,7 +7,7 @@ namespace CornerSpider {
         // A hub at the pet's resting position, with two real mounting surfaces
         // in local space. The long open span is pulled in by radial tension.
         static void DrawCornerOrb(DrawingContext drawing, SkinProfile skin, double ex, double ey,
-            double growth, int layers, bool resident, double threadWidth) {
+            double growth, int layers, bool resident, double threadWidth, bool escort) {
             bool golden = skin.Pattern == "Golden";
             bool garden = skin.Pattern == "Garden";
             bool marble = skin.Pattern == "Marble";
@@ -28,19 +28,20 @@ namespace CornerSpider {
                 if (swap) drawing.Pop();
                 return;
             }
-            double farX = resident ? 108 : side * (golden ? 1.43 : marble ? 1.53 : cross ? 1.88 : 1.63);
-            double farY = resident ? 94 : upper * (golden ? 1.82 : marble ? 1.74 : cross ? 1.96 : 1.71);
+            V openingStart, openingEnd;
+            OrbRadials.MainOpening(skin, ex, ey, out openingStart, out openingEnd);
             double topGap = upper * .045;
             double sideGap = side * .05;
+            const double residentFarX = 108, residentFarY = 94;
             var rim = resident ? new[] {
                 new V(-side * .95, -ey + topGap), new V(-side * .47, -ey + topGap * 1.32),
                 new V(side * .18, -ey + topGap * 1.62), new V(side * .79, -ey + topGap),
-                new V(farX, -ey + topGap * .55), new V(side * .86, farY * .62),
-                new V(-side * .21, farY), new V(-side, farY * .37), new V(-side * 1.13, -upper * .37)
+                new V(residentFarX, -ey + topGap * .55), new V(side * .86, residentFarY * .62),
+                new V(-side * .21, residentFarY), new V(-side, residentFarY * .37), new V(-side * 1.13, -upper * .37)
             } : new[] {
                 new V(-ex * .80, -ey + topGap * 1.30), new V(-ex * .43, -ey + topGap * 1.65),
                 new V(side * .14, -ey + topGap * 1.11), new V(side * .75, -ey + topGap * 1.50),
-                new V(farX, -ey + topGap * .66), new V(-ex + sideGap * .70, farY),
+                openingStart, openingEnd,
                 new V(-ex + sideGap * 1.49, ey * .59), new V(-ex + sideGap * 1.12, -ey * .02),
                 new V(-ex + sideGap * 1.35, -ey * .59), new V(-ex + sideGap * .90, -ey * .85)
             };
@@ -99,6 +100,7 @@ namespace CornerSpider {
 
             int spokes = OrbRadials.Count(skin);
             int turns = cross ? (resident ? 8 : 11) : golden ? 22 : crystal ? 12 : marble ? 14 : garden ? 17 : 16;
+            if (escort) turns = Math.Max(5, turns / 2);
             double phase = OrbRadials.Phase(skin);
             V openSpan = rim[5] - rim[4];
             V towardOpening = resident ? new V(0, 1) : new V(openSpan.Y, -openSpan.X) * (1 / openSpan.Length);
@@ -274,11 +276,8 @@ namespace CornerSpider {
             V midpoint = (a + b) * .5;
             bool openSpan = resident ? index >= 4 && index <= 7 : index == 4;
             V step = b - a;
-            double length = Math.Max(1, step.Length);
-            double chordDepth = Math.Abs(OrbCross(a, b)) / length;
-            double inward = openSpan ? Math.Min(crystal ? 19 : 27, chordDepth * (resident ? .48 : .30)) :
-                (index % 3 == 1 ? 5.1 : 2.5);
-            V bow = openSpan ? new V(-step.Y, step.X) * (inward / length) :
+            double inward = index % 3 == 1 ? 5.1 : 2.5;
+            V bow = openSpan ? OrbRadials.OpeningBow(a, b, resident, crystal) :
                 midpoint * (-Math.Min(inward, midpoint.Length * .36) / Math.Max(1, midpoint.Length));
             c = a + step * (1.0 / 3) + bow * (openSpan ? .57 : 1);
             d = a + step * (2.0 / 3) + bow * (openSpan ? 1.43 : 1);

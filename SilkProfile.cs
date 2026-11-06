@@ -47,6 +47,8 @@ namespace CornerSpider {
         public static SilkProfile Get(string species) {
             var skin=SkinCatalog.Get(species);
             if(skin.WebKind==WebKind.Orb || skin.WebKind==WebKind.Crystal) {
+                if(skin.Male && skin.Category=="Orb weavers")
+                    return new SilkProfile("Visiting a female's orb","The male roams and sometimes waits on the outer frame of a female's capture web.",1,1,1,1,1511,RetreatStyle.Platform);
                 if(skin.Male) return new SilkProfile("Travel silk","Sparse support lines for the pet's resting spot.",1,1,1,1,1511,RetreatStyle.Platform);
                 return new SilkProfile("Corner orb","A capture spiral around a clear hub, held by radials and an edge-anchored frame.",1,1,1,1,1511,RetreatStyle.Platform);
             }

@@ -79,14 +79,16 @@ namespace CornerSpider {
             var canvas=new PetCanvas();
             foreach(var skin in SkinCatalog.All) {
                 var w=new World(360,360,42);w.SetSpecies(skin.Id);w.Web=1;
-                byte[] fresh=new byte[360*360*4],old=new byte[fresh.Length],hidden=new byte[fresh.Length];
-                SilkBitmap(canvas,w,skin.Id).CopyPixels(fresh,1440,0);int builds=canvas.LivingSilkBuilds;
-                w.Life.SilkSeconds=720000;SilkBitmap(canvas,w,skin.Id).CopyPixels(old,1440,0);
-                long growth=0;bool retained=true;for(int i=3;i<fresh.Length;i+=4) { growth+=old[i]-fresh[i];if(old[i]+1<fresh[i]) retained=false; }
-                Check(retained && growth>1000,"long-term silk adds permanent visible repairs: "+skin.Id);
-                Check(canvas.LivingSilkBuilds==builds+1,"aging replaces only the current retained silk: "+skin.Id);
-                w.WebVisibility=0;SilkBitmap(canvas,w,skin.Id).CopyPixels(hidden,1440,0);long alpha=0;for(int i=3;i<hidden.Length;i+=4) alpha+=hidden[i];
-                Check(alpha==0 && canvas.LivingSilkBuilds==builds+1,"web opacity hides aged silk without rebuilding: "+skin.Id);
+                if(!w.OrbMateSeeker) {
+                    byte[] fresh=new byte[360*360*4],old=new byte[fresh.Length],hidden=new byte[fresh.Length];
+                    SilkBitmap(canvas,w,skin.Id).CopyPixels(fresh,1440,0);int builds=canvas.LivingSilkBuilds;
+                    w.Life.SilkSeconds=720000;SilkBitmap(canvas,w,skin.Id).CopyPixels(old,1440,0);
+                    long growth=0;bool retained=true;for(int i=3;i<fresh.Length;i+=4) { growth+=old[i]-fresh[i];if(old[i]+1<fresh[i]) retained=false; }
+                    Check(retained && growth>1000,"long-term silk adds permanent visible repairs: "+skin.Id);
+                    Check(canvas.LivingSilkBuilds==builds+1,"aging replaces only the current retained silk: "+skin.Id);
+                    w.WebVisibility=0;SilkBitmap(canvas,w,skin.Id).CopyPixels(hidden,1440,0);long alpha=0;for(int i=3;i<hidden.Length;i+=4) alpha+=hidden[i];
+                    Check(alpha==0 && canvas.LivingSilkBuilds==builds+1,"web opacity hides aged silk without rebuilding: "+skin.Id);
+                }
                 if(skin.Category=="Jumping spiders") continue;
                 w=new World(360,360,42);w.SetSpecies(skin.Id);w.Spider=new V(180,180);w.Life.GrowthAt=0;
                 foreach(Mood pose in new[]{Mood.Rest,Mood.Walk,Mood.Inspect,Mood.Groom}) foreach(double angle in new[]{0.0,45,90,135,180,225,270,315}) {

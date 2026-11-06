@@ -63,6 +63,7 @@ namespace CornerSpider {
                 return !IsColonyResident && !skin.Male && (skin.WebKind==WebKind.Orb || skin.WebKind==WebKind.Crystal);
             }
         }
+        internal bool HasOrbHomeLayout { get { return HasLargeOrb || (OrbMateSeeker && !IsColonyResident); } }
         double OrbHubClearance(Area area) {
             // Reserve room for the largest post-molt pose without moving the
             // silk when the spider grows or settles back to its regular size.
@@ -71,7 +72,7 @@ namespace CornerSpider {
         internal double SilkScale {
             get {
                 double scale=HomeScale;
-                if(!HasLargeOrb) return scale;
+                if(!HasOrbHomeLayout) return scale;
                 var area=Areas[HomeArea];
                 double span=Math.Min(area.W,area.H);
                 return Math.Min(scale*2,Math.Min(span/(OrbCornerInset+OrbRoomReach),
@@ -180,7 +181,7 @@ namespace CornerSpider {
             // and Portia's platforms keep the space needed on their far side.
             double insetX=Math.Min((HasCornerSleeve?48:WebDweller?160:116)*s,a.W*.5);
             double insetY=Math.Min((HasCornerSleeve?48:WebDweller?160:144)*s,a.H*.5);
-            if(HasLargeOrb) insetX=insetY=Math.Max(OrbCornerInset*SilkScale,OrbHubClearance(a));
+            if(HasOrbHomeLayout) insetX=insetY=Math.Max(OrbCornerInset*SilkScale,OrbHubClearance(a));
             V home=new V(Corner.EndsWith("Right")?a.X+a.W-insetX:a.X+insetX,
                 Corner.StartsWith("Top")?a.Y+insetY:a.Y+a.H-insetY);
             if((home-Home).Length>.01) nestInside=false;
@@ -216,7 +217,16 @@ namespace CornerSpider {
             if(state!=Mood.Walk && state!=Mood.Return && state!=Mood.Stalk && state!=Mood.WebApproach) Speed=0;
             else { burstMoving=true;burstRemaining=Between(.19,.34); }
         }
-        public void GoHome(bool cancelPrey=true) { if(cancelPrey) { if(WebStage!=WebVisit.Fading) CancelWebVisit();HasFly=false; }ClearPlay();Target=Home;PlanCornerRoute(Home);ResetNestRoute();NextFly=Math.Max(NextFly,Clock+40);Enter(Mood.Return); }
+        public void GoHome(bool cancelPrey=true) {
+            if(cancelPrey) { if(WebStage!=WebVisit.Fading) CancelWebVisit();HasFly=false; }
+            ClearPlay();ResetNestRoute();NextFly=Math.Max(NextFly,Clock+40);
+            if(cancelPrey && OrbMateSeeker && !IsColonyResident && !LifeBusy) {
+                V perch=orbEscort!=OrbEscortPhase.Searching?OrbEscortPerch:Perch(HomeArea,NearestCorner(HomeArea,Home));
+                StartOrbPatrol(perch);
+                return;
+            }
+            Target=Home;PlanCornerRoute(Home);Enter(Mood.Return);
+        }
         public void Wake() { napAfter=Clock+Between(100,170);decision=1;if(UnderNestSilk) StartNestExit();else Enter(Mood.Rest); }
         public void ResetCursor() { samples.Clear();StillTime=0;InviteTime=0;cursorValid=false;cursorNearby=false;quietInspection=false;attentionRearmAt=0;nextInspection=Clock+1; }
         void InspectCursor(V cursor) {
@@ -249,7 +259,7 @@ namespace CornerSpider {
                 if((p-Spider).Length>distance) { best=p;distance=(p-Spider).Length; }
             }
             if(HasLargeOrb) best=OrbPoint(Between(64,96)*OrbMovementScale);
-            else if(WebDweller) best=Clamp(Home+new V(Between(-85,85),Between(-85,85))*Math.Min(HomeScale,SilkScale));
+            else if(WebDweller && !OrbMateSeeker) best=Clamp(Home+new V(Between(-85,85),Between(-85,85))*Math.Min(HomeScale,SilkScale));
             Fly=best;HasFly=true;FlyAge=0;FlyPhase=Between(0,6.28);NextFly=Clock+Between(.7,1.3)*FlyInterval;
             BeginPrey(kind);
             if(UnderNestSilk) { StartNestExit();napAfter=Clock+Between(100,170); }
@@ -421,11 +431,12 @@ namespace CornerSpider {
             double cursorSpeed=TrackCursor(dt,cursor);RideCooldown=Math.Max(0,RideCooldown-dt);
             if(State!=Mood.Jump) pixelScale+=(Areas[AreaAt(Spider)].Dpi-pixelScale)*Math.Min(1,dt*8);
             double s=BodyScale;
-            TickResidents(dt);if(TickLife(dt)) { ClearSurvey();return; }
+            TickResidents(dt);bool lifeExclusive=TickLife(dt);TickOrbEscort(dt);
+            if(lifeExclusive) { ClearSurvey();return; }
             TickWebVisit(dt);
             bool cursorInside=cursorValid && ChooseFingerSide(cursor);
             Scared=Math.Max(0,Scared-dt*.4);
-            if((Spider-Home).Length<28*HomeScale && (State==Mood.Sleep || State==Mood.Groom || State==Mood.Rest)) Web=Math.Min(1,Web+dt/110);
+            if(!OrbMateSeeker && (Spider-Home).Length<28*HomeScale && (State==Mood.Sleep || State==Mood.Groom || State==Mood.Rest)) Web=Math.Min(1,Web+dt/110);
             if(HasFly) {
                 FlyAge+=dt;bool linedUp=State==Mood.Aim || State==Mood.Reach || State==Mood.Crouch || State==Mood.Jump;
                 if(!GuestPrey) MovePrey(dt,s,linedUp);
@@ -503,7 +514,8 @@ namespace CornerSpider {
                 case Mood.ExitNest: CrawlOutOfNest(dt);break;
                 case Mood.Sleep: desiredAngle=NestAngle;if(StateTime>20) Wake();break;
                 case Mood.Walk:
-                    if(BurstMove(Target,SpeciesTraits?behavior.PatrolSpeed:155,dt,false)) { decision=Between(12,26);Enter(Mood.Rest); }break;
+                    V destination=OrbMateSeeker && orbEscort!=OrbEscortPhase.Searching?OrbEscortPerch:Target;
+                    if(BurstMove(destination,SpeciesTraits?behavior.PatrolSpeed:155,dt,false)) FinishPatrol();break;
                 case Mood.Groom: if(StateTime>3.5) { decision=Between(10,22);Enter(Mood.Rest); }break;
                 default:
                     if(CursorPlay && cursorValid && cursorDistance<DismissRadius) Face(cursor);
@@ -514,7 +526,8 @@ namespace CornerSpider {
                         // Brief whole-body reorientation, then hold. No swivelling detached head.
                         scanAt=Clock+Between(2.5,6);desiredAngle+=Between(-24,24);
                     }
-                    if(Clock>napAfter) GoHome(false);
+                    if(OrbMateSeeker && !IsColonyResident) IdleOrbMate();
+                    else if(Clock>napAfter) GoHome(false);
                     else if(TrySpeciesMoment()) break;
                     else if(StateTime>decision) {
                         double choice=random.NextDouble();

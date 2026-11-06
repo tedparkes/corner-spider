@@ -53,6 +53,10 @@ namespace CornerSpider {
             foreach(var skin in SkinCatalog.All) foreach(string corner in Settings.Corners) {
                 w.Corner=corner;w.UpdateHome();RenderTargetBitmap bitmap=SilkBitmap(canvas,w,skin.Id);
                 byte[] pixels=new byte[360*360*4];bitmap.CopyPixels(pixels,1440,0);
+                if(w.OrbMateSeeker) {
+                    Check(!Array.Exists(pixels,value=>value!=0),"roaming male draws no personal silk: "+skin.Id+" / "+corner);
+                    continue;
+                }
                 bool right=corner.EndsWith("Right"),top=corner.StartsWith("Top");int vertical=0,horizontal=0;
                 for(int j=2;j<358;j++) {
                     for(int k=0;k<2;k++) {
@@ -75,7 +79,49 @@ namespace CornerSpider {
                 for(int i=3;i<a.Length;i+=4) if(b[i]+1<a[i]) { stable=false;break; }
                 Check(stable,"growing silk preserves existing threads rather than rearranging them: "+skin.Id);
             }
+            CheckOrbEscortArt();
             RenderSilkGallery(folder);
+        }
+        static void CheckOrbEscortArt() {
+            const int size=360;
+            var away=new V(-10000,-10000);
+            var canvas=new PetCanvas();
+            foreach(var skin in SkinCatalog.InCategory("Orb weavers")) {
+                if(!skin.Male) continue;
+                var w=new World(size,size,42) { AutoFeed=false,CursorPlay=false };
+                w.SetSpecies(skin.Id);
+                w.Spider=w.Home;
+                w.Clock=25;
+                for(int frame=0;frame<16;frame++) w.Tick(.1,away);
+                Check(w.OrbEscortOpacity>=.99,"scheduled visit reveals the female's web: "+skin.Id);
+                byte[] pixels=new byte[size*size*4];
+                SilkBitmap(canvas,w,skin.Id).CopyPixels(pixels,size*4,0);
+                int vertical=0,horizontal=0;
+                for(int i=2;i<size-2;i++) {
+                    if(pixels[(i*size+size-1)*4+3]>12) vertical++;
+                    if(pixels[i*4+3]>12) horizontal++;
+                }
+                Check(vertical>15 && horizontal>15,"female's orb attaches to both desktop edges: "+skin.Id);
+                Check(MaxAlphaNear(pixels,size,w.OrbEscortPerch,3)>12,"male's waiting point lies on the visible frame: "+skin.Id);
+                w.WebVisibility=0;
+                SilkBitmap(canvas,w,skin.Id).CopyPixels(pixels,size*4,0);
+                Check(!Array.Exists(pixels,value=>value!=0),"web visibility still hides the escort silk: "+skin.Id);
+                w.Spider=w.OrbEscortPerch;
+                var visual=new DrawingVisual();
+                using(var d=visual.RenderOpen()) canvas.DrawNestScene(d,w,skin.Id);
+                var scene=new RenderTargetBitmap(size,size,96,96,PixelFormats.Pbgra32);
+                scene.Render(visual);
+                scene.CopyPixels(pixels,size*4,0);
+                Check(MaxAlphaNear(pixels,size,w.Home,3)>180,"female remains visible at the hub with silk hidden: "+skin.Id);
+            }
+        }
+        static byte MaxAlphaNear(byte[] pixels,int size,V point,int radius) {
+            byte maximum=0;
+            int x=(int)Math.Round(point.X),y=(int)Math.Round(point.Y);
+            for(int row=Math.Max(0,y-radius);row<=Math.Min(size-1,y+radius);row++)
+                for(int column=Math.Max(0,x-radius);column<=Math.Min(size-1,x+radius);column++)
+                    maximum=Math.Max(maximum,pixels[(row*size+column)*4+3]);
+            return maximum;
         }
         static void CheckRetreatVariety(string folder) {
             string[] ids={"Regal","Bold","Zebra","Tan","RedBackFemale","Emerald","GrayWall","Pantropical","Apache","PortiaLabiata","HyllusDiardiGreen"};
@@ -123,7 +169,7 @@ namespace CornerSpider {
                 var bitmap=new RenderTargetBitmap(1200,900,96,96,PixelFormats.Pbgra32);bitmap.Render(v);
                 byte[] pixels=new byte[1200*900*4];bitmap.CopyPixels(pixels,4800,0);int painted=0;
                 for(int i=3;i<pixels.Length;i+=4) if(pixels[i]>12) painted++;
-                Check(painted>25,"visible vector silk at "+size+": "+skin.Id);
+                Check(w.OrbMateSeeker?painted==0:painted>25,"expected silk visibility at "+size+": "+skin.Id);
             }
             foreach(string id in new[]{"Regal","PortiaLabiata"}) {
                 var w=new World(360,360,42);w.Web=1;var v=new DrawingVisual();

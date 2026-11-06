@@ -11,6 +11,8 @@ namespace CornerSpider {
     public static class BehaviorCatalog {
         public static BehaviorProfile Get(string id) {
             var skin=SkinCatalog.Get(id);
+            if(skin.Male && skin.Category=="Orb weavers") return new BehaviorProfile("Mate seeker",
+                "Searches the desktop and sometimes waits on the edge of a same-species female's web.",SpeciesGesture.WebWatch) { PatrolSpeed=140 };
             if(skin.WebDweller) return new BehaviorProfile(skin.Fictional?"An imaginary silk engineer":"Web-side watcher",skin.Fictional?"An original fantasy species that tends its web and follows vibrations.":"Stays near its capture web, follows a struggling insect along the silk, then wraps and eats it.",SpeciesGesture.WebWatch) { PatrolSpeed=95,HomeAffinity=.95,Duration=6 };
             if(id=="PortiaLabiataMale") return Get("PortiaLabiata");
             if(id=="HyllusDiardiMale") return Get("HyllusDiardiGreen");
@@ -37,6 +39,90 @@ namespace CornerSpider {
         }
     }
     public partial class World {
+        enum OrbEscortPhase { Searching, Approaching, Waiting }
+        OrbEscortPhase orbEscort;
+        double nextOrbEscort=20,orbEscortUntil;
+        public double OrbEscortOpacity { get;private set; }
+        public bool OrbMateSeeker {
+            get {
+                var skin=SkinCatalog.Get(Species);
+                return skin.Male && skin.Category=="Orb weavers";
+            }
+        }
+        bool CanVisitOrb { get { return OrbMateSeeker && !IsColonyResident && MatingEnabled && !LifeBusy; } }
+        public V OrbEscortPerch {
+            get {
+                if(!OrbMateSeeker) return Home;
+                var a=Areas[HomeArea];double s=SilkScale;
+                bool right=Corner.EndsWith("Right"),top=Corner.StartsWith("Top");
+                double ex=Math.Abs((right?a.X+a.W:a.X)-Home.X)/s;
+                double ey=Math.Abs((top?a.Y:a.Y+a.H)-Home.Y)/s;
+                V p=OrbRadials.EscortPerchLocal(SkinCatalog.Get(SkinCatalog.Get(Species).MateId),ex,ey);
+                return Home+new V(right?-p.X:p.X,top?p.Y:-p.Y)*s;
+            }
+        }
+        string OrbMateStatus {
+            get {
+                return orbEscort==OrbEscortPhase.Waiting?"Waiting at a female's web":
+                    orbEscort==OrbEscortPhase.Approaching?"Approaching a female's web":"Searching for a mate";
+            }
+        }
+        void ResetOrbEscort() {
+            orbEscort=OrbEscortPhase.Searching;
+            nextOrbEscort=Clock+20;
+            OrbEscortOpacity=0;
+        }
+        void TickOrbEscort(double dt) {
+            if(!OrbMateSeeker || IsColonyResident) return;
+            if(!CanVisitOrb || (orbEscort==OrbEscortPhase.Waiting && Clock>=orbEscortUntil)) {
+                if(orbEscort!=OrbEscortPhase.Searching) {
+                    orbEscort=OrbEscortPhase.Searching;
+                    nextOrbEscort=Clock+Between(45,80);
+                    decision=1;
+                }
+            }
+            double change=orbEscort==OrbEscortPhase.Searching?-dt/2:dt;
+            OrbEscortOpacity=Math.Max(0,Math.Min(1,OrbEscortOpacity+change));
+        }
+        void StartOrbPatrol(V destination) {
+            Target=destination;
+            PlanCornerRoute(Target);
+            Enter(Mood.Walk);
+        }
+        void SearchForOrbMate() {
+            int from=AreaAt(Spider),area=from,corner=NearestCorner(from,Spider);
+            if(Areas.Count>1 && random.NextDouble()<.38) { area=(from+1)%Areas.Count;corner=NearestCorner(area,Spider); }
+            else corner=(corner+(random.NextDouble()<.5?1:3))%4;
+            StartOrbPatrol(Perch(area,corner));
+        }
+        void IdleOrbMate() {
+            if(orbEscort!=OrbEscortPhase.Searching) {
+                if((Spider-OrbEscortPerch).Length>3*BodyScale) StartOrbPatrol(OrbEscortPerch);
+                else Face(Home);
+                return;
+            }
+            if(CanVisitOrb && Clock>=nextOrbEscort) {
+                V perch=OrbEscortPerch;
+                if((Clamp(perch)-perch).Length<.01) {
+                    orbEscort=OrbEscortPhase.Approaching;
+                    StartOrbPatrol(perch);
+                    return;
+                }
+                nextOrbEscort=Clock+20; // No safe edge perch in this work area yet.
+            }
+            if(StateTime>decision) SearchForOrbMate();
+        }
+        void FinishPatrol() {
+            if(OrbMateSeeker && !IsColonyResident) {
+                if(orbEscort==OrbEscortPhase.Approaching) {
+                    orbEscort=OrbEscortPhase.Waiting;
+                    orbEscortUntil=Clock+Between(14,28);
+                    Face(Home);
+                }
+                decision=Between(2.5,5);
+            } else decision=Between(12,26);
+            Enter(Mood.Rest);
+        }
         public bool SpeciesTraits=true;
         BehaviorProfile behavior=BehaviorCatalog.Get("Regal");
         public BehaviorProfile Personality { get { return behavior; } }

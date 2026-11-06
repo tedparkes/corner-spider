@@ -25,6 +25,27 @@ namespace CornerSpider {
             double angle=(index+irregularity)*(2*Math.PI/count)+phase;
             return new V(Math.Cos(angle),Math.Sin(angle));
         }
+        internal static void MainOpening(SkinProfile skin,double ex,double ey,out V start,out V end) {
+            double upper=Math.Min(World.OrbCornerInset,ey),side=Math.Min(World.OrbCornerInset,ex);
+            bool golden=skin.Pattern=="Golden",marble=skin.Pattern=="Marble",cross=skin.Pattern=="Cross";
+            double farX=side*(golden?1.43:marble?1.53:cross?1.88:1.63);
+            double farY=upper*(golden?1.82:marble?1.74:cross?1.96:1.71);
+            start=new V(farX,-ey+upper*.045*.66);
+            end=new V(-ex+side*.05*.70,farY);
+        }
+        internal static V OpeningBow(V start,V end,bool resident,bool crystal) {
+            V span=end-start;
+            double length=Math.Max(1,span.Length);
+            double depth=Math.Abs(start.X*end.Y-start.Y*end.X)/length;
+            double inward=Math.Min(crystal?19:27,depth*(resident?.48:.30));
+            return new V(-span.Y,span.X)*(inward/length);
+        }
+        internal static V EscortPerchLocal(SkinProfile female,double ex,double ey) {
+            V start,end;
+            MainOpening(female,ex,ey,out start,out end);
+            // Both Bézier controls contribute 3/8 of their bend at the midpoint.
+            return (start+end)*.5+OpeningBow(start,end,false,false)*.75;
+        }
     }
     public static partial class SkinCatalog {
         public static readonly string[] Categories={"Jumping spiders","Orb weavers","Widows","House spiders","Fictional"};
@@ -73,7 +94,9 @@ namespace CornerSpider {
             if(pattern=="Crystal") { f.BodyWidth=21;f.BodyLength=19; }
             if(pattern=="Mech") { f.BodyWidth=14;f.BodyLength=22; }
             var m=f.Variant(id+"Male",name+" - male","Male");m.BodyWidth*=.68;m.BodyLength*=.73;m.HeadWidth=.61;m.FrontLeg=1.18;m.MateRisk=0;
-            m.Description="Smaller, slimmer male with fuller palps. Roams locally and visits a female of the same species.";
+            m.Description=category=="Orb weavers"
+                ?"Smaller, slimmer male with fuller palps. Roams the desktop and sometimes waits on the edge of a female's orb."
+                :"Smaller, slimmer male with fuller palps. Roams locally and visits a female of the same species.";
             list.Add(f);list.Add(m);
         }
     }

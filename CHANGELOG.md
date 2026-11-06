@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 1.1.0-alpha.12 (local preview)
+
+- Real male orb weavers roam in search of mates instead of building a personal
+  web. They occasionally approach a same-species female and wait at the outer
+  edge of her orb before moving on. The mating-visit setting controls these visits.
+
 ## 1.1.0-alpha.11 (local preview)
 
 - Give jumpers a pause between runs to raise their front body, check two

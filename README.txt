@@ -1,8 +1,9 @@
-CORNER SPIDER 1.1.0-alpha.11 - LOCAL PREVIEW
+CORNER SPIDER 1.1.0-alpha.12 - LOCAL PREVIEW
 
 Extract the whole Windows ZIP, then open JumpingSpider.exe or Start-Spider.cmd.
 Requires Windows 10/11 and .NET Framework 4.8. No installer or admin rights.
 This unsigned preview is separate from the published 1.0 release.
+Male orb weavers roam for mates and may wait at the edge of a female's web.
 The spider hops between monitors and continues its route after landing.
 Corner webs use new anchored frames, sheets, funnels and retreats. See
 docs/VERIFICATION-CORNER-WEBS.md for the scored design review.

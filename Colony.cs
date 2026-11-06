@@ -46,7 +46,7 @@ namespace CornerSpider {
         bool ColonySiteFree(ColonyRecord r,ColonyPet ignore) {
             V p=ColonyHome(r);var a=Areas[r.Screen];double scale=Scale*a.Dpi;
             if(Math.Min(a.W,a.H)<260*scale*.65 || (p-Home).Length<260*HomeScale || GuestContains(p,170*scale*.65)) return false;
-            if(r.Screen==HomeArea && HasLargeOrb) {
+            if(r.Screen==HomeArea && HasOrbHomeLayout) {
                 V corner=new V(Corner.EndsWith("Right")?a.X+a.W:a.X,Corner.StartsWith("Top")?a.Y:a.Y+a.H);
                 V hub=Home-corner,site=p-corner;
                 // Leave room for the resident's own silk outside the main orb's

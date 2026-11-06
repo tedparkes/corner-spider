@@ -55,7 +55,8 @@ namespace CornerSpider {
                 for(int i=0;i<5;i++) SilkBitmap(canvas,w,skin.Id);
                 Check(PetCanvas.SilkRasterBuilds==built,"unchanged frames reuse silk samples: "+skin.Id);
                 w.SetScale(1.8);SilkBitmap(canvas,w,skin.Id);int resized=PetCanvas.SilkRasterBuilds;SilkBitmap(canvas,w,skin.Id);
-                Check(resized>built && PetCanvas.SilkRasterBuilds==resized,"size changes replace current silk samples once: "+skin.Id);
+                Check((w.OrbMateSeeker?resized==built:resized>built) && PetCanvas.SilkRasterBuilds==resized,
+                    "size changes sample visible silk once and skip empty roaming art: "+skin.Id);
             }
         }
     }

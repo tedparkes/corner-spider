@@ -28,13 +28,13 @@ namespace CornerSpider {
         public const double GravidSeconds=1800,IncubationSeconds=2700,BroodSeconds=5400,DepartureSeconds=75;
         public LifeRecord Life { get { LifeRecord life;if(!Lives.TryGetValue(Species,out life)) { life=new LifeRecord { NextMolt=MoltHours*3600,NextMate=MateHours*3600 };Lives[Species]=life; }return life; } }
         public bool WebDweller { get { return SkinCatalog.Get(Species).WebDweller; } }
-        public int WebLayers { get { return Math.Min(24,(int)Math.Sqrt(Life.SilkSeconds/1800)); } }
+        public int WebLayers { get { return OrbMateSeeker?0:Math.Min(24,(int)Math.Sqrt(Life.SilkSeconds/1800)); } }
         public double LifeSize { get { var l=Life;if(l.GrowthAt<0) return 1;double t=Math.Max(0,Math.Min(1,(l.Age-l.GrowthAt)/l.GrowthSpan));return 1+.16*(1-t*t*(3-2*t)); } }
         public double GravidAmount { get { return Life.Stage==LifeStage.Gravid?Math.Min(1,Life.StageAge/GravidSeconds):Life.Stage==LifeStage.Laying?1:0; } }
         public bool LifeBusy { get { var s=Life.Stage;return s==LifeStage.PreparingMolt || s==LifeStage.Molting || s==LifeStage.Recovering || s==LifeStage.Courting || s==LifeStage.Mating || s==LifeStage.MaleMeal || s==LifeStage.Laying; } }
         public bool MaleVisible { get { var s=Life.Stage;return s==LifeStage.Courting || s==LifeStage.Mating || s==LifeStage.MaleLeaving || (s==LifeStage.MaleMeal && Life.StageAge<6); } }
         public bool HasSac { get { return Life.Stage==LifeStage.Laying || Life.Stage==LifeStage.Incubating || Life.Stage==LifeStage.Brood; } }
-        public string LifeStatus { get { return Life.Stage==LifeStage.Quiet?"At home in its world · "+WebLayers+" lived-in silk layers":Life.Stage==LifeStage.PreparingMolt?"Returning for a molt":Life.Stage==LifeStage.Molting?"Shedding the old skin":Life.Stage==LifeStage.Recovering?"Resting after a molt":Life.Stage==LifeStage.Courting?"A same-species male is courting":Life.Stage==LifeStage.Mating?"A quiet mating visit":Life.Stage==LifeStage.MaleLeaving?"The male is leaving":Life.Stage==LifeStage.MaleMeal?"The male became a meal":Life.Stage==LifeStage.Gravid?"Gradually becoming gravid":Life.Stage==LifeStage.Laying?"Weaving an egg sac":Life.Stage==LifeStage.Incubating?"An egg sac is developing":Life.Stage==LifeStage.Brood?"Spiderlings are growing near the nest":"Spiderlings are setting off"; } }
+        public string LifeStatus { get { return Life.Stage==LifeStage.Quiet?(OrbMateSeeker?OrbMateStatus:"At home in its world · "+WebLayers+" lived-in silk layers"):Life.Stage==LifeStage.PreparingMolt?"Returning for a molt":Life.Stage==LifeStage.Molting?"Shedding the old skin":Life.Stage==LifeStage.Recovering?"Resting after a molt":Life.Stage==LifeStage.Courting?"A same-species male is courting":Life.Stage==LifeStage.Mating?"A quiet mating visit":Life.Stage==LifeStage.MaleLeaving?"The male is leaving":Life.Stage==LifeStage.MaleMeal?"The male became a meal":Life.Stage==LifeStage.Gravid?"Gradually becoming gravid":Life.Stage==LifeStage.Laying?"Weaving an egg sac":Life.Stage==LifeStage.Incubating?"An egg sac is developing":Life.Stage==LifeStage.Brood?"Spiderlings are growing near the nest":"Spiderlings are setting off"; } }
         void LifeEnter(LifeStage stage) { Life.Stage=stage;Life.StageAge=0; }
         public void SetLifeIntervals(double moltHours,double mateHours) {
             if(!Finite(moltHours) || !Finite(mateHours)) return;
@@ -69,7 +69,7 @@ namespace CornerSpider {
         // suspend do not silently skip a visible molt, visit or brood departure.
         bool TickLife(double dt) {
             var l=Life;l.Age=Math.Min(1e9,l.Age+dt);
-            if((Spider-Home).Length<220*HomeScale) l.SilkSeconds=Math.Min(1e9,l.SilkSeconds+dt);
+            if(!OrbMateSeeker && (Spider-Home).Length<220*HomeScale) l.SilkSeconds=Math.Min(1e9,l.SilkSeconds+dt);
             l.StageAge=Math.Min(2592000,l.StageAge+dt);
             if(l.Stage==LifeStage.Quiet) {
                 if(MoltingEnabled && l.Age>=l.NextMolt) BeginMolt();
