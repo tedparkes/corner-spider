@@ -16,6 +16,8 @@ namespace CornerSpider {
         public readonly Dictionary<string,LifeRecord> Lives=new Dictionary<string,LifeRecord>();
         public bool KeepBabies,AutoUpdateCheck,PreviewUpdates;
         public bool? TrayUpdateShortcut;
+        public string HabitatId="";
+        public bool HabitatWhiteNear=true;
         public int ResidentLimit=6;
         public long LastUpdateCheckTicks;
         public readonly List<ColonyRecord> Colonists=new List<ColonyRecord>();
@@ -69,6 +71,8 @@ namespace CornerSpider {
                 if(k=="autoUpdateCheck" && (v=="true" || v=="false")) AutoUpdateCheck=v=="true";
                 if(k=="previewUpdates" && (v=="true" || v=="false")) PreviewUpdates=v=="true";
                 if(k=="trayUpdateShortcut" && (v=="true" || v=="false")) TrayUpdateShortcut=v=="true";
+                Guid habitat;if(k=="habitatId" && Guid.TryParseExact(v,"N",out habitat)) HabitatId=habitat.ToString("N");
+                if(k=="habitatWhiteNear" && (v=="true" || v=="false")) HabitatWhiteNear=v=="true";
                 long ticks;if(k=="lastUpdateCheck" && long.TryParse(v,out ticks) && ticks>=0 && ticks<=DateTime.MaxValue.Ticks) LastUpdateCheckTicks=ticks;
                 if(k.StartsWith("colony.") && Colonists.Count<World.MaxResidents) { var resident=ColonyRecord.Unpack(v);if(resident!=null) Colonists.Add(resident); }
             }
@@ -82,6 +86,8 @@ namespace CornerSpider {
                 lifeLines.Add("keepBabies="+KeepBabies.ToString().ToLowerInvariant());lifeLines.Add("residentLimit="+ResidentLimit);
                 lifeLines.Add("autoUpdateCheck="+AutoUpdateCheck.ToString().ToLowerInvariant());lifeLines.Add("previewUpdates="+PreviewUpdates.ToString().ToLowerInvariant());lifeLines.Add("lastUpdateCheck="+LastUpdateCheckTicks);
                 if(TrayUpdateShortcut.HasValue) lifeLines.Add("trayUpdateShortcut="+TrayUpdateShortcut.Value.ToString().ToLowerInvariant());
+                if(HabitatId.Length>0) lifeLines.Add("habitatId="+HabitatId);
+                lifeLines.Add("habitatWhiteNear="+HabitatWhiteNear.ToString().ToLowerInvariant());
                 for(int i=0;i<Math.Min(World.MaxResidents,Colonists.Count);i++) lifeLines.Add("colony."+i+"="+Colonists[i].Pack());
                 lifeLines.Add("molting="+MoltingEnabled.ToString().ToLowerInvariant());lifeLines.Add("mating="+MatingEnabled.ToString().ToLowerInvariant());
                 lifeLines.Add("moltHours="+MoltHours.ToString(CultureInfo.InvariantCulture));lifeLines.Add("mateHours="+MateHours.ToString(CultureInfo.InvariantCulture));

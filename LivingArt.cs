@@ -36,8 +36,8 @@ namespace CornerSpider {
                 }
             }art.Freeze();familyBodies[skin.Id]=art;return art;
         }
-        static void DrawFamilySpider(DrawingContext d,World w,SkinProfile skin) {
-            d.PushTransform(new TranslateTransform(w.Spider.X,w.Spider.Y-w.Lift));d.PushTransform(new ScaleTransform(w.BodyScale,w.BodyScale));d.PushTransform(new RotateTransform(w.Angle));
+        static void DrawFamilySpider(DrawingContext d,World w,SkinProfile skin,double lift) {
+            d.PushTransform(new TranslateTransform(w.Spider.X,w.Spider.Y-lift));d.PushTransform(new ScaleTransform(w.BodyScale,w.BodyScale));d.PushTransform(new RotateTransform(w.Angle));
             for(int side=-1;side<=1;side+=2) for(int i=3;i>=0;i--) {
                 LegPose pose=SpiderPose.FamilyLeg(w,side,i,skin);
                 double width=skin.Category=="Widows"?1.5:skin.Pattern=="Mech"?3:2.2;

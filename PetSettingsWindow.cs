@@ -25,6 +25,7 @@ namespace CornerSpider {
         public readonly FingerPreview FingerPreview=new FingerPreview();
         public readonly TabControl Tabs=new TabControl();
         readonly TabItem updatesTab;
+        readonly TabItem habitatTab;
         readonly TextBlock speciesNote,saveStatus;
         bool syncing;
         public bool IsClosed { get;private set; }
@@ -170,6 +171,7 @@ namespace CornerSpider {
             var reset=new Button { Content="Reset preferences",HorizontalAlignment=HorizontalAlignment.Left,Padding=new Thickness(14,7,14,7),Margin=new Thickness(0,12,0,8) };desktop.Children.Add(reset);reset.Click+=delegate { ResetPreferences(); };
             Note(desktop,"Restores appearance, interaction and screen defaults. Keeps your hammock progress, meals and Windows startup choice.");
             AddTab("Desktop",desktop);
+            habitatTab=AddTab("Habitat",new HabitatSettingsPanel(host));
             Action unsubscribeUpdates;
             updatesTab=AddTab("Updates",UpdateSettings.Create(host,out AutoUpdatesCheck,out PreviewUpdatesCheck,out TrayUpdateShortcutSelector,out CheckUpdateButton,out CheckPrereleaseButton,out InstallUpdateButton,out unsubscribeUpdates));
             Closed+=delegate { unsubscribeUpdates(); };
@@ -177,11 +179,12 @@ namespace CornerSpider {
             Note(help,"Approach an awake spider and hold still for the configured invitation delay. The finger fades in; the spider can jump on, hang, climb and wander. Move gently to carry it. A click lets it plan an upward hop; a fast move startles it. The finger holds still until takeoff, and your pointer returns immediately. Your clicks still reach your apps.");
             Note(help,"It watches from corners, stalks occasional flies and returns to its silk retreat. Use the tray's quick actions to feed, call it home, wake or pause it. Double-click the tray icon to reopen these settings.");
             Note(help,"Corner Spider 1.1 alpha\nFree software under the MIT License. The pet works offline with no accounts or telemetry. Optional GitHub update checks are controlled in Updates. Optional support shows a Cash App QR code to scan with your phone. This preview saves in LocalAppData\\CornerSpider-Next, separately from 1.0. See README.txt for removal and manual checks.");
-            Note(help,"Future ideas: custom colors by body region; more species-specific courtship and web construction; an optional background with depth to explore.");AddTab("About & play",help);
+            Note(help,"The Habitat tab imports a photo and depth map for a separate scene the spider can explore.");AddTab("About & play",help);
             saveTimer.Tick+=delegate { saveTimer.Stop();host.Save();saveStatus.Text=host.Settings.LastError.Length==0?"Saved. Changes are live on your desktop.":"Could not save preferences. Check that your save folder is writable."; };
             Closed+=delegate { IsClosed=true;saveTimer.Stop();encounterTimer.Stop();Preview.Dispose();host.Save(); };
         }
         internal void SelectUpdatesTab() { Tabs.SelectedItem=updatesTab; }
+        internal void SelectHabitatTab() { Tabs.SelectedItem=habitatTab; }
         void Changed() { if(syncing) return;saveStatus.Text="Changes are live. Saving...";saveTimer.Stop();saveTimer.Start();host.Render(); }
         public void RefreshMonitors() {
             syncing=true;MonitorSelector.Items.Clear();

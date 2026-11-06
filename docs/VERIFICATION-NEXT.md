@@ -1,5 +1,17 @@
 # Verification: Corner Spider 1.1 previews
 
+## 1.1.0-alpha.14
+
+- The deterministic habitat suite covers projected distance, route continuity,
+  ledge detours, hops, depth masking, measured silk anchors and build order.
+- The Windows habitat diagnostic imports a local test pair, exercises both
+  depth conventions and renders a foreground object obscuring part of a spider
+  and silk strand. It checks four web styles, male orb-weaver behavior, scene
+  selection and the return to the normal desktop overlays.
+- The photo and map describe a single view of visible surfaces. Behind an object,
+  the model can only infer from the pixels that are visible. Long sessions and
+  display changes on physically mixed-DPI monitors still need hands-on testing.
+
 ## 1.1.0-alpha.13
 
 - The deterministic suite covers the tray shortcut defaults, saved preferences,

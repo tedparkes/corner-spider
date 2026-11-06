@@ -18,6 +18,7 @@ namespace CornerSpider {
         static void Check(bool b,string message) { log.AppendLine((b?"PASS: ":"FAIL: ")+message);if(!b) failures++; }
         public static int Run(Application app,string[] args) {
             string folder=args.Length>1?Path.GetFullPath(args[1]):Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"diagnostics");Directory.CreateDirectory(folder);
+            if(args[0]=="--habitat-test") return HabitatDiagnostics.Run(folder,args);
             if(args[0]=="--colony-load-test") return ColonyLoad(app,folder);
             if(args[0]=="--web-review") { RenderCornerWebReview(folder);return 0; }
             if(args[0]=="--silk-sampling-test") {
@@ -90,7 +91,7 @@ namespace CornerSpider {
                         Check(!own,"OS hit testing passes through the illustrated finger");host.World.FingerBlend=0;host.Render();
                         host.Commands["pause"].PerformClick();Check(host.Paused,"pause tray handler");host.Commands["pause"].PerformClick();Check(!host.Paused,"resume tray handler");
                         host.Commands["feed"].PerformClick();Check(host.World.HasFly,"feed tray handler");host.Commands["home"].PerformClick();Check(host.World.State==Mood.Return,"home tray handler");
-                        Check(host.Commands.Count==14 && host.Commands.ContainsKey("settings"),"tray contains quick actions, seven food choices, Settings and Check for updates");
+                        Check(host.Commands.Count==15 && host.Commands.ContainsKey("settings") && host.Commands.ContainsKey("habitat"),"tray contains quick actions, seven food choices, Settings, Habitat and Check for updates");
                         CheckTrayUpdates(host);
                         foreach(PreyKind food in Enum.GetValues(typeof(PreyKind))) { host.World.HasFly=false;host.Commands["food-"+food].PerformClick();Check(host.World.HasFly && host.World.Prey==food,"tray food selection: "+food); }host.World.HasFly=false;
                         var settingsPanel=new PetSettingsWindow(host);

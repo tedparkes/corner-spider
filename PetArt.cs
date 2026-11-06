@@ -224,12 +224,13 @@ namespace CornerSpider {
             Oval(d,B("#30383b"),0,0,2.8,4);Oval(d,B("#9d6850"),0,-4,2.5,2.5);
             Line(d,"#434a45",.8,-1,2,-4,5);Line(d,"#434a45",.8,1,2,4,5);d.Pop();d.Pop();
         }
-        public static void DrawSpider(DrawingContext d,World w,string species) {
-            if(SkinCatalog.Get(species).Category!="Jumping spiders") { DrawFamilySpider(d,w,SkinCatalog.Get(species));return; }
+        public static void DrawSpider(DrawingContext d,World w,string species,double? liftOverride=null) {
+            double lift=liftOverride ?? w.Lift;
+            if(SkinCatalog.Get(species).Category!="Jumping spiders") { DrawFamilySpider(d,w,SkinCatalog.Get(species),lift);return; }
             double scale=w.DrawBodyScale;
             d.PushTransform(new TranslateTransform(w.Spider.X,w.Spider.Y));
             Oval(d,B("#16000000"),0,12*scale,18*scale,9*scale);
-            d.PushTransform(new TranslateTransform(0,-w.Lift));d.PushTransform(new ScaleTransform(scale,scale));
+            d.PushTransform(new TranslateTransform(0,-lift));d.PushTransform(new ScaleTransform(scale,scale));
             d.PushTransform(new RotateTransform(w.Angle));
             // Feet stay in their own articulated frame while the body lowers to brace.
             for(int leg=3;leg>=0;leg--) for(int side=-1;side<=1;side+=2)

@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 1.1.0-alpha.14
+
+- Add optional depth habitats with a local library for aligned color and depth
+  image pairs, both grayscale polarity conventions and a full-screen view.
+- Explore visible surfaces with depth-sensitive scale, occlusion, pauses and
+  short hops. Return to the regular desktop by closing the habitat.
+- Build silk between measured habitat anchors, with family-specific patterns
+  and construction that starts at the supports.
+
 ## 1.1.0-alpha.13
 
 - Add **Check for updates** to the tray menu. It opens Updates and checks the

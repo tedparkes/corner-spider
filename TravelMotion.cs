@@ -138,7 +138,7 @@ namespace CornerSpider {
             return false;
         }
 
-        void UpdateGaitDirection(V displacement,double dt) {
+        internal void UpdateGaitDirection(V displacement,double dt) {
             bool ground=State==Mood.Walk || State==Mood.Return || State==Mood.Stalk || State==Mood.WebApproach || State==Mood.EnterNest || State==Mood.ExitNest || State==Mood.SpeciesAct;
             V direction=new V(0,-1);
             if(ground && displacement.Length>.001*BodyScale) {

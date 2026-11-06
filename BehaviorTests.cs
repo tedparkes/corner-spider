@@ -36,6 +36,7 @@ class BehaviorTests {
             }
             Assert(w.Meals>0,"Automatic feeding should work");
             ColonyTests.Run();UpdateTests.Run();LifeTests.Run();BehaviorRegressionTests.Run();
+            HabitatDepthTests.Run();HabitatSilkTests.Run();
             NaturalMotionTests.Run();
             TravelMotionTests.Run();
             PounceTests.Run();EncounterTests.Run();GuestWebTests.Run();

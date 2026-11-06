@@ -1,14 +1,26 @@
 # Corner Spider 1.1 preview
 
-A spider companion for your actual Windows desktop. This is **1.1.0-alpha.13**,
+A spider companion for your actual Windows desktop. This is **1.1.0-alpha.14**,
 a prerelease for community testing. The [1.0 release](https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0)
-remains the stable version. [Download this preview and read its release notes](https://github.com/tedparkes/corner-spider/releases/tag/v1.1.0-alpha.13).
+remains the stable version. [Download this preview and read its release notes](https://github.com/tedparkes/corner-spider/releases/tag/v1.1.0-alpha.14).
 
 Extract the Windows ZIP and open **JumpingSpider.exe**. Windows 10/11 with .NET
 Framework 4.8; no installer, administrator rights or asset downloads. Startup is
 opt-in. This community build is unsigned.
 
 ## New in this preview
+
+Alpha.14 adds **Depth habitats**. Import a photo and matching grayscale depth map
+under **Settings > Habitat**. The spider follows visible surfaces, hops over
+short gaps, shrinks with distance and can pass behind foreground objects. Silk
+uses anchors measured at different depths and builds in the selected skin's style.
+
+Choose **Import image pair**, select the photo first, then the grayscale map
+from the same viewpoint. PNG or JPEG images work. Use **White is near** or
+**Black is near** to match the map. The library keeps the pair on this PC. Open
+it again from the same tab. Press **F11** to fill the screen or close the
+habitat window to return the spider to the desktop. The preview uses a fixed
+camera and a single visible depth layer. It leaves Windows wallpaper alone.
 
 Alpha.13 adds **Check for updates** to the tray menu. Choose a different tray
 shortcut setting in **Settings > Updates**.

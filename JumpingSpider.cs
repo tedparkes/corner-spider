@@ -13,7 +13,7 @@ using Forms=System.Windows.Forms;
 [assembly:System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.8")]
 [assembly:System.Reflection.AssemblyVersion("1.1.0.0")]
 [assembly:System.Reflection.AssemblyFileVersion("1.1.0.0")]
-[assembly:System.Reflection.AssemblyInformationalVersion("1.1.0-alpha.13")]
+[assembly:System.Reflection.AssemblyInformationalVersion("1.1.0-alpha.14")]
 [assembly:System.Reflection.AssemblyTitle("Corner Spider")]
 [assembly:System.Reflection.AssemblyProduct("Corner Spider")]
 [assembly:System.Reflection.AssemblyDescription("A local jumping-spider companion for the Windows desktop.")]
@@ -73,9 +73,9 @@ namespace CornerSpider {
             if(msg==0x1a) host.QueueDisplayRefresh(); // taskbar/work-area changes
             return IntPtr.Zero;
         }
-        public void Place() {
+        public void Place(bool show=true) {
             var r=Screen.WorkingArea;
-            Native.SetWindowPos(Handle,new IntPtr(-1),r.Left,r.Top,r.Width,r.Height,0x10|0x40);
+            Native.SetWindowPos(Handle,new IntPtr(-1),r.Left,r.Top,r.Width,r.Height,show?0x50u:0x10u);
             SyncCanvas();
         }
         public void SyncCanvas() {
@@ -111,6 +111,8 @@ namespace CornerSpider {
         bool suspended,sessionLocked;
         public bool TestMode;
         public PetSettingsWindow SettingsWindow;
+        HabitatWindow habitat;
+        internal bool HabitatMayAnimate { get { return !Paused && !suspended && !sessionLocked && !Disposed; } }
         public readonly UpdateController Updates;
         public readonly MouseClicks Clicks=new MouseClicks();
         public readonly CursorVeil CursorVisibility=new CursorVeil();
@@ -171,8 +173,8 @@ namespace CornerSpider {
             foreach(var s in selected) {
                 PetWindow found=null;
                 foreach(var w in Windows) if(w.Screen.DeviceName==s.DeviceName && w.Screen.WorkingArea==s.WorkingArea) { found=w;break; }
-                if(found!=null) { removed.Remove(found);found.Place(); }
-                else { var w=new PetWindow(this,s);Windows.Add(w);w.Show(); }
+                if(found!=null) { removed.Remove(found);found.Place(habitat==null); }
+                else { var w=new PetWindow(this,s);Windows.Add(w);if(habitat==null) w.Show(); }
             }
             foreach(var w in removed) { Windows.Remove(w);w.Close(); }
             foreach(var w in Windows) w.SyncCanvas();
@@ -181,18 +183,19 @@ namespace CornerSpider {
         void OnTick(object sender,EventArgs e) {
             double now=clock.Elapsed.TotalSeconds,dt=now-lastTime;lastTime=now;
             bool clicked=Clicks.Consume();
-            if(!Paused && !suspended && !sessionLocked) {
+            if(!Paused && !suspended && !sessionLocked && habitat==null) {
                 Native.Point p;V cursor=new V(-10000,-10000);
                 if((SettingsWindow==null || !SettingsWindow.IsVisible) && !Menu.Visible && Native.GetCursorPos(out p)) cursor=new V(p.X-Origin.X,p.Y-Origin.Y);
                 World.Tick(dt,cursor,clicked);Render();
             }
             if(now-lastSave>30) { Save();lastSave=now; }
             Updates.Tick();
-            double ms=Paused?250:World.State==Mood.Sleep?83:World.State==Mood.Rest || World.State==Mood.Groom?50:33;
-            if(!Paused) foreach(var resident in World.Residents) if(resident.Actor.Speed>1 || resident.Record.Leaving) ms=Math.Min(ms,50);
+            double ms=Paused || habitat!=null?250:World.State==Mood.Sleep?83:World.State==Mood.Rest || World.State==Mood.Groom?50:33;
+            if(!Paused && habitat==null) foreach(var resident in World.Residents) if(resident.Actor.Speed>1 || resident.Record.Leaving) ms=Math.Min(ms,50);
             if(Math.Abs(timer.Interval.TotalMilliseconds-ms)>1) timer.Interval=TimeSpan.FromMilliseconds(ms);
         }
         public void Render() {
+            if(habitat!=null) return;
             CursorVisibility.Update(!Paused && !suspended && !sessionLocked && World.CursorPlay && World.FingerActive && World.FingerBlend>=.65 && (World.Cursor-World.FingerOrigin).Length<12*World.BodyScale && !Menu.Visible && (SettingsWindow==null || !SettingsWindow.IsVisible));
             V spider=new V(World.Spider.X,World.Spider.Y-World.Lift);
             int web=(int)(World.Web*30);
@@ -242,17 +245,41 @@ namespace CornerSpider {
             }return true; } catch(Exception ex) { Forms.MessageBox.Show("Couldn't change startup: "+ex.Message,"Corner Spider");return false; }
         }
         public void OpenSettings() { OpenSettings(false); }
-        void OpenSettings(bool showUpdates) {
+        void OpenSettings(bool showUpdates,bool showHabitat=false) {
             bool opening=SettingsWindow==null;
             if(opening) {
                 CursorVisibility.Release();World.Resume();SettingsWindow=new PetSettingsWindow(this);SettingsWindow.Closed+=delegate { SettingsWindow=null; };
             }
             if(showUpdates) SettingsWindow.SelectUpdatesTab();
+            if(showHabitat) SettingsWindow.SelectHabitatTab();
             if(opening) SettingsWindow.Show();
             else {
                 if(SettingsWindow.WindowState==WindowState.Minimized) SettingsWindow.WindowState=WindowState.Normal;
                 SettingsWindow.Activate();
             }
+        }
+        internal void OpenHabitat(HabitatScene scene,bool whiteIsNear) {
+            if(habitat!=null && habitat.SceneId==scene.Id && habitat.WhiteIsNear==whiteIsNear) {
+                if(habitat.WindowState==WindowState.Minimized) habitat.WindowState=WindowState.Normal;
+                habitat.Activate();return;
+            }
+            var next=new HabitatWindow(this,scene,whiteIsNear);
+            if(habitat!=null) {
+                var previous=habitat;habitat=next;previous.Close();
+            } else {
+                habitat=next;CursorVisibility.Release();World.Resume();
+                foreach(var overlay in Windows) overlay.Hide();
+            }
+            next.Closed+=delegate {
+                if(habitat!=next) return;
+                habitat=null;
+                if(Disposed) return;
+                foreach(var overlay in Windows) overlay.Show();
+                ResumeClock();Render();
+            };
+            try { next.Show(); }
+            catch { next.Close();throw; }
+            Settings.HabitatId=scene.Id;Settings.HabitatWhiteNear=whiteIsNear;Save();
         }
         internal void SetTrayUpdateShortcut(bool? enabled) {
             Settings.TrayUpdateShortcut=enabled;
@@ -293,17 +320,19 @@ namespace CornerSpider {
         void BuildTray() {
             Menu=new Forms.ContextMenuStrip();Menu.Opening+=delegate { CursorVisibility.Release(); };Menu.Items.Add(new Forms.ToolStripMenuItem("CORNER SPIDER  1.1 ALPHA") { Enabled=false });
             var status=new Forms.ToolStripMenuItem { Enabled=false };Menu.Items.Add(status);
-            Menu.Opening+=delegate { status.Text=(World.GuestStatus.Length>0?World.GuestStatus:World.State.ToString())+"  |  "+World.Meals+" prey caught"+(Settings.LastError.Length>0?"  |  Save failed":"")+(Updates!=null && Updates.Available!=null?"  |  Update available":""); };
+            Menu.Opening+=delegate { status.Text=(habitat!=null?"In a depth habitat":World.GuestStatus.Length>0?World.GuestStatus:World.State.ToString())+"  |  "+World.Meals+" prey caught"+(Settings.LastError.Length>0?"  |  Save failed":"")+(Updates!=null && Updates.Available!=null?"  |  Update available":""); };
             Menu.Items.Add(new Forms.ToolStripSeparator());
             var feed=Item("feed",World.HuntsSpiders?"Release a small spider":"Release a fly",delegate { World.Feed(); });Menu.Items.Add(feed);Menu.Opening+=delegate { feed.Enabled=!World.HasFly && !Paused; };
             var foodMenu=new Forms.ToolStripMenuItem("Choose food");Menu.Items.Add(foodMenu);
             foreach(PreyKind food in Enum.GetValues(typeof(PreyKind))) { PreyKind selected=food;foodMenu.DropDownItems.Add(Item("food-"+food,FoodName(food),delegate { World.Feed(selected); })); }
-            Menu.Opening+=delegate { foodMenu.Enabled=!World.HasFly && !World.LifeBusy && !Paused;feed.Enabled=foodMenu.Enabled; };
-            Menu.Items.Add(Item("home","Go to hammock",delegate { World.GoHome(); }));
-            Menu.Items.Add(Item("wake","Wake up",delegate { World.Wake(); }));
+            Menu.Opening+=delegate { foodMenu.Enabled=habitat==null && !World.HasFly && !World.LifeBusy && !Paused;feed.Enabled=foodMenu.Enabled; };
+            var home=Item("home","Go to hammock",delegate { World.GoHome(); });Menu.Items.Add(home);
+            var wake=Item("wake","Wake up",delegate { World.Wake(); });Menu.Items.Add(wake);
+            Menu.Opening+=delegate { home.Enabled=wake.Enabled=habitat==null; };
             var pause=Item("pause","Pause",delegate { Paused=!Paused;ResumeClock(); });Menu.Items.Add(pause);Menu.Opening+=delegate { pause.Text=Paused?"Resume":"Pause"; };
             Menu.Items.Add(new Forms.ToolStripSeparator());
             Menu.Items.Add(Item("settings","Settings...",OpenSettings));
+            Menu.Items.Add(Item("habitat","Habitat...",delegate { OpenSettings(false,true); }));
             var updates=Item("updates","Check for updates...",delegate { OpenSettings(true);Updates.CheckNow(); });
             updates.Enabled=Settings.TrayUpdateShortcutEnabled(Updates.Current);Menu.Items.Add(updates);
             Menu.Items.Add(new Forms.ToolStripSeparator());
@@ -318,6 +347,7 @@ namespace CornerSpider {
         public void Dispose() {
             if(Disposed) return;Disposed=true;CursorVisibility.Dispose();timer.Stop();displayTimer.Stop();timer.Tick-=OnTick;Clicks.Dispose();
             if(Updates!=null) Updates.Dispose();
+            if(habitat!=null) habitat.Close();
             if(SettingsWindow!=null) SettingsWindow.Close();
             Microsoft.Win32.SystemEvents.DisplaySettingsChanged-=DisplayChanged;Microsoft.Win32.SystemEvents.PowerModeChanged-=PowerChanged;Microsoft.Win32.SystemEvents.SessionSwitch-=SessionChanged;Application.Current.SessionEnding-=SessionEnding;
             Save();if(Tray!=null) { Tray.Visible=false;Tray.Dispose(); }if(Menu!=null) Menu.Dispose();if(icon!=null) icon.Dispose();
@@ -333,7 +363,7 @@ namespace CornerSpider {
             if(args.Length>0 && args[0]=="--quit") {
                 try { using(var signal=EventWaitHandle.OpenExisting(quitEvent)) signal.Set(); } catch(WaitHandleCannotBeOpenedException) {}return 0;
             }
-            bool test=args.Length>0 && (args[0]=="--colony-load-test" || args[0]=="--self-test" || args[0]=="--desktop-test" || args[0]=="--render-preview" || args[0]=="--finger-preview" || args[0]=="--prey-preview" || args[0]=="--encounter-preview" || args[0]=="--travel-preview" || args[0]=="--life-preview" || args[0]=="--release-preview" || args[0]=="--hammock-preview" || args[0]=="--web-review" || args[0]=="--silk-test" || args[0]=="--silk-sampling-test" || args[0]=="--dismount-preview" || args[0]=="--nest-preview");
+            bool test=args.Length>0 && (args[0]=="--colony-load-test" || args[0]=="--self-test" || args[0]=="--desktop-test" || args[0]=="--render-preview" || args[0]=="--finger-preview" || args[0]=="--prey-preview" || args[0]=="--encounter-preview" || args[0]=="--travel-preview" || args[0]=="--life-preview" || args[0]=="--release-preview" || args[0]=="--hammock-preview" || args[0]=="--web-review" || args[0]=="--silk-test" || args[0]=="--silk-sampling-test" || args[0]=="--dismount-preview" || args[0]=="--nest-preview" || args[0]=="--habitat-test");
             // Offscreen review plates do not open overlays or own input hooks.
             string mutexName=args.Length>0 && args[0]=="--web-review"?"Local\\CornerSpiderPet_WebReview":
                 test?"Local\\CornerSpiderPet_Tests":"Local\\CornerSpiderPet_v1";
