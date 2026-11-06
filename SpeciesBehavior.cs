@@ -72,7 +72,9 @@ namespace CornerSpider {
             double angle=gestureHeading*Math.PI/180;
             if(kind==SpeciesGesture.Zigzag || kind==SpeciesGesture.Survey || kind==SpeciesGesture.WallWatch) {
                 double step=kind==SpeciesGesture.Zigzag?Math.Sin(StateTime*Math.PI*1.25)*12:Math.Sin(Math.Min(1,StateTime/behavior.Duration)*Math.PI)*22;
-                V before=Spider;Spider=Clamp(gestureOrigin+new V(Math.Cos(angle),Math.Sin(angle))*(step*BodyScale*GestureBlend));
+                V before=Spider;
+                V next=Clamp(gestureOrigin+new V(Math.Cos(angle),Math.Sin(angle))*(step*BodyScale*GestureBlend));
+                if(AreaAt(next)==AreaAt(before)) Spider=next;
                 Speed=(Spider-before).Length/dt;StepPhase+=(Spider-before).Length/(4.5*BodyScale);
             }
             if(kind==SpeciesGesture.NestCheck) {

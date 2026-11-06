@@ -9,7 +9,49 @@ static class BehaviorRegressionTests {
     static void Check(bool b,string message) { checks++;if(!b) throw new Exception("Regression: "+message); }
     static World New(int seed) { var w=new World(1280,720,seed);w.AutoFeed=false;w.Spider=new V(600,350);return w; }
     static void Tick(World w,double seconds) { for(int i=0;i<seconds*40;i++) w.Tick(.025,away); }
+    static void CheckSeamRoute(Area[] areas,V start,V destination,int expectedHops,double size,double dt,string label,bool molt=false) {
+        var w=New(12);w.ConfigureDisplays(areas,1);w.SetScale(size);w.CursorPlay=false;w.Spider=start;
+        string route=label+" at size "+size+" and step "+dt;
+        if(molt) {
+            destination=w.Home;
+            Check(w.BeginMolt(),"can start a molt return from another screen");
+        } else {
+            w.Target=destination;w.State=Mood.Walk;
+        }
+        int hops=0,visibleHops=0;bool lifted=false;
+        for(int frame=0;frame<180/dt && (molt?w.Life.Stage!=LifeStage.Molting:w.State!=Mood.Rest);frame++) {
+            Mood before=w.State;int screen=w.AreaAt(w.Spider);
+            w.Tick(dt,away);
+            if(w.AreaAt(w.Spider)!=screen) Check(before==Mood.Jump,"crosses only while airborne: "+route);
+            if(w.State==Mood.Jump && before!=Mood.Jump) {
+                hops++;lifted=false;
+                Check(w.InsideAny(w.JumpStart) && w.InsideAny(w.JumpEnd) && w.AreaAt(w.JumpStart)!=w.AreaAt(w.JumpEnd),
+                    "launches and lands on different screens: "+route);
+            }
+            if(w.State==Mood.Jump && !lifted && w.Lift>.01) { lifted=true;visibleHops++; }
+        }
+        Check(hops==expectedHops && visibleHops==hops,"makes "+expectedHops+" visible seam hops: "+route);
+        Check((molt?w.Life.Stage==LifeStage.Molting:w.State==Mood.Rest) && (w.Spider-destination).Length<.01,
+            "resumes its route and reaches its original destination: "+route);
+    }
+    static void CheckSeamHops() {
+        var sideBySide=new[]{new Area(-1000,0,1000,900,1),new Area(0,80,1250,900,1.5)};
+        var stacked=new[]{new Area(-150,0,1050,800,1.5),new Area(75,800,1180,950,1)};
+        var gap=new[]{new Area(-1000,0,1000,900,1),new Area(110,80,1250,900,1.5)};
+        var row=new[]{new Area(-1100,0,1100,900,1),new Area(0,0,1000,900,1.5),new Area(1000,0,1200,900,1.25)};
+        V left=new V(-240,450),right=new V(270,450),upper=new V(550,550),lower=new V(550,1070);
+        foreach(double size in new[]{.2,1,1.8}) foreach(double dt in new[]{.016,.1}) {
+            CheckSeamRoute(sideBySide,left,right,1,size,dt,"shared seam to the right");
+            CheckSeamRoute(sideBySide,right,left,1,size,dt,"shared seam to the left");
+            CheckSeamRoute(stacked,upper,lower,1,size,dt,"offset seam downwards");
+            CheckSeamRoute(stacked,lower,upper,1,size,dt,"offset seam upwards");
+            CheckSeamRoute(gap,left,new V(380,450),1,size,dt,"gap between screens");
+            CheckSeamRoute(row,left,new V(1270,450),2,size,dt,"three screens in a row");
+        }
+        CheckSeamRoute(sideBySide,left,new V(),1,1,.033,"return to molt",true);
+    }
     public static void Run() {
+        CheckSeamHops();
         var w=New(42);w.SpawnFly();V first=w.Fly;w.SpawnFly();Check((w.Fly-first).Length==0,"feeding twice must keep the same prey");
         var seen=new HashSet<Mood>();seen.Add(w.State);
         for(int i=0;i<480;i++) { w.Tick(.025,away);seen.Add(w.State); }
@@ -70,6 +112,6 @@ static class BehaviorRegressionTests {
             var loaded=Settings.Load(folder);Check(loaded.Species=="Zebra" && loaded.Web==.72 && loaded.Meals==14 && loaded.HomeMonitor=="test-right","settings roundtrip");
             settings.Web=.81;Check(settings.Save(folder),"atomic replacement");Check(File.Exists(Path.Combine(folder,"settings.txt.bak")),"previous settings preserved");
         } finally { foreach(string name in new[]{"settings.txt","settings.txt.bak","settings.txt.new"}) { string path=Path.Combine(folder,name);if(File.Exists(path)) File.Delete(path); }if(Directory.Exists(folder)) Directory.Delete(folder); }
-        Console.WriteLine("PASS: "+checks+" regression assertions (hunt phases, jitter, rides, nest, mixed-DPI geometry, unplug, 40-minute simulation, persistence).");
+        Console.WriteLine("PASS: "+checks+" regression assertions (screen hops, hunt phases, jitter, rides, nest, mixed-DPI geometry, unplug, 40-minute simulation, persistence).");
     }
 }

@@ -56,8 +56,10 @@ namespace CornerSpider {
         }
 
         bool Travel(V destination,double speed,double dt) {
-            V routed=AvoidGuestWeb(Route(destination));double s=BodyScale;
-            if((destination-Spider).Length<2*s) { Spider=destination;Speed=0;ResetTravel();return true; }
+            V routed;
+            if(!GroundRoute(destination,out routed)) return false;
+            double s=BodyScale;
+            if(AreaAt(destination)==AreaAt(Spider) && (destination-Spider).Length<2*s) { Spider=destination;Speed=0;ResetTravel();return true; }
             if(!travelReady || (destination-travelDestination).Length>2*s || (routed-travelRoute).Length>2*s) PlanTravel(destination,routed);
             if(!travelMoving) {
                 Speed=0;Face(routed);travelPause-=dt;
@@ -67,7 +69,7 @@ namespace CornerSpider {
             // Retain the deliberate homeward pace around the nest-entry route.
             bool arrived=MoveResolved(destination,travelEnd,Math.Min(State==Mood.Return?190:370,speed*travelFactor),dt,travelSideways?(double?)travelHeading:null);
             if(arrived) { ResetTravel();return true; }
-            if((travelEnd-Spider).Length<.01*s) {
+            if(travelReady && (travelEnd-Spider).Length<.01*s && AreaAt(travelEnd)==AreaAt(Spider)) {
                 Spider=travelEnd;Speed=0;travelMoving=false;
                 travelPause=travelSideways?TravelRange(.16,.42):travelLength>100?TravelRange(.20,.65):TravelRange(.28,.85);
             }

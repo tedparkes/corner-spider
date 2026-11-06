@@ -155,11 +155,14 @@ namespace CornerSpider {
                         // Measure steady operation after warmup and the icon/IO stress burst.
                         process.Refresh();startPrivate=process.PrivateMemorySize64;startCpu=process.TotalProcessorTime.TotalSeconds;startTime=elapsed.Elapsed.TotalSeconds;
                     } else if(stage==3 && host.World.Areas.Count==2) {
-                        var left=host.World.Areas[0];var right=host.World.Areas[1];
-                        double y=Math.Max(left.Y,right.Y)+Math.Min(left.H,right.H)/2;
-                        host.World.HasFly=false;host.World.AutoFeed=false;host.World.CursorPlay=false;host.World.Spider=new V(left.X+left.W-45,y);host.World.Target=new V(right.X+110,y);host.World.State=Mood.Walk;
+                        var from=host.World.Areas[0];var to=host.World.Areas[1];
+                        double margin=(SpiderPose.Radius+32)*host.World.Scale*Math.Max(from.Dpi,to.Dpi);
+                        host.World.HasFly=false;host.World.AutoFeed=false;host.World.CursorPlay=false;
+                        host.World.Spider=from.Clamp(to.Center,margin);host.World.Target=to.Clamp(from.Center,margin);
+                        host.World.JumpStart=host.World.JumpEnd=host.World.Spider;host.World.State=Mood.Walk;
                     } else if(stage==6 && host.World.Areas.Count==2) {
-                        Check(host.World.AreaAt(host.World.Spider)==1,"running desktop pet walks across the real two-monitor seam");
+                        Check(host.World.AreaAt(host.World.JumpStart)==0 && host.World.AreaAt(host.World.JumpEnd)==1 &&
+                            host.World.AreaAt(host.World.Spider)==1,"running desktop pet hops across the real two-monitor seam");
                     } else if(stage==10) {
                         process.Refresh();double duration=elapsed.Elapsed.TotalSeconds-startTime;
                         log.AppendLine("MEASURED: "+duration.ToString("F1")+" seconds, CPU="+((process.TotalProcessorTime.TotalSeconds-startCpu)/duration*100).ToString("F2")+"% of one logical CPU, working set="+(process.WorkingSet64/1048576.0).ToString("F1")+" MiB, private="+(process.PrivateMemorySize64/1048576.0).ToString("F1")+" MiB (delta "+((process.PrivateMemorySize64-startPrivate)/1048576.0).ToString("F1")+").");

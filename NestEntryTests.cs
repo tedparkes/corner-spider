@@ -11,7 +11,9 @@ static class NestEntryTests {
         bool entered=false;int crawlSteps=0;double crawlPhase=0,lastAlong=-10000;
         for(int i=0;i<12000 && w.State!=Mood.Sleep;i++) {
             V before=w.Spider;Mood state=w.State;w.Tick(dt,away);
-            Check((w.Spider-before).Length<200*w.BodyScale*dt+2*w.BodyScale,
+            double maxStep=state==Mood.Jump?(w.JumpEnd-w.JumpStart).Length*dt/w.JumpDuration+.01:
+                200*w.BodyScale*dt+2*w.BodyScale;
+            Check((w.Spider-before).Length<maxStep,
                 "return has no teleport or abrupt position change: "+w.Corner+", size="+w.Scale+
                 ", DPI="+w.Areas[w.HomeArea].Dpi+", "+state+" -> "+w.State+
                 ", from="+before.X+","+before.Y+" to="+w.Spider.X+","+w.Spider.Y);

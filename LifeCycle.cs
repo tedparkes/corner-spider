@@ -58,6 +58,13 @@ namespace CornerSpider {
             if(!MoltingEnabled || Life.Stage!=LifeStage.Quiet || !LifeAvailable) return false;
             ClearPlay();GoHome(false);LifeEnter(LifeStage.PreparingMolt);return true;
         }
+        bool ReturningForLifeEvent {
+            get {
+                return State==Mood.Return || State==Mood.EnterNest ||
+                    (jumpPurpose=="transit" && transitResume==Mood.Return &&
+                    (State==Mood.Reach || State==Mood.Crouch || State==Mood.Jump || State==Mood.Land));
+            }
+        }
         // All clocks count active simulation time. Pausing, closed sessions and
         // suspend do not silently skip a visible molt, visit or brood departure.
         bool TickLife(double dt) {
@@ -70,10 +77,10 @@ namespace CornerSpider {
             }
             if(l.Stage==LifeStage.PreparingMolt) {
                 if(State==Mood.Sleep && (Spider-Home).Length<3*HomeScale) LifeEnter(LifeStage.Molting);
-                else { if(State!=Mood.Return && State!=Mood.EnterNest) GoHome(false);return false; }
+                else { if(!ReturningForLifeEvent) GoHome(false);return false; }
             }
             if((l.Stage==LifeStage.Courting || l.Stage==LifeStage.Laying) && (Spider-Home).Length>3*HomeScale) {
-                l.StageAge=0;if(State!=Mood.Return && State!=Mood.EnterNest) GoHome(false);return false;
+                l.StageAge=0;if(!ReturningForLifeEvent) GoHome(false);return false;
             }
             bool exclusive=LifeBusy;
             if(exclusive) { ClearPlay();Spider=Home;Speed=GaitBlend=0;Angle=desiredAngle=NestAngle;State=Mood.Sleep;StateTime=1;nestInside=true;nestRest=Math.Min(1,nestRest+dt); }

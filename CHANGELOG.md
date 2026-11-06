@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 1.1.0-alpha.10 (local preview)
+
+- Approach, crouch and make a short silk-trailing hop when travelling between
+  monitors, including along a shared edge. Land on the next screen and resume
+  the patrol, hunt or trip home.
+
 ## 1.1.0-alpha.9 (local preview)
 
 - Add **Check for prerelease** for a one-time search for the newest compatible

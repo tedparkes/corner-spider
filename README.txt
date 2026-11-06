@@ -1,8 +1,9 @@
-CORNER SPIDER 1.1.0-alpha.9 - LOCAL PREVIEW
+CORNER SPIDER 1.1.0-alpha.10 - LOCAL PREVIEW
 
 Extract the whole Windows ZIP, then open JumpingSpider.exe or Start-Spider.cmd.
 Requires Windows 10/11 and .NET Framework 4.8. No installer or admin rights.
 This unsigned preview is separate from the published 1.0 release.
+The spider hops between monitors and continues its route after landing.
 Corner webs use new anchored frames, sheets, funnels and retreats. See
 docs/VERIFICATION-CORNER-WEBS.md for the scored design review.
 Web strands now use supersampling and higher-quality downscaling for smoother

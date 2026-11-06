@@ -44,6 +44,7 @@ namespace CornerSpider {
         struct Sample { public V P; public double T; public Sample(V p,double t) { P=p;T=t; } }
         readonly Queue<Sample> samples=new Queue<Sample>();
         string jumpPurpose="ground";
+        Mood transitResume=Mood.Walk;
         bool directAttack,holdingMeal;
         double decision=12,napAfter=100,desiredAngle,rideDuration=8,pixelScale=1,jumpScale=1,jumpStartAngle;
         bool cursorValid;
@@ -100,7 +101,7 @@ namespace CornerSpider {
         }
         public V Clamp(V p) {
             var a=Areas[AreaAt(p)];
-            // No inset at a shared seam: the spider can walk across contiguous monitors.
+            // A shared seam has room on both sides. A hard desktop edge needs clearance.
             double margin=SpiderPose.Radius*Scale*LifeSize*Math.Max(a.Dpi,pixelScale);
             V bounded=a.Clamp(p,0),safe=a.Clamp(p,margin);
             if(InsideAny(new V(bounded.X-margin,bounded.Y)) && InsideAny(new V(bounded.X+margin,bounded.Y))) safe.X=bounded.X;
@@ -276,55 +277,81 @@ namespace CornerSpider {
             JumpDuration=Math.Max(.20,Math.Min(.32,.18+(JumpEnd-Spider).Length/(1200*BodyScale)));
             if(directAttack) JumpDuration=Math.Max(.13,Math.Min(.19,.10+(JumpEnd-Spider).Length/(2600*BodyScale)));
             if(purpose=="release") JumpDuration=Math.Max(.32,Math.Min(.42,.22+(JumpEnd-Spider).Length/(1000*BodyScale)));
+            if(purpose=="transit") JumpDuration=Math.Max(.30,Math.Min(.46,.24+(JumpEnd-Spider).Length/(900*BodyScale)));
             Face(JumpEnd);Enter(Mood.Jump);
         }
         void Face(V dest) { V d=dest-Spider;if(d.Length>1) desiredAngle=Math.Atan2(d.Y,d.X)*180/Math.PI+90; }
         public static double AngleDelta(double from,double to) { return ((to-from)%360+540)%360-180; }
-        V Route(V destination) {
+        V Route(V destination,out V? landing) {
+            landing=null;
             if(cornerWaypoint.HasValue && (State==Mood.Walk || State==Mood.Return)) {
                 if((cornerWaypoint.Value-Spider).Length<3*BodyScale) cornerWaypoint=null;else return cornerWaypoint.Value;
             }
             int from=AreaAt(Spider),to=AreaAt(destination);if(from==to) return destination;
             var a=Areas[from];var b=Areas[to];
-            // Steer through the shared edge/overlap instead of straight into a blank desktop gap.
+            // Approach a point with room for the whole spider before taking off.
             double margin=SpiderPose.Radius*Scale*LifeSize*Math.Max(pixelScale,Math.Max(a.Dpi,b.Dpi));
             double lo=Math.Max(a.Y,b.Y)+margin,hi=Math.Min(a.Y+a.H,b.Y+b.H)-margin;
+            V edge,direction;
             if(hi>=lo) {
-                double x=b.Center.X>a.Center.X?a.X+a.W:a.X;
-                V gate=new V(x,Math.Max(lo,Math.Min(hi,destination.Y)));
-                if((gate-Spider).Length>4*BodyScale) return gate;
-                return new V(b.Center.X>a.Center.X?b.X+3:b.X+b.W-3,gate.Y);
+                bool right=b.Center.X>a.Center.X;
+                direction=new V(right?1:-1,0);
+                double headroom=Math.Min(hi,lo+30*BodyScale);
+                edge=new V(right?a.X+a.W:a.X,Math.Max(headroom,Math.Min(hi,destination.Y)));
+            } else {
+                lo=Math.Max(a.X,b.X)+margin;hi=Math.Min(a.X+a.W,b.X+b.W)-margin;
+                if(hi<lo) return destination; // No shared lane. Hop when the hard edge blocks the approach.
+                bool down=b.Center.Y>a.Center.Y;
+                direction=new V(0,down?1:-1);
+                edge=new V(Math.Max(lo,Math.Min(hi,destination.X)),down?a.Y+a.H:a.Y);
             }
-            lo=Math.Max(a.X,b.X)+margin;hi=Math.Min(a.X+a.W,b.X+b.W)-margin;
-            if(hi>=lo) {
-                double y=b.Center.Y>a.Center.Y?a.Y+a.H:a.Y;
-                V gate=new V(Math.Max(lo,Math.Min(hi,destination.X)),y);
-                if((gate-Spider).Length>4*BodyScale) return gate;
-                return new V(gate.X,b.Center.Y>a.Center.Y?b.Y+3:b.Y+b.H-3);
-            }
-            return destination; // Disconnected/diagonal screens are traversed by a silk hop below.
+            // An intervening screen that shares this edge gets its own landing.
+            V across=edge+direction*.5;
+            int adjacent=AreaAt(across);
+            if(adjacent!=from && Areas[adjacent].Contains(across)) to=adjacent;
+            landing=DisplayLanding(edge,to);
+            return a.Clamp(edge,margin);
+        }
+        V DisplayLanding(V point,int area) {
+            var display=Areas[area];
+            double dpi=Math.Max(display.Dpi,Math.Max(pixelScale,Areas[AreaAt(Spider)].Dpi));
+            double clearance=SpiderPose.Radius*Scale*LifeSize*dpi;
+            return display.Clamp(point,clearance);
+        }
+        void StartDisplayHop(V landing) {
+            transitResume=State;
+            PrepareJump(landing,"transit");
+        }
+        bool GroundRoute(V destination,out V waypoint) {
+            V? landing;
+            V approach=Route(destination,out landing);
+            waypoint=AvoidGuestWeb(approach);
+            if(!landing.HasValue || (waypoint-approach).Length>.001 || (waypoint-Spider).Length>4*BodyScale) return true;
+            StartDisplayHop(landing.Value);
+            return false;
         }
         bool Move(V destination,double speed,double dt) {
-            return MoveResolved(destination,AvoidGuestWeb(Route(destination)),speed,dt,null);
+            V waypoint;
+            return GroundRoute(destination,out waypoint) && MoveResolved(destination,waypoint,speed,dt,null);
         }
         bool MoveResolved(V destination,V dest,double speed,double dt,double? heading) {
             V d=dest-Spider;double distance=d.Length;Face(dest);
             if(heading.HasValue) desiredAngle=heading.Value;
-            if((destination-Spider).Length<2*BodyScale) { Spider=destination;Speed=0;return true; }
+            int from=AreaAt(Spider),to=AreaAt(destination);
+            if((destination-Spider).Length<2*BodyScale) {
+                if(from!=to) { StartDisplayHop(DisplayLanding(destination,to));return false; }
+                Spider=destination;Speed=0;return true;
+            }
             if(distance<.000001*BodyScale) { Speed=0;return false; }
             double targetSpeed=Math.Min(speed*BodyScale,Math.Sqrt(2*1300*BodyScale*distance));
             // Pivot before advancing. Quick starts and strong braking remove the gliding feel.
             if(Math.Abs(AngleDelta(Angle,desiredAngle))>28) targetSpeed=0;
             Speed+=Math.Max(-1800*BodyScale*dt,Math.Min(1000*BodyScale*dt,targetSpeed-Speed));
             double step=Math.Min(distance,Speed*dt);V next=Clamp(Spider+d*(step/distance));
-            if(step>.01 && (next-Spider).Length<.01 && AreaAt(Spider)!=AreaAt(destination)) {
-                // A layout may contain a real gap. Cross it deliberately, never strand the pet.
-                // Turning or braking with planted feet is not a blocked screen edge.
-                bool returning=State==Mood.Return;
-                PrepareJump(Areas[AreaAt(destination)].Clamp(dest,SpiderPose.Radius*BodyScale),"transit");
-                Target=returning?Home:destination;
-                return false;
-            }
+            int nextArea=AreaAt(next);
+            if(nextArea!=from) { StartDisplayHop(DisplayLanding(next,nextArea));return false; }
+            // A diagonal gap has no shared lane. A blocked step at its hard edge starts the hop.
+            if(step>.01 && (next-Spider).Length<.01 && from!=to) { StartDisplayHop(DisplayLanding(dest,to));return false; }
             StepPhase+=(next-Spider).Length/(4.5*BodyScale);Spider=next;return false;
         }
         bool BurstMove(V destination,double speed,double dt,bool stalking) {
@@ -418,7 +445,7 @@ namespace CornerSpider {
                         else { if(jumpPurpose!="transit") jumpPurpose="ground";Enter(Mood.Land); }
                     }break;
                 case Mood.Land:
-                    if(StateTime>=.20) { if(jumpPurpose=="fly") Enter(directAttack && Meal==PreyKind.SmallSpider?Mood.Struggle:Mood.Eat);else if(jumpPurpose=="transit") Enter(WebStage==WebVisit.Approach?Mood.WebApproach:(Target-Home).Length<1?Mood.Return:Mood.Walk);else { decision=Between(2,5);Enter(Mood.Rest); } }break;
+                    if(StateTime>=.20) { if(jumpPurpose=="fly") Enter(directAttack && Meal==PreyKind.SmallSpider?Mood.Struggle:Mood.Eat);else if(jumpPurpose=="transit") Enter(transitResume);else { decision=Between(2,5);Enter(Mood.Rest); } }break;
                 case Mood.Struggle: if(StateTime>=StruggleDuration) Enter(Mood.Eat);break;
                 case Mood.Ride:
                     Carry(dt,cursor,cursorSpeed,cursorInside,clicked);break;

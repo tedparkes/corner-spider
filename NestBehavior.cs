@@ -167,7 +167,7 @@ namespace CornerSpider {
             low=Math.Max(low,Math.Min(a,b));high=Math.Min(high,Math.Max(a,b));return high>low;
         }
         void ReturnToNest(double dt) {
-            if((Spider-Home).Length<2*HomeScale) { Spider=Home;nestInside=true;desiredAngle=NestAngle;Enter(Mood.Sleep);return; }
+            if(AreaAt(Spider)==HomeArea && (Spider-Home).Length<2*HomeScale) { Spider=Home;nestInside=true;desiredAngle=NestAngle;Enter(Mood.Sleep);return; }
             if(UnderNestSilk) { ResetNestRoute();Enter(Mood.EnterNest);return; }
             // Keep the existing perimeter and cross-monitor route until local.
             if(AreaAt(Spider)!=HomeArea || cornerWaypoint.HasValue) {
