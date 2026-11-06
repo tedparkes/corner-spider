@@ -1,5 +1,14 @@
 # Verification: Corner Spider 1.1 previews
 
+## 1.1.0-alpha.13
+
+- The deterministic suite covers the tray shortcut defaults, saved preferences,
+  monitor hops and male orb-weaver visits. Native diagnostics exercise the tray
+  command with Settings closed, open and minimized.
+- The [Alpha 13 release](https://github.com/tedparkes/corner-spider/releases/tag/v1.1.0-alpha.13)
+  records the public package and updater checks. Physical mixed-DPI transitions,
+  sleep/resume and long-term colony use remain open for hands-on testing.
+
 ## 1.1.0-alpha.8
 
 - The Windows build and deterministic behavior suite passed. The local Alpha 8

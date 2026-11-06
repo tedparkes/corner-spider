@@ -2,11 +2,13 @@
 
 ## Unreleased
 
-## 1.1.0-alpha.13 (local preview)
+## 1.1.0-alpha.13
 
 - Add **Check for updates** to the tray menu. It opens Updates and checks the
   selected release channel. The shortcut defaults on in preview builds and off
   in full releases, with an override in Updates.
+- Publish the larger orb webs, monitor hops, movement changes and male orb-weaver
+  visits from Alpha 9 through Alpha 13 as a community prerelease.
 
 ## 1.1.0-alpha.12 (local preview)
 

@@ -1,8 +1,8 @@
 # Corner Spider 1.1 preview
 
 A spider companion for your actual Windows desktop. This is **1.1.0-alpha.13**,
-a local preview. The [1.0 release](https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0)
-remains the stable version. [Published community preview and release notes](https://github.com/tedparkes/corner-spider/releases/tag/v1.1.0-alpha.8).
+a prerelease for community testing. The [1.0 release](https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0)
+remains the stable version. [Download this preview and read its release notes](https://github.com/tedparkes/corner-spider/releases/tag/v1.1.0-alpha.13).
 
 Extract the Windows ZIP and open **JumpingSpider.exe**. Windows 10/11 with .NET
 Framework 4.8; no installer, administrator rights or asset downloads. Startup is
@@ -163,9 +163,10 @@ The tray shortcut defaults on in preview builds and off in full releases.
 Use **Download and restart** when a newer build is offered. Updates require
 your confirmation and a version newer than your current installation.
 
-To update Alpha 2, enable **Include preview releases** and select **Check now**.
-Version 1.0 users can move to the preview by quitting the previous pet and
-extracting this Windows ZIP.
+On Alpha 2 or Alpha 8, enable **Include preview releases** and select **Check now**.
+On Alpha 9 or newer, **Check for prerelease** works without changing your saved
+channel. Version 1.0 users can move to the preview by quitting the previous pet
+and extracting this Windows ZIP.
 
 Checks read the public GitHub releases API for `tedparkes/corner-spider`; downloads
 come from that repository and GitHub's asset servers. No pet history, settings or

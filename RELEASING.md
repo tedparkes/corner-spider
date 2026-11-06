@@ -1,6 +1,9 @@
 # Preparing a GitHub release
 
 The public repository is https://github.com/tedparkes/corner-spider.
+Publish validated Corner Spider alpha builds as GitHub prereleases for testers by
+default, unless the project owner asks to hold a build locally. Use the preview
+branch and leave the stable release marked as latest.
 Nothing is published automatically by the local packaging script or build workflow.
 
 Changes after a preserved tag belong to the next release. Choose its version,
@@ -10,14 +13,12 @@ tags and ZIPs unchanged.
 
 1. Use the existing corner-spider repository, or create an empty repository for a
    deliberate fork. Review LICENSE and the public README before uploading.
-2. Use the prepared local repository on branch `main`, or extract the source
-   bundle into a new repository. The source includes .github, .gitignore, LICENSE
-   and docs. Connect your chosen GitHub repository and push the reviewed commit:
+2. Use the existing repository, or extract the source bundle into a new repository.
+   The source includes .github, .gitignore, LICENSE and docs. Push the reviewed
+   commit and tag to GitHub. For example, the 1.1 preview branch uses:
 
    ```text
-   git remote add origin YOUR_REPOSITORY_URL
-   git push -u origin main
-   git push origin vNEXT_VERSION
+   git push --atomic origin HEAD:refs/heads/preview/1.1 refs/tags/vNEXT_VERSION
    ```
 
    Commit the release contents and create the matching tag before pushing it.
