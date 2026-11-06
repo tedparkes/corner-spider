@@ -1,14 +1,17 @@
 # Corner Spider 1.1 preview
 
-A spider companion for your actual Windows desktop. This is **1.1.0-alpha.8**,
-a prerelease for community testing. The [1.0 release](https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0)
-remains the stable version. [Download this preview and read its release notes](https://github.com/tedparkes/corner-spider/releases/tag/v1.1.0-alpha.8).
+A spider companion for your actual Windows desktop. This is **1.1.0-alpha.9**,
+a local preview. The [1.0 release](https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0)
+remains the stable version. [Published community preview and release notes](https://github.com/tedparkes/corner-spider/releases/tag/v1.1.0-alpha.8).
 
 Extract the Windows ZIP and open **JumpingSpider.exe**. Windows 10/11 with .NET
 Framework 4.8; no installer, administrator rights or asset downloads. Startup is
 opt-in. This community build is unsigned.
 
 ## New in this preview
+
+Alpha.9 adds a one-time prerelease check and gives orb-weaver capture webs about
+twice the room across both dimensions when the display can accommodate them.
 
 Alpha.8 gives the cocoon more room across its body and extends its opening into
 the room. [Same-scale comparison](docs/roomier-cocoon.png).
@@ -139,10 +142,11 @@ Portia leaves. The encounter shares the single prey slot and waits during life e
 
 ## Updates and resident offspring
 
-**Settings > Updates** has Check now, an opt-in daily check, an optional preview
-channel, and Download and restart when a newer compatible release is available.
-Automatic checks never install or restart on their own. The default channel is
-stable; a 1.1 preview will not downgrade to public 1.0.
+**Settings > Updates** has **Check now** and an opt-in daily check. Enable
+**Include prereleases in regular checks** to consider stable and preview builds
+together. **Check for prerelease** looks for the latest compatible preview once.
+Use **Download and restart** when a newer build is offered. Updates require
+your confirmation and a version newer than your current installation.
 
 To update Alpha 2, enable **Include preview releases** and select **Check now**.
 Version 1.0 users can move to the preview by quitting the previous pet and

@@ -9,7 +9,39 @@ static class LifeTests {
     static void Check(bool ok,string why) { checks++;if(!ok) throw new Exception("Living world: "+why); }
     static World Pet(string skin,int seed=42) { var w=new World(1800,1200,seed) { AutoFeed=false,CursorPlay=false };w.SetSpecies(skin);w.Spider=w.Home;return w; }
     static void Step(World w,double seconds) { for(int i=0;i<(int)Math.Ceiling(seconds*10);i++) w.Tick(.1,away); }
+    static void CheckOrbLayout() {
+        var w=Pet("CrossOrb");
+        Check(w.SilkScale==2 && w.BodyScale==1,"a main orb doubles its span without enlarging its spider");
+        foreach(string corner in Settings.Corners) {
+            w.Corner=corner;
+            w.UpdateHome();
+            var a=w.Areas[w.HomeArea];
+            double edgeX=corner.EndsWith("Right")?a.X+a.W:a.X;
+            double edgeY=corner.StartsWith("Top")?a.Y:a.Y+a.H;
+            Check(Math.Abs(w.Home.X-edgeX)==320 && Math.Abs(w.Home.Y-edgeY)==320,
+                "the enlarged orb hub tracks both anchored edges: "+corner);
+        }
+        w.Corner="BottomLeft";
+        w.UpdateHome();
+        w.SetSpecies("CrossOrbMale");
+        Check(w.SilkScale==1 && w.Home.X==160 && w.Home.Y==1040,"switching to the male restores the travel silk inset");
+        w.SetSpecies("CrossOrb");
+        Check(w.SilkScale==2 && w.Home.X==320 && w.Home.Y==880,"switching back restores the enlarged capture web");
+        w.SetSpecies("SouthernWidow");
+        Check(w.SilkScale==1 && w.Home.X==160 && w.Home.Y==1040,"switching to a cobweb restores its own inset");
+
+        var small=new Area(-900,20,900,640,2);
+        w.ConfigureDisplays(new[]{new Area(0,0,1920,1080,1),small},1);
+        w.SetScale(1.8);
+        w.SetSpecies("CrossOrb");
+        double x=w.Home.X-small.X,y=small.Y+small.H-w.Home.Y;
+        Check(w.SilkScale<w.HomeScale*2 && x+World.OrbRoomReach*w.SilkScale<=small.W+.00001 &&
+            y+World.OrbRoomReach*w.SilkScale<=small.H+.00001,"the full orb fits a smaller high-DPI work area");
+        double margin=SpiderPose.Radius*w.HomeScale*1.16;
+        Check(x+.00001>=margin && y+.00001>=margin,"the fitted hub leaves room for the legs after a molt");
+    }
     public static void Run() {
+        CheckOrbLayout();
         Check(SkinCatalog.All.Length==46 && SkinCatalog.Categories.Length==5,"complete expanded catalog");
         foreach(var s in SkinCatalog.All) {
             Check(s.MateId.Length>0,"every species has both sexes: "+s.Id);

@@ -55,6 +55,28 @@ namespace CornerSpider {
         V? cornerWaypoint;
         public double BodyScale { get { return Scale*pixelScale*LifeSize; } }
         public double HomeScale { get { return (IsColonyResident?ResidentWebScale:Scale)*Areas[Math.Min(HomeArea,Areas.Count-1)].Dpi; } }
+        internal const double OrbCornerInset=160, OrbRoomReach=320;
+        internal bool HasLargeOrb {
+            get {
+                var skin=SkinCatalog.Get(Species);
+                return !IsColonyResident && !skin.Male && (skin.WebKind==WebKind.Orb || skin.WebKind==WebKind.Crystal);
+            }
+        }
+        double OrbHubClearance(Area area) {
+            // Reserve room for the largest post-molt pose without moving the
+            // silk when the spider grows or settles back to its regular size.
+            return Math.Min(Math.Min(area.W,area.H)*.5,SpiderPose.Radius*HomeScale*1.16);
+        }
+        internal double SilkScale {
+            get {
+                double scale=HomeScale;
+                if(!HasLargeOrb) return scale;
+                var area=Areas[HomeArea];
+                double span=Math.Min(area.W,area.H);
+                return Math.Min(scale*2,Math.Min(span/(OrbCornerInset+OrbRoomReach),
+                    (span-OrbHubClearance(area))/OrbRoomReach));
+            }
+        }
         // The retreat runs diagonally between the two adjacent desktop edges.
         public double NestAngle {
             get {
@@ -96,7 +118,7 @@ namespace CornerSpider {
         }
         public double CornerDistance { get { int a=AreaAt(Spider);return (Spider-Perch(a,NearestCorner(a,Spider))).Length; } }
         void ChoosePerch() {
-            if(WebDweller || IsColonyResident) { Target=Clamp(Home+new V(Between(-48,48),Between(-48,48))*HomeScale);Enter(Mood.Walk);return; }
+            if(WebDweller || IsColonyResident) { Target=Clamp(Home+new V(Between(-48,48),Between(-48,48))*Math.Min(HomeScale,SilkScale));Enter(Mood.Walk);return; }
             int area=AreaAt(Spider),corner=NearestCorner(area,Spider);
             double choice=random.NextDouble();
             if(Areas.Count>1 && choice<.10) { area=(area+1)%Areas.Count;corner=NearestCorner(area,Spider); }
@@ -126,6 +148,7 @@ namespace CornerSpider {
             // and Portia's platforms keep the space needed on their far side.
             double insetX=Math.Min((HasCornerSleeve?48:WebDweller?160:116)*s,a.W*.5);
             double insetY=Math.Min((HasCornerSleeve?48:WebDweller?160:144)*s,a.H*.5);
+            if(HasLargeOrb) insetX=insetY=Math.Max(OrbCornerInset*SilkScale,OrbHubClearance(a));
             V home=new V(Corner.EndsWith("Right")?a.X+a.W-insetX:a.X+insetX,
                 Corner.StartsWith("Top")?a.Y+insetY:a.Y+a.H-insetY);
             if((home-Home).Length>.01) nestInside=false;
@@ -191,7 +214,7 @@ namespace CornerSpider {
                 double a=Between(0,Math.PI*2);V p=Clamp(Spider+new V(Math.Cos(a),Math.Sin(a))*Between(far?320:145,far?540:270)*BodyScale);
                 if((p-Spider).Length>distance) { best=p;distance=(p-Spider).Length; }
             }
-            if(WebDweller) best=Clamp(Home+new V(Between(-85,85),Between(-85,85))*HomeScale);
+            if(WebDweller) best=Clamp(Home+new V(Between(-85,85),Between(-85,85))*Math.Min(HomeScale,SilkScale));
             Fly=best;HasFly=true;FlyAge=0;FlyPhase=Between(0,6.28);NextFly=Clock+Between(.7,1.3)*FlyInterval;
             BeginPrey(kind);
             if(UnderNestSilk) { StartNestExit();napAfter=Clock+Between(100,170); }

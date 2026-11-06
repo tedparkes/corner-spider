@@ -20,10 +20,10 @@ namespace CornerSpider {
             if(!SkinCatalog.Contains(id) || species==id) return;
             if(WebStage!=WebVisit.None) CancelWebVisit();
             if(State==Mood.SpeciesAct) { decision=2;Enter(Mood.Rest); }
-            bool previousBusy=LifeBusy,previousWebDweller=WebDweller,previousCornerSleeve=HasCornerSleeve;
+            bool previousBusy=LifeBusy,previousWebDweller=WebDweller,previousCornerSleeve=HasCornerSleeve,previousLargeOrb=HasLargeOrb;
             species=id;behavior=BehaviorCatalog.Get(id);nextSpeciesMoment=Clock+28;NextWebVisit=Clock+100;
             if(previousBusy) { nestInside=false;Wake(); }
-            if((previousWebDweller!=WebDweller || previousCornerSleeve!=HasCornerSleeve) && !IsColonyResident) {
+            if((previousWebDweller!=WebDweller || previousCornerSleeve!=HasCornerSleeve || previousLargeOrb!=HasLargeOrb) && !IsColonyResident) {
                 bool goingHome=State==Mood.Return || State==Mood.EnterNest || State==Mood.ExitNest || State==Mood.Sleep;
                 UpdateHome();
                 if(goingHome) GoHome(false);

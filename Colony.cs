@@ -46,6 +46,14 @@ namespace CornerSpider {
         bool ColonySiteFree(ColonyRecord r,ColonyPet ignore) {
             V p=ColonyHome(r);var a=Areas[r.Screen];double scale=Scale*a.Dpi;
             if(Math.Min(a.W,a.H)<260*scale*.65 || (p-Home).Length<260*HomeScale || GuestContains(p,170*scale*.65)) return false;
+            if(r.Screen==HomeArea && HasLargeOrb) {
+                V corner=new V(Corner.EndsWith("Right")?a.X+a.W:a.X,Corner.StartsWith("Top")?a.Y:a.Y+a.H);
+                V hub=Home-corner,site=p-corner;
+                // Leave room for the resident's own silk outside the main orb's
+                // triangular frame, including the two longer wall attachments.
+                double reach=Math.Max(Math.Abs(hub.X),Math.Abs(hub.Y))+OrbRoomReach*SilkScale;
+                if(Math.Abs(site.X)+Math.Abs(site.Y)<reach+110*scale*.65) return false;
+            }
             V outside=r.Edge==0?new V(p.X,a.Y-2):r.Edge==1?new V(a.X+a.W+2,p.Y):r.Edge==2?new V(p.X,a.Y+a.H+2):new V(a.X-2,p.Y);
             if(InsideAny(outside)) return false; // A monitor seam is not a wall to anchor silk to.
             foreach(var other in Residents) if(other!=ignore && (ColonyHome(other.Record)-p).Length<230*Math.Max(scale,Scale*Areas[Math.Min(other.Record.Screen,Areas.Count-1)].Dpi)*.65) return false;

@@ -49,7 +49,8 @@ namespace CornerSpider {
             var empty=new DrawingGroup();empty.Freeze();var blank=PetCanvas.CacheSilk(empty,1);
             Check(blank.Image==null && blank.Drawing.IsFrozen,"an empty web uses no bitmap");
             foreach(var skin in SkinCatalog.All) {
-                var w=new World(900,650,42);w.SetSpecies(skin.Id);w.Web=1;var canvas=new PetCanvas();SilkBitmap(canvas,w,skin.Id);
+                // Leave room for the larger orb to resize at both pet sizes.
+                var w=new World(1900,1800,42);w.SetSpecies(skin.Id);w.Web=1;var canvas=new PetCanvas();SilkBitmap(canvas,w,skin.Id);
                 int built=PetCanvas.SilkRasterBuilds;
                 for(int i=0;i<5;i++) SilkBitmap(canvas,w,skin.Id);
                 Check(PetCanvas.SilkRasterBuilds==built,"unchanged frames reuse silk samples: "+skin.Id);

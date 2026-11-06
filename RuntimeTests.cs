@@ -96,6 +96,10 @@ namespace CornerSpider {
                         settingsPanel.KeepBabiesCheck.IsChecked=true;settingsPanel.ResidentLimitSlider.Value=10;Check(host.World.KeepBabies && host.World.ResidentLimit==10,"resident checkbox and population slider apply live");
                         settingsPanel.AutoUpdatesCheck.IsChecked=true;settingsPanel.PreviewUpdatesCheck.IsChecked=true;Check(host.Settings.AutoUpdateCheck && host.Settings.PreviewUpdates,"automatic check and preview channel preferences apply");
                         settingsPanel.CheckUpdateButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));Check(host.Updates.Status.Contains("diagnostics") && !settingsPanel.InstallUpdateButton.IsEnabled,"manual check handler is wired and diagnostics do not contact the network");
+                        settingsPanel.PreviewUpdatesCheck.IsChecked=false;
+                        settingsPanel.CheckPrereleaseButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                        Check(host.Updates.Status.Contains("prerelease checks are disabled in diagnostics") && !host.Settings.PreviewUpdates && !settingsPanel.InstallUpdateButton.IsEnabled,"one-time prerelease check uses the preview channel without changing the saved preference");
+                        settingsPanel.PreviewUpdatesCheck.IsChecked=true;
                         foreach(string family in SkinCatalog.Categories) { settingsPanel.CategorySelector.SelectedItem=family;Check(settingsPanel.SpeciesSelector.Items.Count==SkinCatalog.InCategory(family).Length && SkinCatalog.Get(host.World.Species).Category==family,"category filters skins and updates the live pet: "+family); }
                         settingsPanel.CategorySelector.SelectedItem="Jumping spiders";
                         settingsPanel.MoltSlider.Value=12;settingsPanel.MateSlider.Value=24;Check(host.World.MoltHours==12 && host.World.MateHours==24,"life interval sliders update the world");

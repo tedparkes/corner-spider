@@ -23,6 +23,12 @@ static class UpdateTests {
         foreach(string bad in new[]{"../1.0.0","1.1","01.0.0","1.1.0-alpha.01","1.2.3.exe",null}) Check(ReleaseVersion.Parse(bad)==null,"invalid version rejected");
         string feed="["+Release("1.0.0",false)+","+Release("1.2.0-alpha.2",true)+","+Release("1.1.0",false)+"]";
         Check(UpdateCore.SelectRelease(feed,false).Version.Text=="1.1.0","stable channel ignores previews");Check(UpdateCore.SelectRelease(feed,true).Version.Text=="1.2.0-alpha.2","preview channel considers newer prereleases");
+        string stable=Release("1.2.0",false),draft=Release("1.3.0-alpha.1",true).Replace("\"draft\":false","\"draft\":true");
+        string incomplete=Release("1.3.0-alpha.2",true).Replace("SHA256SUMS.txt","other.txt");
+        string mixed="["+Release("1.2.0-alpha.10",true)+","+stable+","+Release("1.2.0-alpha.2",true)+","+draft+","+incomplete+"]";
+        Check(UpdateCore.SelectRelease(mixed,ReleaseChannel.PrereleasesOnly).Version.Text=="1.2.0-alpha.10","one-time check finds the newest complete published prerelease even with a newer stable release");
+        Check(UpdateCore.SelectRelease(mixed,true).Version.Text=="1.2.0","regular checks that include prereleases still prefer a newer stable release");
+        Check(UpdateCore.SelectRelease("["+stable+"]",ReleaseChannel.PrereleasesOnly)==null,"a prerelease check does not return a stable package");
         Check(UpdateCore.SelectRelease("["+Release("9.0.0",false,"https://example.com")+"]",true)==null,"foreign download links are not trusted");
         Check(UpdateCore.SelectRelease("["+Release("1.0.0",false)+"]",false).Version.CompareTo(ReleaseVersion.Parse("1.1.0-alpha.2"))<0,"published 1.0 is not an update for this preview");
         string hash=new string('a',64);Check(UpdateCore.ExpectedHash(hash+"  app.zip\n","app.zip")==hash,"exact checksum selected");Reject(delegate { UpdateCore.ExpectedHash(hash+"  app.zip\n"+hash+"  app.zip","app.zip"); },"ambiguous checksums rejected");

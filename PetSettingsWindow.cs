@@ -17,7 +17,7 @@ namespace CornerSpider {
         public readonly Slider MoltSlider,MateSlider;
         public readonly CheckBox KeepBabiesCheck,AutoUpdatesCheck,PreviewUpdatesCheck;
         public readonly Slider ResidentLimitSlider;
-        public readonly Button CheckUpdateButton,InstallUpdateButton;
+        public readonly Button CheckUpdateButton,CheckPrereleaseButton,InstallUpdateButton;
         public readonly CheckBox FliesCheck,RidesCheck,AllMonitorsCheck,StartupCheck,TraitsCheck,WebVisitsCheck;
         public readonly Button WebVisitButton,SupportButton;
         public readonly SettingsPreview Preview=new SettingsPreview();
@@ -166,7 +166,7 @@ namespace CornerSpider {
             var reset=new Button { Content="Reset preferences",HorizontalAlignment=HorizontalAlignment.Left,Padding=new Thickness(14,7,14,7),Margin=new Thickness(0,12,0,8) };desktop.Children.Add(reset);reset.Click+=delegate { ResetPreferences(); };
             Note(desktop,"Restores appearance, interaction and screen defaults. Keeps your hammock progress, meals and Windows startup choice.");
             AddTab("Desktop",desktop);
-            Action unsubscribeUpdates;AddTab("Updates",UpdateSettings.Create(host,out AutoUpdatesCheck,out PreviewUpdatesCheck,out CheckUpdateButton,out InstallUpdateButton,out unsubscribeUpdates));
+            Action unsubscribeUpdates;AddTab("Updates",UpdateSettings.Create(host,out AutoUpdatesCheck,out PreviewUpdatesCheck,out CheckUpdateButton,out CheckPrereleaseButton,out InstallUpdateButton,out unsubscribeUpdates));
             Closed+=delegate { unsubscribeUpdates(); };
             var help=NewPanel();help.Children.Add(Text("A quiet little desktop companion",21));
             Note(help,"Approach an awake spider and hold still for the configured invitation delay. The finger fades in; the spider can jump on, hang, climb and wander. Move gently to carry it. A click lets it plan an upward hop; a fast move startles it. The finger holds still until takeoff, and your pointer returns immediately. Your clicks still reach your apps.");

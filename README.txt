@@ -1,4 +1,4 @@
-CORNER SPIDER 1.1.0-alpha.8 - COMMUNITY PRERELEASE
+CORNER SPIDER 1.1.0-alpha.9 - LOCAL PREVIEW
 
 Extract the whole Windows ZIP, then open JumpingSpider.exe or Start-Spider.cmd.
 Requires Windows 10/11 and .NET Framework 4.8. No installer or admin rights.
@@ -60,9 +60,10 @@ Free MIT-licensed software. Pet data stays local; no telemetry. Optional update
 checks contact GitHub. Automatic checks are off by default.
 The optional support button shows only the original Cash App QR.
 
-UPDATES: Settings > Updates offers Check now, optional daily checks and
-Download and restart. Automatic checks only look for updates. To update Alpha 2,
-enable Include preview releases and select Check now. Version 1.0 users can move
+UPDATES: Settings > Updates offers Check now and optional daily checks. Enable
+Include prereleases in regular checks to consider stable and preview builds.
+Check for prerelease looks for the latest compatible preview once. Choose
+Download and restart when a newer build is offered. Version 1.0 users can move
 to the preview with a manual ZIP download.
 Life & home adds Let babies stay and build their own nests, with a 1-12 resident
 limit. Residents grow, move independently and persist across sessions. Switching

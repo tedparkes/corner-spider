@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 1.1.0-alpha.9 (local preview)
+
+- Add **Check for prerelease** for a one-time search for the newest compatible
+  GitHub preview. The saved **Include prereleases in regular checks** option
+  covers manual and daily checks. Installation still requires a newer version
+  and confirmation through **Download and restart**.
+- Enlarge orb-weaver capture webs to about twice their previous width and height
+  where the selected monitor has room. Silk still attaches to both corner edges.
+
 ## 1.1.0-alpha.8
 
 - Widen and lengthen cocoon sleeves so they read as shelters for the spider.

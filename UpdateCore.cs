@@ -35,6 +35,7 @@ namespace CornerSpider {
         public string Tag,ZipName,ZipUrl,ChecksumsUrl,PageUrl;
         public ReleaseVersion Version;
     }
+    public enum ReleaseChannel { Stable,IncludePrereleases,PrereleasesOnly }
     public static class UpdateCore {
         public const string Repository="https://github.com/tedparkes/corner-spider";
         public const string Feed="https://api.github.com/repos/tedparkes/corner-spider/releases?per_page=100";
@@ -42,10 +43,15 @@ namespace CornerSpider {
         static JavaScriptSerializer Json() { return new JavaScriptSerializer { MaxJsonLength=2*1024*1024,RecursionLimit=40 }; }
         static string Field(IDictionary<string,object> d,string key) { object v;return d.TryGetValue(key,out v)?v as string:null; }
         public static ReleaseInfo SelectRelease(string json,bool previews) {
+            return SelectRelease(json,previews?ReleaseChannel.IncludePrereleases:ReleaseChannel.Stable);
+        }
+        public static ReleaseInfo SelectRelease(string json,ReleaseChannel channel) {
             var list=Json().DeserializeObject(json) as object[];if(list==null) throw new InvalidDataException("GitHub returned an unexpected release list.");ReleaseInfo best=null;
             foreach(object item in list) {
                 var d=item as IDictionary<string,object>;object draft,pre,assets;if(d==null || !d.TryGetValue("draft",out draft) || !(draft is bool) || (bool)draft || !d.TryGetValue("prerelease",out pre) || !(pre is bool) || string.IsNullOrEmpty(Field(d,"published_at"))) continue;
-                string tag=Field(d,"tag_name");var version=ReleaseVersion.Parse(tag);if(version==null || (!previews && ((bool)pre || version.Preview.Length>0))) continue;
+                string tag=Field(d,"tag_name");var version=ReleaseVersion.Parse(tag);if(version==null) continue;
+                bool prerelease=(bool)pre || version.Preview.Length>0;
+                if((channel==ReleaseChannel.Stable && prerelease) || (channel==ReleaseChannel.PrereleasesOnly && !prerelease)) continue;
                 var candidate=new ReleaseInfo { Tag=tag,Version=version,ZipName="CornerSpider-v"+version.Text+"-Windows.zip",PageUrl=Repository+"/releases/tag/"+tag };
                 if(!d.TryGetValue("assets",out assets) || !(assets is object[])) continue;
                 foreach(object asset in (object[])assets) { var a=asset as IDictionary<string,object>;if(a==null) continue;string name=Field(a,"name"),url=Field(a,"browser_download_url");

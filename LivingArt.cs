@@ -61,17 +61,18 @@ namespace CornerSpider {
             DrawMeal(d,w);d.Pop();d.Pop();d.Pop();
         }
         void DrawLivingSilk(DrawingContext d,World w,string species) {
-            var skin=SkinCatalog.Get(species);var area=w.Areas[w.HomeArea];double scale=w.HomeScale;
+            var skin=SkinCatalog.Get(species);var area=w.Areas[w.HomeArea];double scale=w.SilkScale;
+            double threadWidth=Math.Min(1,w.HomeScale/scale);
             double ex=Math.Abs((w.Corner.EndsWith("Right")?area.X+area.W:area.X)-w.Home.X)/scale;
             double ey=Math.Abs((w.Corner.StartsWith("Top")?area.Y:area.Y+area.H)-w.Home.Y)/scale;
             int layers=w.WebLayers,baseLevel=(int)(w.Web*30);
-            string key=species+":"+layers+":"+baseLevel+":"+ex.ToString("F1")+":"+ey.ToString("F1");
+            string key=species+":"+layers+":"+baseLevel+":"+ex.ToString("F1")+":"+ey.ToString("F1")+":"+threadWidth.ToString("F3")+":"+w.IsColonyResident;
             if(key!=livingSilkKey) {
                 LivingSilkBuilds++;
                 livingSilkKey=key;livingSilk=new DrawingGroup();using(var c=livingSilk.Open()) {
                     double growth=.35+.65*w.Web;
                     if(skin.WebKind==WebKind.Orb || skin.WebKind==WebKind.Crystal)
-                        DrawCornerOrb(c,skin,ex,ey,growth,layers,w.IsColonyResident);
+                        DrawCornerOrb(c,skin,ex,ey,growth,layers,w.IsColonyResident,threadWidth);
                     else if(skin.WebKind!=WebKind.Retreat)
                         DrawCornerSheet(c,skin,ex,ey,growth,layers,w.IsColonyResident);
                 }livingSilk.Freeze();livingSilkImage=new SilkImage();

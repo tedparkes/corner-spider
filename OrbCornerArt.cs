@@ -7,7 +7,7 @@ namespace CornerSpider {
         // A hub at the pet's resting position, with two real mounting surfaces
         // in local space. The long open span is pulled in by radial tension.
         static void DrawCornerOrb(DrawingContext drawing, SkinProfile skin, double ex, double ey,
-            double growth, int layers, bool resident) {
+            double growth, int layers, bool resident, double threadWidth) {
             bool golden = skin.Pattern == "Golden";
             bool garden = skin.Pattern == "Garden";
             bool marble = skin.Pattern == "Marble";
@@ -21,8 +21,8 @@ namespace CornerSpider {
                 drawing.PushTransform(new MatrixTransform(0, 1, 1, 0, 0, 0));
             }
 
-            double upper = Math.Min(160, ey);
-            double side = resident ? 105 : Math.Min(160, ex);
+            double upper = Math.Min(World.OrbCornerInset, ey);
+            double side = resident ? 105 : Math.Min(World.OrbCornerInset, ex);
             if (skin.Male) {
                 DrawOrbTravelSilk(drawing, ex, ey, side, upper, resident, golden, layers);
                 if (swap) drawing.Pop();
@@ -39,7 +39,7 @@ namespace CornerSpider {
                 new V(-side * .21, farY), new V(-side, farY * .37), new V(-side * 1.13, -upper * .37)
             } : new[] {
                 new V(-ex * .80, -ey + topGap * 1.30), new V(-ex * .43, -ey + topGap * 1.65),
-                new V(ex * .14, -ey + topGap * 1.11), new V(ex * .75, -ey + topGap * 1.50),
+                new V(side * .14, -ey + topGap * 1.11), new V(side * .75, -ey + topGap * 1.50),
                 new V(farX, -ey + topGap * .66), new V(-ex + sideGap * .70, farY),
                 new V(-ex + sideGap * 1.49, ey * .59), new V(-ex + sideGap * 1.12, -ey * .02),
                 new V(-ex + sideGap * 1.35, -ey * .59), new V(-ex + sideGap * .90, -ey * .85)
@@ -62,7 +62,7 @@ namespace CornerSpider {
                     path.BezierTo(OrbPoint(c), OrbPoint(d), OrbPoint(b), true, false);
                 }
             }
-            OrbStroke(drawing, frame, frameColor, .59, "#54394748");
+            OrbStroke(drawing, frame, frameColor, .59, "#54394748", threadWidth);
             if (!resident) {
                 var bridge = new StreamGeometry();
                 using (var path = bridge.Open()) {
@@ -72,7 +72,7 @@ namespace CornerSpider {
                     path.BezierTo(OrbPoint(c), OrbPoint(d), OrbPoint(b), true, false);
                 }
                 drawing.PushOpacity(.77);
-                OrbStroke(drawing, bridge, frameColor, .51, "#48394748");
+                OrbStroke(drawing, bridge, frameColor, .51, "#48394748", threadWidth);
                 drawing.Pop();
             }
 
@@ -95,7 +95,7 @@ namespace CornerSpider {
                     OrbLine(path, anchor - pad, anchor + pad);
                 }
             }
-            OrbStroke(drawing, mounts, frameColor, .49, "#49394748");
+            OrbStroke(drawing, mounts, frameColor, .49, "#49394748", threadWidth);
 
             int spokes = golden ? 34 : crystal ? 20 : marble || cross ? 25 : garden ? 27 : 29;
             int turns = cross ? (resident ? 8 : 11) : golden ? 22 : crystal ? 12 : marble ? 14 : garden ? 17 : 16;
@@ -137,7 +137,7 @@ namespace CornerSpider {
                     OrbLine(path, cross ? ray * 3.5 : new V(0, 0), tips[i]);
                 }
             }
-            OrbStroke(drawing, radii, radialColor, cross ? .34 : .45, cross ? "#303c4a4c" : "#403c4a4c");
+            OrbStroke(drawing, radii, radialColor, cross ? .34 : .45, cross ? "#303c4a4c" : "#403c4a4c", threadWidth);
 
             var spiral = new StreamGeometry();
             using (var path = spiral.Open()) {
@@ -163,7 +163,7 @@ namespace CornerSpider {
                     a = b;
                 }
             }
-            OrbCaptureStroke(drawing, spiral, catchColor, cross);
+            OrbCaptureStroke(drawing, spiral, catchColor, cross, threadWidth);
 
             // Nonsticky hub turns are separated from the capture spiral.
             var hub = new StreamGeometry();
@@ -178,7 +178,7 @@ namespace CornerSpider {
                     path.LineTo(OrbPoint(rays[ray] * r), true, false);
                 }
             }
-            OrbStroke(drawing, hub, frameColor, cross ? .30 : .40, cross ? "#30404c4d" : "#42404c4d");
+            OrbStroke(drawing, hub, frameColor, cross ? .30 : .40, cross ? "#30404c4d" : "#42404c4d", threadWidth);
 
             if (garden) {
                 for (int sideOfHub = -1; sideOfHub <= 1; sideOfHub += 2) {
@@ -187,8 +187,8 @@ namespace CornerSpider {
                     for (int i = 1; i <= steps; i++) {
                         V b = new V((i % 2 == 0 ? -1 : 1) * (4.4 - i * .19),
                             sideOfHub * (13 + i * 3.15));
-                        Line(drawing, "#64c9d2c6", 1.25, a.X, a.Y, b.X, b.Y);
-                        Line(drawing, "#dcf4f3e7", .65, a.X, a.Y, b.X, b.Y);
+                        Line(drawing, "#64c9d2c6", 1.25*threadWidth, a.X, a.Y, b.X, b.Y);
+                        Line(drawing, "#dcf4f3e7", .65*threadWidth, a.X, a.Y, b.X, b.Y);
                         a = b;
                     }
                 }
@@ -196,10 +196,10 @@ namespace CornerSpider {
             if (marble) {
                 // A short off-orb signal line leads toward a crevice at the mounting surface.
                 V crevice = new V(rim[1].X, -ey + topGap * .20);
-                Line(drawing, frameColor, .68, 0, 0, crevice.X, crevice.Y);
+                Line(drawing, frameColor, .68*threadWidth, 0, 0, crevice.X, crevice.Y);
                 for (int i = 0; i < 7; i++) {
                     double s = (i - 3) * 1.5;
-                    Curve(drawing, "#91e1e6db", .34, new Point(crevice.X + s, -ey),
+                    Curve(drawing, "#91e1e6db", .34*threadWidth, new Point(crevice.X + s, -ey),
                         new Point(crevice.X + s - 1, -ey + 6), new Point(crevice.X - s + 2, -ey + 9),
                         new Point(crevice.X - s, -ey + topGap * 1.1));
                 }
@@ -217,7 +217,7 @@ namespace CornerSpider {
                         OrbLine(path, tips[k] * (t + .04), tips[k] * Math.Min(1, t + .22));
                     }
                 }
-                OrbStroke(drawing, repairs, "#78e1e9df", .32, "#2d3c4a4c");
+                OrbStroke(drawing, repairs, "#78e1e9df", .32, "#2d3c4a4c", threadWidth);
             }
             if (swap) drawing.Pop();
         }
@@ -327,15 +327,16 @@ namespace CornerSpider {
             path.LineTo(OrbPoint(b), true, false);
         }
 
-        static void OrbStroke(DrawingContext drawing, StreamGeometry geometry, string tint, double width, string shade) {
+        static void OrbStroke(DrawingContext drawing, StreamGeometry geometry, string tint, double width, string shade,
+            double threadWidth = 1) {
             geometry.Freeze();
-            drawing.DrawGeometry(null, P(shade, width + .53), geometry);
-            drawing.DrawGeometry(null, P(tint, width), geometry);
+            drawing.DrawGeometry(null, P(shade, (width + .53)*threadWidth), geometry);
+            drawing.DrawGeometry(null, P(tint, width*threadWidth), geometry);
         }
 
-        static void OrbCaptureStroke(DrawingContext drawing, StreamGeometry geometry, string tint, bool cross) {
+        static void OrbCaptureStroke(DrawingContext drawing, StreamGeometry geometry, string tint, bool cross, double threadWidth) {
             geometry.Freeze();
-            drawing.DrawGeometry(null, P(cross ? "#323c4a4c" : "#423c4a4c", cross ? .57 : .74), geometry);
+            drawing.DrawGeometry(null, P(cross ? "#323c4a4c" : "#423c4a4c", (cross ? .57 : .74)*threadWidth), geometry);
             var silk = (Color)ColorConverter.ConvertFromString(tint);
             var sheen = new LinearGradientBrush {
                 MappingMode = BrushMappingMode.Absolute,
@@ -348,7 +349,7 @@ namespace CornerSpider {
                     i / (double)(brightness.Length - 1)));
             }
             sheen.Freeze();
-            var pen = new Pen(sheen, cross ? .30 : .35) { StartLineCap = PenLineCap.Round, EndLineCap = PenLineCap.Round };
+            var pen = new Pen(sheen, (cross ? .30 : .35)*threadWidth) { StartLineCap = PenLineCap.Round, EndLineCap = PenLineCap.Round };
             pen.Freeze();
             drawing.DrawGeometry(null, pen, geometry);
         }
