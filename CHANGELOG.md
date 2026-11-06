@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 1.1.0-alpha.11 (local preview)
+
+- Give jumpers a pause between runs to raise their front body, check two
+  directions, and settle before moving on.
+- Give web spiders articulated feet with separate lift, reach and plant phases.
+  Orb weavers test the silk at the hub and follow visible spokes. Widows and
+  funnel weavers approach prey at distinct paces.
+- Blend the leg poses into and out of hops for a smoother push and landing.
+
 ## 1.1.0-alpha.10 (local preview)
 
 - Approach, crouch and make a short silk-trailing hop when travelling between

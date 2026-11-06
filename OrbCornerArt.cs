@@ -97,9 +97,9 @@ namespace CornerSpider {
             }
             OrbStroke(drawing, mounts, frameColor, .49, "#49394748", threadWidth);
 
-            int spokes = golden ? 34 : crystal ? 20 : marble || cross ? 25 : garden ? 27 : 29;
+            int spokes = OrbRadials.Count(skin);
             int turns = cross ? (resident ? 8 : 11) : golden ? 22 : crystal ? 12 : marble ? 14 : garden ? 17 : 16;
-            double phase = golden ? .38 : marble ? .73 : garden ? .17 : crystal ? 1.26 : .51;
+            double phase = OrbRadials.Phase(skin);
             V openSpan = rim[5] - rim[4];
             V towardOpening = resident ? new V(0, 1) : new V(openSpan.Y, -openSpan.X) * (1 / openSpan.Length);
             V towardCorner = towardOpening * -1;
@@ -117,9 +117,7 @@ namespace CornerSpider {
             var radii = new StreamGeometry();
             using (var path = radii.Open()) {
                 for (int i = 0; i < spokes; i++) {
-                    double irregularity = .27 * Math.Sin(i * 2.39 + phase) + .13 * Math.Sin(i * 4.16);
-                    double angle = (i + irregularity) * (2 * Math.PI / spokes) + phase;
-                    V ray = new V(Math.Cos(angle), Math.Sin(angle));
+                    V ray = OrbRadials.Ray(i, spokes, phase);
                     rays[i] = ray;
                     tips[i] = OrbRimHit(rim, ray, resident, crystal);
                     double along = (ray.X * towardOpening.X + ray.Y * towardOpening.Y) / halfDepth;

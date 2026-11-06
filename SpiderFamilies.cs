@@ -3,6 +3,29 @@ using System.Collections.Generic;
 
 namespace CornerSpider {
     public enum WebKind { Retreat, Orb, Tangle, Sheet, Crystal }
+    internal static class OrbRadials {
+        internal static int Count(SkinProfile skin) {
+            switch(skin.Pattern) {
+                case "Golden":return 34;
+                case "Cross":case "Marble":return 25;
+                case "Garden":return 27;
+                default:return skin.WebKind==WebKind.Crystal?20:29;
+            }
+        }
+        internal static double Phase(SkinProfile skin) {
+            switch(skin.Pattern) {
+                case "Golden":return .38;
+                case "Marble":return .73;
+                case "Garden":return .17;
+                default:return skin.WebKind==WebKind.Crystal?1.26:.51;
+            }
+        }
+        internal static V Ray(int index,int count,double phase) {
+            double irregularity=.27*Math.Sin(index*2.39+phase)+.13*Math.Sin(index*4.16);
+            double angle=(index+irregularity)*(2*Math.PI/count)+phase;
+            return new V(Math.Cos(angle),Math.Sin(angle));
+        }
+    }
     public static partial class SkinCatalog {
         public static readonly string[] Categories={"Jumping spiders","Orb weavers","Widows","House spiders","Fictional"};
         public static SkinProfile[] InCategory(string category) { return Array.FindAll(All,delegate(SkinProfile s) { return s.Category==category; }); }

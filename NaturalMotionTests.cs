@@ -7,6 +7,26 @@ static class NaturalMotionTests {
     static readonly V away=new V(-10000,-10000);
     static void Check(bool ok,string why) { checks++;if(!ok) throw new Exception("Natural motion: "+why); }
     static World New(int seed) { var w=new World(1280,720,seed);w.AutoFeed=false;w.Spider=new V(600,350);return w; }
+
+    static void CheckAmbientSurvey() {
+        var w=new World(2000,900,42) { AutoFeed=false,CursorPlay=false,Spider=new V(300,400),Target=new V(1650,400),Angle=90,State=Mood.Walk };
+        bool left=false,right=false,raised=false,settled=false;
+        for(int i=0;i<1600 && w.State==Mood.Walk;i++) {
+            V before=w.Spider;
+            w.Tick(.025,away);
+            if(w.SurveyPitch<12 || w.GaitBlend>.02) continue;
+            Check((w.Spider-before).Length<.001 && w.FrontReach(-1)==0 && w.FrontReach(1)==0,
+                "an ambient survey holds position without playing the cursor greeting");
+            left|=w.SurveyYaw<-7;right|=w.SurveyYaw>7;
+            raised|=w.SurveyAttachment(new V3(0,-22,7)).Z>12;
+            bool planted=true;
+            for(int side=-1;side<=1;side+=2) for(int leg=0;leg<4;leg++) planted&=Math.Abs(SpiderPose.Leg(w,side,leg).Ankle3.Z-.8)<.001;
+            settled|=planted;
+        }
+        Check(left && right && raised && settled,"patrol pauses include a raised prosoma, both bearings and a grounded stance");
+        Check((w.Spider-w.Target).Length<2,"the patrol resumes after looking around");
+    }
+
     public static void Run() {
         var w=New(42);w.CursorPlay=false;w.Angle=90;w.State=Mood.Walk;w.Target=new V(1100,350);
         double peak=0,run=0,longest=0,still=0;int bursts=0;bool moving=false;
@@ -20,6 +40,7 @@ static class NaturalMotionTests {
         Check(bursts>=4 && still>1,"patrol repeatedly stops on planted feet");
         Check(longest>.8 && longest<3,"long travel includes a sustained run as well as short steps, without endless cruising");
         Check((w.Spider-w.Target).Length<2,"bursty movement still reaches its destination");
+        CheckAmbientSurvey();
 
         w=New(8);V cursor=new V(600,250);bool inspected=false,raised=false;int entries=0;Mood last=w.State;
         for(int i=0;i<80;i++) {

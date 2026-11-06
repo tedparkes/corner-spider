@@ -46,7 +46,7 @@ namespace CornerSpider {
         string jumpPurpose="ground";
         Mood transitResume=Mood.Walk;
         bool directAttack,holdingMeal;
-        double decision=12,napAfter=100,desiredAngle,rideDuration=8,pixelScale=1,jumpScale=1,jumpStartAngle;
+        double decision=12,napAfter=100,desiredAngle,rideDuration=8,pixelScale=1,jumpScale=1,jumpStartAngle,launchSquash=1;
         bool cursorValid;
         bool cursorNearby,burstMoving=true;
         double nextInspection,burstRemaining=.24,scanAt;
@@ -118,8 +118,39 @@ namespace CornerSpider {
             for(int i=0;i<4;i++) { double d=(Perch(area,i)-point).Length;if(d<distance) { distance=d;best=i; } }return best;
         }
         public double CornerDistance { get { int a=AreaAt(Spider);return (Spider-Perch(a,NearestCorner(a,Spider))).Length; } }
+        V OrbPoint(double distance) {
+            var skin=SkinCatalog.Get(Species);
+            int count=OrbRadials.Count(skin);
+            V local=OrbRadials.Ray(random.Next(count),count,OrbRadials.Phase(skin));
+            V ray=new V(Corner.EndsWith("Right")?-local.X:local.X,Corner.StartsWith("Top")?local.Y:-local.Y);
+            var area=Areas[HomeArea];
+            double margin=SpiderPose.Radius*Math.Max(HomeScale*LifeSize,BodyScale);
+            V start=area.Clamp(new V(area.X,area.Y),margin),end=area.Clamp(new V(area.X+area.W,area.Y+area.H),margin);
+            // Shorten the trip at a tight edge without moving the target off its strand.
+            if(Math.Abs(ray.X)>.000001) distance=Math.Min(distance,((ray.X>0?end.X:start.X)-Home.X)/ray.X);
+            if(Math.Abs(ray.Y)>.000001) distance=Math.Min(distance,((ray.Y>0?end.Y:start.Y)-Home.Y)/ray.Y);
+            return Home+ray*Math.Max(0,distance);
+        }
+        double OrbMovementScale { get { return Math.Min(HomeScale,SilkScale); } }
+        bool UsesOrbRoute(V destination) {
+            return (State==Mood.Walk || State==Mood.Stalk) && HasLargeOrb &&
+                AreaAt(Spider)==HomeArea && AreaAt(destination)==HomeArea &&
+                (destination-Home).Length<=110*OrbMovementScale && (Spider-Home).Length<=130*OrbMovementScale;
+        }
+        V OrbWaypoint(V destination) {
+            if(!UsesOrbRoute(destination)) return destination;
+            V from=Spider-Home,to=destination-Home;
+            double slack=2.5*OrbMovementScale;
+            if(from.Length<=slack || to.Length<=slack) return destination;
+            double cross=Math.Abs(from.X*to.Y-from.Y*to.X)/to.Length;
+            return cross>slack || from.X*to.X+from.Y*to.Y<0?Home:destination;
+        }
         void ChoosePerch() {
-            if(WebDweller || IsColonyResident) { Target=Clamp(Home+new V(Between(-48,48),Between(-48,48))*Math.Min(HomeScale,SilkScale));Enter(Mood.Walk);return; }
+            if(WebDweller || IsColonyResident) {
+                if(HasLargeOrb) Target=(Spider-Home).Length>20*OrbMovementScale?Home:OrbPoint(Between(25,49)*OrbMovementScale);
+                else Target=Clamp(Home+new V(Between(-48,48),Between(-48,48))*Math.Min(HomeScale,SilkScale));
+                Enter(Mood.Walk);return;
+            }
             int area=AreaAt(Spider),corner=NearestCorner(area,Spider);
             double choice=random.NextDouble();
             if(Areas.Count>1 && choice<.10) { area=(area+1)%Areas.Count;corner=NearestCorner(area,Spider); }
@@ -181,6 +212,7 @@ namespace CornerSpider {
         void Enter(Mood state) {
             ResetTravel();
             State=state;StateTime=0;
+            if(state==Mood.Notice) orbSenseStart=-1;
             if(state!=Mood.Walk && state!=Mood.Return && state!=Mood.Stalk && state!=Mood.WebApproach) Speed=0;
             else { burstMoving=true;burstRemaining=Between(.19,.34); }
         }
@@ -202,6 +234,7 @@ namespace CornerSpider {
         }
         public void Resume() {
             FingerBlend=0;InviteTime=0;inspectionResume=Mood.Rest;
+            ClearSurvey();
             ResetCursor();
             if(State==Mood.Dismount) { RideCooldown=25;Jump(JumpEnd,"release");return; }
             if(State==Mood.Inspect) { decision=2;Enter(Mood.Rest); }
@@ -215,7 +248,8 @@ namespace CornerSpider {
                 double a=Between(0,Math.PI*2);V p=Clamp(Spider+new V(Math.Cos(a),Math.Sin(a))*Between(far?320:145,far?540:270)*BodyScale);
                 if((p-Spider).Length>distance) { best=p;distance=(p-Spider).Length; }
             }
-            if(WebDweller) best=Clamp(Home+new V(Between(-85,85),Between(-85,85))*Math.Min(HomeScale,SilkScale));
+            if(HasLargeOrb) best=OrbPoint(Between(64,96)*OrbMovementScale);
+            else if(WebDweller) best=Clamp(Home+new V(Between(-85,85),Between(-85,85))*Math.Min(HomeScale,SilkScale));
             Fly=best;HasFly=true;FlyAge=0;FlyPhase=Between(0,6.28);NextFly=Clock+Between(.7,1.3)*FlyInterval;
             BeginPrey(kind);
             if(UnderNestSilk) { StartNestExit();napAfter=Clock+Between(100,170); }
@@ -260,6 +294,10 @@ namespace CornerSpider {
             if(State==Mood.Struggle) return 1-.035*CaptureStruggle;
             if(State==Mood.Dismount) return 1-.08*DismountBrace;
             if(State==Mood.Crouch) return 1-.08*Math.Min(1,StateTime/.24);
+            if(State==Mood.Jump) {
+                double extension=Math.Min(1,JumpProgress/.22);
+                return launchSquash+(1-launchSquash)*extension*extension*(3-2*extension);
+            }
             if(State==Mood.Land) return 1-.07*Math.Sin(Math.PI*Math.Min(1,StateTime/.20));
             if(SettlingOnFinger) return 1-.07*Math.Sin(Math.PI*RideAge/.24);
             return 1-.065*NestTuck-(State==Mood.SpeciesAct && behavior.Gesture==SpeciesGesture.BarkPause?.06*GestureBlend:0);
@@ -271,6 +309,7 @@ namespace CornerSpider {
             JumpEnd=Clamp(dest);jumpPurpose=purpose;Face(JumpEnd);Enter(Mood.Reach);
         }
         void Jump(V dest,string purpose) {
+            launchSquash=Squash;
             JumpStart=Spider;JumpEnd=Clamp(dest);JumpTime=0;jumpScale=BodyScale;jumpPurpose=purpose;jumpStartAngle=Angle;
             directAttack=purpose=="fly" && HuntsSpiders;holdingMeal=false;
             SilkStart=Spider;SilkOpacity=1;
@@ -324,7 +363,7 @@ namespace CornerSpider {
         }
         bool GroundRoute(V destination,out V waypoint) {
             V? landing;
-            V approach=Route(destination,out landing);
+            V approach=Route(OrbWaypoint(destination),out landing);
             waypoint=AvoidGuestWeb(approach);
             if(!landing.HasValue || (waypoint-approach).Length>.001 || (waypoint-Spider).Length>4*BodyScale) return true;
             StartDisplayHop(landing.Value);
@@ -382,7 +421,7 @@ namespace CornerSpider {
             double cursorSpeed=TrackCursor(dt,cursor);RideCooldown=Math.Max(0,RideCooldown-dt);
             if(State!=Mood.Jump) pixelScale+=(Areas[AreaAt(Spider)].Dpi-pixelScale)*Math.Min(1,dt*8);
             double s=BodyScale;
-            TickResidents(dt);if(TickLife(dt)) return;
+            TickResidents(dt);if(TickLife(dt)) { ClearSurvey();return; }
             TickWebVisit(dt);
             bool cursorInside=cursorValid && ChooseFingerSide(cursor);
             Scared=Math.Max(0,Scared-dt*.4);
@@ -451,10 +490,10 @@ namespace CornerSpider {
                     Carry(dt,cursor,cursorSpeed,cursorInside,clicked);break;
                 case Mood.Dismount:
                     PrepareDismount(dt);break;
-                case Mood.Notice: Face(Fly);if(StateTime>.65) Enter(Mood.Stalk);break;
+                case Mood.Notice: NoticePrey();break;
                 case Mood.Stalk:
                     if(!HasFly) { Wake();break; }Face(Fly);
-                    if(WebDweller) { if(Move(Fly,115,dt)) { Meal=Prey;HasFly=false;holdingMeal=true;if(Meals<int.MaxValue) Meals++;Enter(Mood.Struggle); }break; }
+                    if(WebDweller) { if(Move(Fly,WebHuntSpeed,dt)) { Meal=Prey;HasFly=false;holdingMeal=true;if(Meals<int.MaxValue) Meals++;Enter(Mood.Struggle); }break; }
                     if((Fly-Spider).Length<PreyPounceRange*s) Enter(Mood.Aim);
                     else { double distance=(Fly-Spider).Length/s;BurstMove(Fly,HuntingSpeed(distance),dt,true); }break;
                 case Mood.Aim: Face(Fly);if(!HasFly) Wake();else if(StateTime>.6) PrepareJump(Fly,"fly");break;
@@ -468,6 +507,9 @@ namespace CornerSpider {
                 case Mood.Groom: if(StateTime>3.5) { decision=Between(10,22);Enter(Mood.Rest); }break;
                 default:
                     if(CursorPlay && cursorValid && cursorDistance<DismissRadius) Face(cursor);
+                    else if(CanSurvey) {
+                        if(State==Mood.Rest && StateTime>.45) StartSurvey(false);
+                    }
                     else if(Clock>scanAt) {
                         // Brief whole-body reorientation, then hold. No swivelling detached head.
                         scanAt=Clock+Between(2.5,6);desiredAngle+=Between(-24,24);
@@ -482,6 +524,7 @@ namespace CornerSpider {
                         else ChoosePerch();
                     }break;
             }
+            UpdateSurvey(dt,cursorDistance);
             double turn=AngleDelta(Angle,desiredAngle),delta=catchTurning?turn:Math.Max(-190*dt,Math.Min(190*dt,turn));
             Angle=(Angle+delta+360)%360;AngularSpeed=delta/dt;
             UpdateGaitDirection(Spider-tickStart,dt);

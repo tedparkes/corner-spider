@@ -39,18 +39,24 @@ namespace CornerSpider {
         static void DrawFamilySpider(DrawingContext d,World w,SkinProfile skin) {
             d.PushTransform(new TranslateTransform(w.Spider.X,w.Spider.Y-w.Lift));d.PushTransform(new ScaleTransform(w.BodyScale,w.BodyScale));d.PushTransform(new RotateTransform(w.Angle));
             for(int side=-1;side<=1;side+=2) for(int i=3;i>=0;i--) {
-                double phase=Math.Sin(w.StepPhase+(i%2)*Math.PI+(side<0?0:Math.PI))*w.GaitBlend*4;
-                double fold=w.NestTuck*.15,reach=i==0?w.FrontReach(side):0;
-                V a=new V(side*5,-15+i*5),b=new V(side*(i==0?19:26)*(1-fold),-42+i*21),c=new V(side*(i==0?34:50)*(1-fold),-64+i*40+phase);
-                if(i==0) { b.X*=1-reach*.45;c.X*=1-reach*.60;b.Y-=reach*6;c.Y-=reach*8; }
-                c.Y=Math.Max(-66,Math.Min(66,c.Y));
-                if(c.Length>67) c=c*(67/c.Length);
-                if(i==0 && w.Hanging) { V grip=(w.FingerTip(w.FingerOrigin)-w.Spider)*(1/w.BodyScale);double a2=-w.Angle*Math.PI/180;c=new V(grip.X*Math.Cos(a2)-grip.Y*Math.Sin(a2)+side*2,grip.X*Math.Sin(a2)+grip.Y*Math.Cos(a2));b=(a+c)*.5+new V(side*9,0); }
+                LegPose pose=SpiderPose.FamilyLeg(w,side,i,skin);
                 double width=skin.Category=="Widows"?1.5:skin.Pattern=="Mech"?3:2.2;
-                Line(d,skin.LegShade,width+1,a.X,a.Y,b.X,b.Y);Line(d,skin.Legs,width,a.X,a.Y,b.X,b.Y);
-                Line(d,skin.LegShade,width,b.X,b.Y,c.X,c.Y);Line(d,skin.Legs,Math.Max(.6,width-.6),b.X,b.Y,c.X,c.Y);
-                if(skin.Category!="Widows" || skin.Pattern=="BrownWidow" || skin.Male) for(int band=1;band<=3;band++) { V p=b+(c-b)*(band/4.0),q=b+(c-b)*(band/4.0+.05);Line(d,skin.Mark,width*.7,p.X,p.Y,q.X,q.Y); }
+                Line(d,skin.LegShade,width+1,pose.Root.X,pose.Root.Y,pose.Hip.X,pose.Hip.Y);
+                Line(d,skin.LegShade,width+1,pose.Hip.X,pose.Hip.Y,pose.Knee.X,pose.Knee.Y);
+                Line(d,skin.Legs,width,pose.Hip.X,pose.Hip.Y,pose.Knee.X,pose.Knee.Y);
+                Line(d,skin.LegShade,width,pose.Knee.X,pose.Knee.Y,pose.Ankle.X,pose.Ankle.Y);
+                Line(d,skin.Legs,Math.Max(.6,width-.6),pose.Knee.X,pose.Knee.Y,pose.Ankle.X,pose.Ankle.Y);
+                Line(d,skin.Legs,Math.Max(.5,width*.48),pose.Ankle.X,pose.Ankle.Y,pose.Tip.X,pose.Tip.Y);
+                if(skin.Category!="Widows" || skin.Pattern=="BrownWidow" || skin.Male) {
+                    V lower=pose.Ankle-pose.Knee;
+                    for(int band=1;band<=3;band++) {
+                        V start=pose.Knee+lower*(band/4.0),end=pose.Knee+lower*(band/4.0+.05);
+                        Line(d,skin.Mark,width*.7,start.X,start.Y,end.X,end.Y);
+                    }
+                }
             }
+            V settle=SpiderPose.Project(new V3(0,0,-3*w.WebSense));
+            d.PushTransform(new TranslateTransform(settle.X,settle.Y));
             d.PushTransform(new ScaleTransform(1+w.GravidAmount*.18,1+w.GravidAmount*.12,0,16));DrawArt(d,FamilyBody(skin));d.Pop();
             Oval(d,Glow(skin.Head,skin.HeadShade),0,-9,9*skin.HeadWidth/.65,11*skin.HeadLength/.72);
             for(int side=-1;side<=1;side+=2) {
@@ -58,6 +64,7 @@ namespace CornerSpider {
                 double groom=w.State==Mood.Groom?Math.Sin(w.StateTime*5+side)*3:0;
                 Line(d,skin.Legs,1.4,side*4,-17,side*(6+groom),-24);Oval(d,B(skin.Palps),side*(6+groom),-24,skin.Male?2:1,1.5);
             }
+            d.Pop();
             DrawMeal(d,w);d.Pop();d.Pop();d.Pop();
         }
         void DrawLivingSilk(DrawingContext d,World w,string species) {

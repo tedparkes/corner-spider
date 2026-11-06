@@ -40,8 +40,40 @@ static class LifeTests {
         double margin=SpiderPose.Radius*w.HomeScale*1.16;
         Check(x+.00001>=margin && y+.00001>=margin,"the fitted hub leaves room for the legs after a molt");
     }
+    static void CheckOrbTravel() {
+        var listening=Pet("CrossOrb");listening.SpawnFly();bool sensed=false;
+        for(int i=0;i<120 && listening.State==Mood.Notice;i++) {
+            listening.Tick(.016,away);
+            if(listening.WebSense>.5) {
+                sensed=true;
+                Check((listening.Spider-listening.Home).Length<.001 && listening.Speed==0,"orb listens on planted feet before walking");
+            }
+        }
+        Check(sensed && listening.State==Mood.Stalk,"the hub check is visible and leads into the hunt");
+        foreach(var skin in SkinCatalog.All) {
+            if(skin.Male || (skin.WebKind!=WebKind.Orb && skin.WebKind!=WebKind.Crystal)) continue;
+            foreach(string corner in Settings.Corners) {
+                var w=Pet(skin.Id,41);w.Corner=corner;w.UpdateHome();w.Spider=w.Home;w.SpawnFly();
+                V prey=w.Fly-w.Home;
+                V local=new V(corner.EndsWith("Right")?-prey.X:prey.X,corner.StartsWith("Top")?prey.Y:-prey.Y);
+                int count=OrbRadials.Count(skin);bool onSpoke=false;
+                for(int i=0;i<count;i++) {
+                    V ray=OrbRadials.Ray(i,count,OrbRadials.Phase(skin));
+                    if((ray*local.Length-local).Length<.001) onSpoke=true;
+                }
+                Check(onSpoke,"trapped food lies on a visible radial: "+skin.Id+" / "+corner);
+                w.Spider=w.Home+new V(prey.Y,-prey.X)*.55;
+                bool hub=false;
+                for(int i=0;i<500 && w.Meals==0;i++) {
+                    w.Tick(.033,away);
+                    if((w.Spider-w.Home).Length<3) hub=true;
+                }
+                Check(hub && w.Meals==1,"a spider changing radials comes through the hub and reaches the food");
+            }
+        }
+    }
     public static void Run() {
-        CheckOrbLayout();
+        CheckOrbLayout();CheckOrbTravel();
         Check(SkinCatalog.All.Length==46 && SkinCatalog.Categories.Length==5,"complete expanded catalog");
         foreach(var s in SkinCatalog.All) {
             Check(s.MateId.Length>0,"every species has both sexes: "+s.Id);

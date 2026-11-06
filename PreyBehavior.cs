@@ -15,6 +15,34 @@ namespace CornerSpider {
         public double PreySteps { get; private set; }
         public bool PreyWalking { get; private set; }
         V preyOrigin;
+        double orbSenseStart=-1;
+        public double WebSense {
+            get {
+                if(State!=Mood.Notice || orbSenseStart<0) return 0;
+                double phase=Math.Max(0,Math.Min(1,(StateTime-orbSenseStart)/.44));
+                double pulse=Math.Sin(Math.PI*phase);
+                return pulse*pulse;
+            }
+        }
+        void NoticePrey() {
+            Face(Fly);
+            if(HasLargeOrb && (Spider-Home).Length<8*OrbMovementScale) {
+                // Turn first, then dip into the web on planted feet before following the signal.
+                if(orbSenseStart<0 && Math.Abs(AngleDelta(Angle,desiredAngle))<3 && GaitBlend<.04)
+                    orbSenseStart=StateTime;
+                if(orbSenseStart<0 || StateTime-orbSenseStart<.44) return;
+            }
+            if(StateTime>.65) Enter(Mood.Stalk);
+        }
+        double WebHuntSpeed {
+            get {
+                switch(SkinCatalog.Get(Species).WebKind) {
+                    case WebKind.Tangle:return 70;
+                    case WebKind.Sheet:return 150;
+                    default:return 90;
+                }
+            }
+        }
         public bool HuntsSpiders { get { return SkinCatalog.Get(Species).SpiderPrey; } }
         public void SetSpecies(string id) {
             if(!SkinCatalog.Contains(id) || species==id) return;

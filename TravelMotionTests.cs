@@ -17,6 +17,59 @@ static class TravelMotionTests {
         bouts.Add(length);longest=Math.Max(longest,length);shortest=Math.Min(shortest,length);
         if(length>140) longRuns++;if(length<80) shortRuns++;
     }
+    static LegPose TravelLeg(World w,SkinProfile skin,int side,int leg) {
+        return skin.WebDweller?SpiderPose.FamilyLeg(w,side,leg,skin):SpiderPose.Leg(w,side,leg,skin);
+    }
+    static void CheckFootContactAndLanding() {
+        const double step=Math.PI*2/120;
+        foreach(var skin in SkinCatalog.All) {
+            var w=New(5,1,1,skin.Id);
+            w.State=Mood.Walk;w.GaitBlend=1;
+            foreach(var direction in new[]{new V(0,-1),new V(1,0)}) {
+                w.GaitDirection=direction;
+                var before=new LegPose[8];
+                var lifted=new bool[8];
+                int plantedSamples=0;
+                double slip=0;
+                for(int frame=0;frame<=120;frame++) {
+                    w.StepPhase=frame*step;
+                    int swinging=0;
+                    for(int i=0;i<8;i++) {
+                        LegPose p=TravelLeg(w,skin,i<4?-1:1,i%4);
+                        Check(p.Tip.Length<SpiderPose.Radius,"stepping foot fits the desktop clearance: "+skin.Id);
+                        if(p.Lift>.001) { swinging++;lifted[i]=true; }
+                        if(frame>0) {
+                            var previous=before[i];
+                            Check(Math.Abs((p.Knee3-p.Hip3).Length-(previous.Knee3-previous.Hip3).Length)<.0001 &&
+                                Math.Abs((p.Ankle3-p.Knee3).Length-(previous.Ankle3-previous.Knee3).Length)<.0001,
+                                "each rendered leg keeps both segments fixed through its step: "+skin.Id);
+                            if(previous.Lift<.000001 && p.Lift<.000001) {
+                                slip+=(p.Tip-previous.Tip+direction*(4.5*step)).Length;
+                                plantedSamples++;
+                            }
+                        }
+                        before[i]=p;
+                    }
+                    int maxSwing=skin.WebDweller && skin.WebKind!=WebKind.Sheet?2:4;
+                    Check(swinging<=maxSwing,"travel keeps the other feet in support: "+skin.Id);
+                }
+                foreach(bool stepped in lifted) Check(stepped,"each leg visibly lifts and replants: "+skin.Id);
+                Check(plantedSamples>0 && slip/plantedSamples<4.5*step*.08,
+                    "planted feet stay close to the same screen point through a steady stride: "+skin.Id);
+            }
+            w.GaitBlend=0;
+            for(int side=-1;side<=1;side+=2) for(int leg=0;leg<4;leg++) {
+                w.State=Mood.Crouch;w.StateTime=.26;
+                var ready=TravelLeg(w,skin,side,leg);
+                w.State=Mood.Jump;w.JumpTime=0;
+                Check((TravelLeg(w,skin,side,leg).Tip-ready.Tip).Length<.001,"takeoff starts from the braced foot pose: "+skin.Id);
+                w.JumpTime=w.JumpDuration;
+                var touching=TravelLeg(w,skin,side,leg);
+                w.State=Mood.Land;w.StateTime=0;
+                Check((TravelLeg(w,skin,side,leg).Tip-touching.Tip).Length<.001,"touchdown keeps the airborne endpoint pose: "+skin.Id);
+            }
+        }
+    }
     static void Route(World w,V start,V end,double dt) {
         double s=w.BodyScale;w.Spider=start;w.Target=end;w.State=Mood.Walk;
         V axis=end-start;w.Angle=Math.Atan2(axis.Y,axis.X)*180/Math.PI+90;
@@ -45,6 +98,7 @@ static class TravelMotionTests {
         routes++;
     }
     public static void Run() {
+        CheckFootContactAndLanding();
         for(int skin=0;skin<SkinCatalog.All.Length;skin++) foreach(double dt in new[]{.016,.033,.1}) foreach(double size in new[]{.2,1,1.8}) {
             var w=New(31+skin,size,new[]{1,1.5,2}[skin%3],SkinCatalog.All[skin].Id);double s=w.BodyScale;
             double angle=(skin%8)*Math.PI/4;V axis=new V(Math.Cos(angle),Math.Sin(angle))*700;

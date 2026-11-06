@@ -237,16 +237,32 @@ namespace CornerSpider {
             d.PushTransform(new TranslateTransform(0,(1-w.Squash)*19));
             double breathing=1+Math.Sin(w.Clock*1.5)*.003;
             d.PushTransform(new ScaleTransform(breathing,w.Squash));
+            MatrixTransform survey=w.SurveyPitch==0 && w.SurveyYaw==0 && w.SurveyRoll==0?null:SurveyArtTransform(w,1);
+            if(survey!=null) d.PushTransform(SurveyArtTransform(w,.42));
             d.PushTransform(new ScaleTransform(1+w.GravidAmount*.18,1+w.GravidAmount*.12,0,16));DrawArt(d,Body(species));d.Pop();
+            if(survey!=null) { d.Pop();d.PushTransform(survey); }
             DrawArt(d,Head(species));
+            if(survey!=null) d.Pop();
             // Raised forelegs pass in front of the face, instead of vanishing under it.
             d.Pop();d.Pop();
             for(int side=-1;side<=1;side+=2) if(w.FrontReach(side)>=.25) DrawLeg(d,w,species,side,0);
             d.PushTransform(new TranslateTransform(0,(1-w.Squash)*19));
             d.PushTransform(new ScaleTransform(breathing,w.Squash));
             // The prosoma is one rigid part. No swivelling portrait face or eyelid blink.
+            if(survey!=null) d.PushTransform(survey);
             DrawMeal(d,w);DrawPalps(d,w,SkinCatalog.Get(species));
+            if(survey!=null) d.Pop();
             d.Pop();d.Pop();d.Pop();d.Pop();d.Pop();d.Pop();
+        }
+        static MatrixTransform SurveyArtTransform(World world,double strength) {
+            // Reproject the illustrated body plane through the same rotation as the coxae.
+            const double bodyPlane=7;
+            double depth=SpiderPose.Project(new V3(0,1,0)).Y;
+            V3 origin=new V3(0,-SpiderPose.Project(new V3(0,0,bodyPlane)).Y/depth,bodyPlane);
+            V start=SpiderPose.Project(world.SurveyAttachment(origin,strength));
+            V across=SpiderPose.Project(world.SurveyAttachment(origin+new V3(1,0,0),strength))-start;
+            V along=SpiderPose.Project(world.SurveyAttachment(origin+new V3(0,1/depth,0),strength))-start;
+            return new MatrixTransform(new Matrix(across.X,across.Y,along.X,along.Y,start.X,start.Y));
         }
         static void Segment(DrawingContext d,string species,V from,V to,double width,bool cuff=false) {
             var skin=SkinCatalog.Get(species);width*=skin.LegWidth;

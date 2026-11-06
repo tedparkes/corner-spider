@@ -6,11 +6,70 @@ namespace CornerSpider {
         bool travelReady,travelMoving,travelSideways,lastTravelSideways;
         V travelRoute,travelDestination,travelEnd;
         double travelPause,travelFactor,travelHeading,travelLength;
+        double surveyStart,surveyDuration,surveyDirection,surveyElevation,nextSurveyAt=2.6;
+        public double SurveyPitch { get;private set; }
+        public double SurveyYaw { get;private set; }
+        public double SurveyRoll { get;private set; }
         public V GaitDirection=new V(0,-1);
         public bool SideStepping { get { return State==Mood.Walk && travelMoving && travelSideways && Speed>1; } }
 
         double TravelRange(double min,double max) { return min+travelRandom.NextDouble()*(max-min); }
         void ResetTravel() { travelReady=false;travelMoving=false;travelPause=0;travelSideways=false; }
+
+        bool CanSurvey { get { return !IsColonyResident && SkinCatalog.Get(Species).Category=="Jumping spiders"; } }
+
+        bool StartSurvey(bool betweenRuns) {
+            if(!CanSurvey || HasFly || LifeBusy || Clock<nextSurveyAt) return false;
+            if(CursorPlay && cursorValid && (Cursor-Spider).Length<DismissRadius) return false;
+            // Derive variation from the completed movement, keeping the travel and prey RNGs independent.
+            double variation=.5+.5*Math.Sin(Clock*1.9+StepPhase*.17);
+            surveyDirection=Math.Cos(Clock*2.8+StepPhase*.31)<0?-1:1;
+            surveyElevation=21+variation*6;
+            surveyStart=Clock;
+            surveyDuration=(betweenRuns ? .88 : 1.16)+variation*.22;
+            nextSurveyAt=Clock+(betweenRuns ? 2.45 : 3.9)+variation*1.15;
+            desiredAngle=Angle;
+            return true;
+        }
+
+        static double SurveyEase(double phase,double start,double end) {
+            double t=Math.Max(0,Math.Min(1,(phase-start)/(end-start)));
+            return t*t*(3-2*t);
+        }
+
+        void ClearSurvey() { surveyDuration=SurveyPitch=SurveyYaw=SurveyRoll=0; }
+
+        void UpdateSurvey(double dt,double cursorDistance) {
+            if(surveyDuration>0) {
+                double phase=(Clock-surveyStart)/surveyDuration;
+                bool stopped=State==Mood.Rest || (State==Mood.Walk && !travelMoving && Speed<1);
+                if(phase<1 && stopped && CanSurvey && !HasFly && !LifeBusy && !(CursorPlay && cursorValid && cursorDistance<DismissRadius)) {
+                    // Raise the front, hold at two bearings, and settle before taking the next step.
+                    double pitch=SurveyEase(phase,.06,.24)*(1-SurveyEase(phase,.74,1));
+                    double turn=SurveyEase(phase,.11,.29)-1.53*SurveyEase(phase,.42,.63)+.53*SurveyEase(phase,.76,1);
+                    SurveyPitch=surveyElevation*pitch;
+                    SurveyYaw=surveyDirection*17*turn;
+                    SurveyRoll=surveyDirection*7*turn;
+                    return;
+                }
+                surveyDuration=0;
+            }
+            double fade=Math.Max(0,1-dt*12);
+            SurveyPitch=Math.Abs(SurveyPitch)<.03?0:SurveyPitch*fade;
+            SurveyYaw=Math.Abs(SurveyYaw)<.03?0:SurveyYaw*fade;
+            SurveyRoll=Math.Abs(SurveyRoll)<.03?0:SurveyRoll*fade;
+        }
+
+        public V3 SurveyAttachment(V3 point,double strength=1) {
+            if(SurveyPitch==0 && SurveyYaw==0 && SurveyRoll==0) return point;
+            double radians=strength*Math.PI/180;
+            double pitch=SurveyPitch*radians,roll=SurveyRoll*radians,yaw=SurveyYaw*radians;
+            double y=point.Y*Math.Cos(pitch)+point.Z*Math.Sin(pitch);
+            double pitchZ=point.Z*Math.Cos(pitch)-point.Y*Math.Sin(pitch);
+            double x=point.X*Math.Cos(roll)-pitchZ*Math.Sin(roll);
+            double z=point.X*Math.Sin(roll)+pitchZ*Math.Cos(roll);
+            return new V3(x*Math.Cos(yaw)-y*Math.Sin(yaw),x*Math.Sin(yaw)+y*Math.Cos(yaw),z);
+        }
 
         bool SafeTravelSegment(V end) {
             if((Clamp(end)-end).Length>.01*BodyScale) return false;
@@ -56,13 +115,15 @@ namespace CornerSpider {
         }
 
         bool Travel(V destination,double speed,double dt) {
+            if(UsesOrbRoute(destination)) return Move(destination,Math.Min(80,speed),dt);
             V routed;
             if(!GroundRoute(destination,out routed)) return false;
             double s=BodyScale;
             if(AreaAt(destination)==AreaAt(Spider) && (destination-Spider).Length<2*s) { Spider=destination;Speed=0;ResetTravel();return true; }
             if(!travelReady || (destination-travelDestination).Length>2*s || (routed-travelRoute).Length>2*s) PlanTravel(destination,routed);
             if(!travelMoving) {
-                Speed=0;Face(routed);travelPause-=dt;
+                Speed=0;travelPause-=dt;
+                if(surveyDuration==0) Face(routed);
                 if(travelPause>0) return false;
                 PlanTravel(destination,routed);
             }
@@ -72,6 +133,7 @@ namespace CornerSpider {
             if(travelReady && (travelEnd-Spider).Length<.01*s && AreaAt(travelEnd)==AreaAt(Spider)) {
                 Spider=travelEnd;Speed=0;travelMoving=false;
                 travelPause=travelSideways?TravelRange(.16,.42):travelLength>100?TravelRange(.20,.65):TravelRange(.28,.85);
+                if(State==Mood.Walk && travelLength>=40 && StartSurvey(true)) travelPause=Math.Max(travelPause,surveyDuration);
             }
             return false;
         }

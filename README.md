@@ -1,6 +1,6 @@
 # Corner Spider 1.1 preview
 
-A spider companion for your actual Windows desktop. This is **1.1.0-alpha.10**,
+A spider companion for your actual Windows desktop. This is **1.1.0-alpha.11**,
 a local preview. The [1.0 release](https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0)
 remains the stable version. [Published community preview and release notes](https://github.com/tedparkes/corner-spider/releases/tag/v1.1.0-alpha.8).
 
@@ -9,6 +9,9 @@ Framework 4.8; no installer, administrator rights or asset downloads. Startup is
 opt-in. This community build is unsigned.
 
 ## New in this preview
+
+Alpha.11 revises leg placement and gives jumping spiders a brief raised look
+between moves. Orb weavers approach trapped prey along their web spokes.
 
 Alpha.10 has the spider hop between monitors, including across shared edges.
 It lands on the next screen and carries on with its route.
