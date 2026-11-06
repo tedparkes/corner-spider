@@ -41,11 +41,23 @@ namespace CornerSpider {
         static readonly SilkProfile wall=new SilkProfile("Flat crevice cell","A short, flat-sided cell with a low cover; the outline is a habitat-inspired illustration.",1,.87,.77,.32,10103,RetreatStyle.Cell);
         static readonly SilkProfile pantropical=new SilkProfile("Tangled tube shelter","A rounded tube enclosed in an irregular silk mesh, inspired by complex P. paykulli nests.",1,.96,1.22,1.35,11213,RetreatStyle.Tangle);
         static readonly SilkProfile apache=new SilkProfile("Plant-side tube","A tapered sleeve with a narrow end and converging seams; this is an artistic variation.",1,1.18,.96,.58,12049,RetreatStyle.Taper);
-        static readonly SilkProfile portia=new SilkProfile("Platform and scaffold","An open, asymmetric silk platform with a funnel-like corner scaffold, inspired by Portia webs.",1,1.05,.55,1.15,13109,RetreatStyle.Platform);
+        static readonly SilkProfile portia=new SilkProfile("Layered Portia web","A resting platform inside several loosely joined silk sheets, based on documented female Portia webs.",1,1.05,.55,1.15,13109,RetreatStyle.Platform);
+        static readonly SilkProfile portiaMale=new SilkProfile("Open silk platform","A small open silk platform on sparse supports, based on documented male Portia resting webs.",1,1.05,.55,1.15,13109,RetreatStyle.Platform);
         static readonly SilkProfile hyllus=new SilkProfile("Broad silk pocket","A roomy, rounded pouch with a reinforced rim, fitted to the larger body; exact architecture is illustrative.",1,1.18,1.05,.7,14207,RetreatStyle.Pocket);
         public static SilkProfile Get(string species) {
             var skin=SkinCatalog.Get(species);
-            if(skin.WebKind!=WebKind.Retreat) return skin.WebKind==WebKind.Orb?new SilkProfile("Orb capture web","Radial spokes and a close spiral, supported from both corner edges.",1,1,1,1,1511,RetreatStyle.Platform):skin.WebKind==WebKind.Sheet?new SilkProfile("Sheet and funnel","A low silk sheet leading to a sheltered funnel entrance.",1,1,1,1,1611,RetreatStyle.Platform):new SilkProfile(skin.WebKind==WebKind.Crystal?"Crystal lattice":"Tangle web",skin.WebKind==WebKind.Crystal?"An imaginary angular crystalline web.":"An irregular anchored capture network with a sheltered resting point.",1,1,1,1,1711,RetreatStyle.Platform);
+            if(skin.WebKind==WebKind.Orb || skin.WebKind==WebKind.Crystal) {
+                if(skin.Male) return new SilkProfile("Travel silk","Sparse support lines for the pet's resting spot.",1,1,1,1,1511,RetreatStyle.Platform);
+                return new SilkProfile("Corner orb","A capture spiral around a clear hub, held by radials and an edge-anchored frame.",1,1,1,1,1511,RetreatStyle.Platform);
+            }
+            if(skin.WebKind==WebKind.Sheet)
+                return new SilkProfile("Sheet and funnel","A layered sheet opens into a recessed silk tunnel.",1,1,1,1,1611,RetreatStyle.Platform);
+            if(skin.WebKind==WebKind.Tangle) {
+                string note=skin.Male?"A sparse support web for the pet's resting spot.":skin.Pattern=="House"
+                    ?"An irregular capture sheet with a shelter near the center and threads leading down to the substrate."
+                    :"A sheltered retreat off to one side, with a tangled capture sheet and gumfoot lines.";
+                return new SilkProfile("Corner cobweb",note,1,1,1,1,1711,RetreatStyle.Platform);
+            }
             switch(species) {
                 case "Bold":case "BoldFemale":return bold;
                 case "Zebra":case "ZebraMale":return zebra;
@@ -56,7 +68,8 @@ namespace CornerSpider {
                 case "GrayWall":case "GrayWallMale":return wall;
                 case "Pantropical":case "PantropicalFemale":return pantropical;
                 case "Apache":case "ApacheFemale":return apache;
-                case "PortiaLabiata":case "PortiaLabiataMale":return portia;
+                case "PortiaLabiata":return portia;
+                case "PortiaLabiataMale":return portiaMale;
                 case "HyllusDiardiGreen":case "HyllusDiardiMale":return hyllus;
                 default:return regal;
             }

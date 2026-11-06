@@ -1,7 +1,7 @@
 # Corner Spider 1.1 preview
 
-A spider companion for your actual Windows desktop. This is **1.1.0-alpha.4**,
-an unpublished local preview with smoother silk and corrected prey-web construction. The [1.0 release](https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0)
+A spider companion for your actual Windows desktop. This is **1.1.0-alpha.5**,
+an unpublished local preview with redesigned corner webs. The [1.0 release](https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0)
 remains the stable version. [Published community preview and release notes](https://github.com/tedparkes/corner-spider/releases/tag/v1.1.0-alpha.2).
 
 Extract the Windows ZIP and open **JumpingSpider.exe**. Windows 10/11 with .NET
@@ -9,6 +9,9 @@ Framework 4.8; no installer, administrator rights or asset downloads. Startup is
 opt-in. This community build is unsigned.
 
 ## New in this preview
+
+Alpha.5 rebuilds orbs, cobwebs, funnel sheets, and silk retreats around real
+desktop-edge attachments. [Design review and verification](docs/VERIFICATION-CORNER-WEBS.md).
 
 Alpha.4 adds anti-aliasing for fine web strands, including the settings preview.
 [Rendering checks](docs/VERIFICATION-WEB-AA.md).

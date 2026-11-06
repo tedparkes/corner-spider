@@ -69,48 +69,11 @@ namespace CornerSpider {
             if(key!=livingSilkKey) {
                 LivingSilkBuilds++;
                 livingSilkKey=key;livingSilk=new DrawingGroup();using(var c=livingSilk.Open()) {
-                    double radius=Math.Min(112,Math.Min(ex,ey)*.78),growth=.35+.65*w.Web;
-                    string silk=skin.Fictional?(skin.Pattern=="Nebula"?"#b4c3b7ff":skin.Pattern=="Crystal"?"#b4a8f7e3":"#b4bfe3de"):"#b4e5eee6";
-                    if(skin.WebKind==WebKind.Orb || skin.WebKind==WebKind.Crystal) {
-                        int spokes=skin.WebKind==WebKind.Crystal?12:24;
-                        for(int i=0;i<spokes;i++) { double a=i*Math.PI*2/spokes;V rim=new V(Math.Cos(a)*radius,Math.Sin(a)*radius);Line(c,silk,.6,0,0,rim.X,rim.Y);
-                            double b=(i+1)*Math.PI*2/spokes;Line(c,silk,.75,rim.X,rim.Y,Math.Cos(b)*radius,Math.Sin(b)*radius);
-                        }
-                        // A fan of doubled mooring threads supports the frame from
-                        // both desktop edges, rather than crossing the capture spiral.
-                        for(int i=0;i<16;i++) { double t=(i/2+.5)/8.0,a=i%2==0?Math.PI*.68+t*Math.PI*.55:Math.PI*1.23+t*Math.PI*.55;
-                            V anchor=i%2==0?new V(-ex,-ey+(ey+radius)*t):new V(-ex+(ex+radius)*t,-ey);
-                            if(w.IsColonyResident) anchor=ColonyAnchor(ex,ey,i/15.0,radius*1.25);
-                            V rim=new V(Math.Cos(a)*radius,Math.Sin(a)*radius);Line(c,silk,1.2,anchor.X,anchor.Y,rim.X,rim.Y);
-                        }
-                        int rings=5+(int)(10*growth)+layers/3;
-                        for(int ring=1;ring<=rings;ring++) for(int i=0;i<spokes;i++) { double r=radius*(ring<=15?ring/16.0:(ring-15.5)/16),a=i*Math.PI*2/spokes,b=(i+1)*Math.PI*2/spokes;Point p=new Point(Math.Cos(a)*r,Math.Sin(a)*r),q=new Point(Math.Cos(b)*r,Math.Sin(b)*r);
-                            double mid=(a+b)*.5;Curve(c,silk,.32,p,new Point(Math.Cos(mid)*r*.97,Math.Sin(mid)*r*.97),new Point(Math.Cos(mid)*r*.97,Math.Sin(mid)*r*.97),q); }
-                        if(skin.Pattern=="Garden") for(int i=0;i<15;i++) Line(c,"#dfedf4e7",1,-5+(i%2)*10,25+i*4,-5+((i+1)%2)*10,29+i*4);
-                    } else if(skin.WebKind!=WebKind.Retreat) {
-                        var random=new Random(1127+(int)skin.WebKind);int count=(skin.WebKind==WebKind.Sheet?65:42)+(int)(growth*35)+layers*3;
-                        // Every cross-line terminates on two anchored tension ribs.
-                        V[] anchors={new V(-ex,-ey),new V(-ex,55),new V(55,-ey),new V(-ex,-30),new V(-30,-ey)};
-                        if(w.IsColonyResident) for(int i=0;i<anchors.Length;i++) anchors[i]=ColonyAnchor(ex,ey,i/4.0,120);
-                        V hub=new V(65,65);
-                        foreach(var a in anchors) Line(c,silk,.8,a.X,a.Y,hub.X,hub.Y);
-                        for(int i=0;i<16;i++) { double t=(i/2+.5)/8.0;V a=i%2==0?new V(-ex,-ey+(ey+55)*t):new V(-ex+(ex+55)*t,-ey);
-                            if(w.IsColonyResident) a=ColonyAnchor(ex,ey,i/15.0,120);
-                            V end=anchors[i%anchors.Length]+(hub-anchors[i%anchors.Length])*.75;Line(c,silk,1.2,a.X,a.Y,end.X,end.Y); }
-                        for(int i=0;i<count;i++) { V a=anchors[random.Next(anchors.Length)],b=anchors[random.Next(anchors.Length)];double t=random.NextDouble();double u=skin.WebKind==WebKind.Sheet?t:random.NextDouble();V p=a+(hub-a)*t,q=b+(hub-b)*u;Curve(c,silk,.28,new Point(p.X,p.Y),new Point(p.X*.6+q.X*.4,p.Y*.6+q.Y*.4+5),new Point(p.X*.4+q.X*.6,p.Y*.4+q.Y*.6+5),new Point(q.X,q.Y)); }
-                        if(skin.WebKind==WebKind.Sheet) for(int i=0;i<14;i++) { double r=4+i*1.5;c.DrawEllipse(null,P(silk,.45),new Point(-37,-37),r,r*.6); }
-                    }
-                    // Permanent reinforcement joins the desktop edges to the nest;
-                    // the same deterministic lines remain as new layers are added.
-                    var ageRandom=new Random(9041);
-                    for(int i=0;i<layers*5;i++) {
-                        V start=i%2==0?new V(-ex,-ey+ageRandom.NextDouble()*(ey+30)):new V(-ex+ageRandom.NextDouble()*(ex+30),-ey);
-                        if(w.IsColonyResident) start=ColonyAnchor(ex,ey,ageRandom.NextDouble(),120);
-                        V end=new V(Math.Cos(i*2.4)*38,Math.Sin(i*2.4)*48);
-                        if(skin.WebKind==WebKind.Orb || skin.WebKind==WebKind.Crystal) { double angle=Math.PI+(i%13)*Math.PI/24;end=new V(Math.Cos(angle)*radius,Math.Sin(angle)*radius); }
-                        Curve(c,"#6ce4e9df",.35,new Point(start.X,start.Y),new Point(start.X*.55,start.Y*.55),new Point(end.X-4,end.Y-4),new Point(end.X,end.Y));
-                    }
-                    for(int i=0;i<layers/3;i++) { double a=i*2.4;Oval(c,B("#786c6859"),Math.Cos(a)*48,Math.Sin(a)*56,1.5,2.1); }
+                    double growth=.35+.65*w.Web;
+                    if(skin.WebKind==WebKind.Orb || skin.WebKind==WebKind.Crystal)
+                        DrawCornerOrb(c,skin,ex,ey,growth,layers,w.IsColonyResident);
+                    else if(skin.WebKind!=WebKind.Retreat)
+                        DrawCornerSheet(c,skin,ex,ey,growth,layers,w.IsColonyResident);
                 }livingSilk.Freeze();livingSilkImage=new SilkImage();
             }
             if(livingSilkImage.Drawing==null || livingSilkScale!=scale) { livingSilkScale=scale;livingSilkImage=CacheSilk(livingSilk,scale); }

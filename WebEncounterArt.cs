@@ -26,8 +26,8 @@ namespace CornerSpider {
                 path.BezierTo(GuestPoint(strand.B),GuestPoint(strand.C),GuestPoint(strand.D),true,false);
             }g.Freeze();
             double width=strand.Kind==0?.65:strand.Kind==1?.46:.34;
-            d.PushOpacity(strand.Kind==0?.9:strand.Kind==1?.78:.73);
-            d.DrawGeometry(null,P("#722e454f",(width+.7)/factor),g);
+            d.PushOpacity(strand.Kind==0?.9:strand.Kind==1?.78:.77);
+            d.DrawGeometry(null,P("#8436424a",(width+.86)/factor),g);
             d.DrawGeometry(null,P("#edf5fff7",width/factor),g);d.Pop();
         }
         internal static void DrawGuestWeb(DrawingContext d,World w) {

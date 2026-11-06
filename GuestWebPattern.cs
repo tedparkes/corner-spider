@@ -15,7 +15,7 @@ namespace CornerSpider {
         }
     }
     public static class GuestWebPattern {
-        public const int Spokes=16,Turns=9;
+        public const int Spokes=16,Turns=11;
         public const int TopBridgeAnchor=13,SideBridgeAnchor=3;
         public static readonly V Hub=new V(34,36);
         static readonly double[] bridgeTimes={0,.2,.36,.5,.64,.8,1};
@@ -52,9 +52,9 @@ namespace CornerSpider {
             // radial endpoints attach directly to an edge instead of leaving
             // a round orb suspended from a handful of distant guy lines.
             var points=new V[Spokes];
-            var anchors=new[]{new V(0,188),new V(0,126),new V(0,83),new V(0,48),
-                new V(0,18),new V(0,0),new V(22,0),new V(54,0),new V(92,0),
-                new V(136,0),new V(183,0)};
+            var anchors=new[]{new V(0,188),new V(0,130),new V(0,79),new V(0,52),
+                new V(0,16),new V(0,0),new V(17,0),new V(50,0),new V(88,0),
+                new V(130,0),new V(183,0)};
             Array.Copy(anchors,0,points,3,anchors.Length);
             for(int i=0;i<bridgeTimes.Length;i++) points[(13+i)%Spokes]=BridgePoint(bridgeTimes[i]);
             return points;
@@ -98,13 +98,30 @@ namespace CornerSpider {
             // an actual spoke, with modest spacing variation and inward sag.
             int count=Spokes*Turns;
             for(int i=0;i<count;i++) {
-                double r0=SpiralRadius(i,count),r1=SpiralRadius(i+1,count);
-                V a=Hub+(Rim(i)-Hub)*r0,b=Hub+(Rim(i+1)-Hub)*r1;
-                list.Add(Scallop(a,b,2,.065+.012*Math.Sin(i*1.8)));
+                V a=CaptureJunction(i,count),b=CaptureJunction(i+1,count);
+                V towardHub=Hub-(a+b)*.5;
+                double bow=Math.Max(.22,Math.Min(2.3,(b-a).Length*.08))*(.91+.09*Math.Sin(i*1.8));
+                list.Add(Scallop(a,b,2,bow/Math.Max(1,towardHub.Length)));
             }
             return list.ToArray();
         }
-        static double SpiralRadius(int i,int count) { return .94-.82*i/count+.007*Math.Sin(i*.81); }
+        static V CaptureJunction(int i,int count) {
+            V radial=Rim(i)-Hub;
+            double length=radial.Length;
+            double inner=11.5+1.7*Math.Cos(i*Math.PI*2/Spokes+.45);
+            double outer=length-Math.Min(length*.22,5.2+2.1*Math.Sin(i*Math.PI*2/Spokes-.7)+length*.027);
+            // Long frame wings can carry tension without being filled to their
+            // tips with squeezed capture turns.
+            double wing=Math.Max(0,outer-70);
+            outer-=.0038*wing*wing;
+            double progress=(double)i/count;
+            double remaining=1-progress;
+            // A relatively round free zone around the spider, stretching out
+            // toward the shape of the supports in the outer capture turns.
+            double distance=inner+(outer-inner)*(remaining+.075*Math.Sin(remaining*Math.PI))
+                +Math.Sin(i*.73)*.55*Math.Sin(progress*Math.PI);
+            return Hub+radial*(distance/length);
+        }
         public static int Active(double progress) {
             double distance=Math.Max(0,Math.Min(1,progress))*total;
             // Count means all silk is complete. The final walk to the hub

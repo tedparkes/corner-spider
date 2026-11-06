@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## 1.1.0-alpha.5 (local preview)
+
+- Rebuild corner silk around actual desktop edges. Orb webs use curved frames,
+  irregular radii, capture spirals and a clear area around the hub.
+- Give widows and house spiders layered cobwebs with distinct support and capture
+  threads. Give funnel weavers a sheet that merges into a recessed retreat.
+- Reweave jumping spider and resident retreats with open, uneven sleeves and
+  feathered attachment seams. Portia's male platform and female space web differ.
+- Shape the prey web's capture spiral around its hub and leave space at the far
+  ends of its supports. Frame and radials still precede capture silk.
+- Add an offscreen review command for dark and light backgrounds. Refine the
+  designs through three rounds of scored visual critique.
+
 ## 1.1.0-alpha.4 (local preview)
 
 - Smooth fine silk with supersampled transparent artwork and high-quality image

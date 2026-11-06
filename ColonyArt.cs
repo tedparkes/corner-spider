@@ -68,25 +68,5 @@ namespace CornerSpider {
             foreach(var p in w.Residents) { PetCanvas art;if(!colonyArt.TryGetValue(p,out art)) { art=new PetCanvas();colonyArt[p]=art; }art.DrawNestScene(d,p.Actor,p.Record.Species); }
         }
         static V ColonyAnchor(double ex,double ey,double t,double spread) { return ex<ey?new V(-ex,(t*2-1)*spread):new V((t*2-1)*spread,-ey); }
-        DrawingGroup colonyBack,colonyFront;
-        SilkImage colonyBackImage,colonyFrontImage;
-        double colonySilkScale=-1;
-        string colonyKey;
-        void DrawColonyRetreat(DrawingContext d,World w,bool front,string species) {
-            var a=w.Areas[w.HomeArea];double scale=w.HomeScale,ex=Math.Abs((w.Corner.EndsWith("Right")?a.X+a.W:a.X)-w.Home.X)/scale,ey=Math.Abs((w.Corner.StartsWith("Top")?a.Y:a.Y+a.H)-w.Home.Y)/scale;
-            var profile=SilkProfile.Get(species);int growth=(int)(w.Web*30);string key=species+":"+growth+":"+w.WebLayers+":"+ex.ToString("F0")+":"+ey.ToString("F0");
-            if(key!=colonyKey) {
-                colonyKey=key;colonyBack=new DrawingGroup();colonyFront=new DrawingGroup();
-                using(var c=colonyBack.Open()) for(int i=0;i<14+w.WebLayers;i++) { V anchor=ColonyAnchor(ex,ey,i/(double)(13+w.WebLayers),105);V end=new V(Math.Cos(i*2.4)*25,Math.Sin(i*2.4)*36);Line(c,"#b4e5eee6",.65,anchor.X,anchor.Y,end.X,end.Y); }
-                using(var c=colonyFront.Open()) {
-                    c.PushTransform(new RotateTransform(45));c.PushTransform(new ScaleTransform(profile.Width,profile.Length));var shape=Pocket(profile);
-                    c.DrawGeometry(B("#1aeef4e6"),P("#a0e4eee1",.7),shape);c.PushClip(shape);var random=new Random(profile.Seed);
-                    for(int i=0;i<24+growth+w.WebLayers;i++) { double x=R(random,-50,50);Line(c,"#64edf3e8",.35,x,-50,x+R(random,-18,18),58); }
-                    RetreatDetails(c,profile,w.Web);c.Pop();c.Pop();c.Pop();
-                }colonyBack.Freeze();colonyFront.Freeze();colonySilkScale=-1;
-            }
-            if(colonySilkScale!=scale) { colonySilkScale=scale;colonyBackImage=CacheSilk(colonyBack,scale);colonyFrontImage=CacheSilk(colonyFront,scale); }
-            d.PushOpacity(w.WebVisibility);d.PushTransform(new TranslateTransform(w.Home.X,w.Home.Y));d.PushTransform(new ScaleTransform(w.Corner.EndsWith("Right")?-scale:scale,w.Corner.StartsWith("Top")?scale:-scale));d.DrawDrawing((front?colonyFrontImage:colonyBackImage).Drawing);d.Pop();d.Pop();d.Pop();
-        }
     }
 }

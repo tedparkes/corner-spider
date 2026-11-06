@@ -13,7 +13,7 @@ using Forms=System.Windows.Forms;
 [assembly:System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.8")]
 [assembly:System.Reflection.AssemblyVersion("1.1.0.0")]
 [assembly:System.Reflection.AssemblyFileVersion("1.1.0.0")]
-[assembly:System.Reflection.AssemblyInformationalVersion("1.1.0-alpha.4")]
+[assembly:System.Reflection.AssemblyInformationalVersion("1.1.0-alpha.5")]
 [assembly:System.Reflection.AssemblyTitle("Corner Spider")]
 [assembly:System.Reflection.AssemblyProduct("Corner Spider")]
 [assembly:System.Reflection.AssemblyDescription("A local jumping-spider companion for the Windows desktop.")]
@@ -316,8 +316,11 @@ namespace CornerSpider {
             if(args.Length>0 && args[0]=="--quit") {
                 try { using(var signal=EventWaitHandle.OpenExisting(quitEvent)) signal.Set(); } catch(WaitHandleCannotBeOpenedException) {}return 0;
             }
-            bool test=args.Length>0 && (args[0]=="--colony-load-test" || args[0]=="--self-test" || args[0]=="--desktop-test" || args[0]=="--render-preview" || args[0]=="--finger-preview" || args[0]=="--prey-preview" || args[0]=="--encounter-preview" || args[0]=="--travel-preview" || args[0]=="--life-preview" || args[0]=="--release-preview" || args[0]=="--hammock-preview" || args[0]=="--silk-test" || args[0]=="--silk-sampling-test" || args[0]=="--dismount-preview" || args[0]=="--nest-preview");
-            bool created;using(var mutex=new Mutex(true,test?"Local\\CornerSpiderPet_Tests":"Local\\CornerSpiderPet_v1",out created)) {
+            bool test=args.Length>0 && (args[0]=="--colony-load-test" || args[0]=="--self-test" || args[0]=="--desktop-test" || args[0]=="--render-preview" || args[0]=="--finger-preview" || args[0]=="--prey-preview" || args[0]=="--encounter-preview" || args[0]=="--travel-preview" || args[0]=="--life-preview" || args[0]=="--release-preview" || args[0]=="--hammock-preview" || args[0]=="--web-review" || args[0]=="--silk-test" || args[0]=="--silk-sampling-test" || args[0]=="--dismount-preview" || args[0]=="--nest-preview");
+            // Offscreen review plates do not open overlays or own input hooks.
+            string mutexName=args.Length>0 && args[0]=="--web-review"?"Local\\CornerSpiderPet_WebReview":
+                test?"Local\\CornerSpiderPet_Tests":"Local\\CornerSpiderPet_v1";
+            bool created;using(var mutex=new Mutex(true,mutexName,out created)) {
                 if(!created) return 0;
                 PetHost host=null;try {
                     var app=new Application { ShutdownMode=ShutdownMode.OnExplicitShutdown };
