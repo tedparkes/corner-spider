@@ -64,7 +64,7 @@ namespace CornerSpider {
         V GuestLocal(double x,double y) { return GuestCorner+new V(x*(GuestInward.X>0?1:-1),y*(GuestInward.Y>0?1:-1)); }
         V SafeGuestPerch(V preferred) {
             if(!GuestContains(preferred,SpiderPose.Radius*BodyScale+12*GuestScale)) return preferred;
-            V best=Home;double distance=double.MaxValue;
+            V best=HasCornerSleeve?NestEntrance:Home;double distance=double.MaxValue;
             for(int area=0;area<Areas.Count;area++) for(int corner=0;corner<4;corner++) {
                 V p=Perch(area,corner);if(GuestContains(p,SpiderPose.Radius*Scale*Areas[area].Dpi+12*GuestScale)) continue;
                 double d=(p-Spider).Length;if(d<distance) { best=p;distance=d; }

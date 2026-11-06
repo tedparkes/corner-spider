@@ -56,7 +56,13 @@ namespace CornerSpider {
         public double BodyScale { get { return Scale*pixelScale*LifeSize; } }
         public double HomeScale { get { return (IsColonyResident?ResidentWebScale:Scale)*Areas[Math.Min(HomeArea,Areas.Count-1)].Dpi; } }
         // The retreat runs diagonally between the two adjacent desktop edges.
-        public double NestAngle { get { return Corner.StartsWith("Top")?(Corner.EndsWith("Right")?135:225):(Corner.EndsWith("Right")?45:315); } }
+        public double NestAngle {
+            get {
+                bool top=Corner.StartsWith("Top"),right=Corner.EndsWith("Right");
+                if(HasCornerSleeve) return top?(right?45:315):(right?135:225);
+                return top?(right?135:225):(right?45:315);
+            }
+        }
         double nestRest;
         public double NestTuck { get { return nestRest*nestRest*(3-2*nestRest); } }
         public World(double width,double height,int seed) {
@@ -97,7 +103,8 @@ namespace CornerSpider {
             else if(choice<.28) corner=(corner+(random.NextDouble()<.5?1:3))%4;
             // Most excursions are tiny adjustments within the current sheltered corner.
             Target=Clamp(Perch(area,corner)+new V(Between(-22,22),Between(-18,18))*Scale*Areas[area].Dpi);
-            if(SpeciesTraits && behavior.HomeAffinity>0 && random.NextDouble()<behavior.HomeAffinity) Target=Home;
+            if(SpeciesTraits && behavior.HomeAffinity>0 && random.NextDouble()<behavior.HomeAffinity)
+                Target=HasCornerSleeve?NestEntrance:Home;
             Target=SafeGuestPerch(Target);
             PlanCornerRoute(Target);
             Enter(Mood.Walk);
@@ -115,10 +122,10 @@ namespace CornerSpider {
         public void UpdateHome() {
             if(IsColonyResident) { Home=ResidentHome;ResetNestRoute();return; }
             HomeArea=Math.Max(0,Math.Min(Areas.Count-1,HomeArea));var a=Areas[HomeArea];double s=HomeScale;
-            // Pull one side of the diagonal sleeve close to the wall. The
-            // wider gap on the other side leaves a route out from behind it.
-            double insetX=Math.Min((WebDweller?160:116)*s,a.W*.5);
-            double insetY=Math.Min((WebDweller?160:144)*s,a.H*.5);
+            // The compact sleeve uses an opening facing the room. Open webs
+            // and Portia's platforms keep the space needed on their far side.
+            double insetX=Math.Min((HasCornerSleeve?48:WebDweller?160:116)*s,a.W*.5);
+            double insetY=Math.Min((HasCornerSleeve?48:WebDweller?160:144)*s,a.H*.5);
             V home=new V(Corner.EndsWith("Right")?a.X+a.W-insetX:a.X+insetX,
                 Corner.StartsWith("Top")?a.Y+insetY:a.Y+a.H-insetY);
             if((home-Home).Length>.01) nestInside=false;
@@ -257,14 +264,15 @@ namespace CornerSpider {
             int from=AreaAt(Spider),to=AreaAt(destination);if(from==to) return destination;
             var a=Areas[from];var b=Areas[to];
             // Steer through the shared edge/overlap instead of straight into a blank desktop gap.
-            double lo=Math.Max(a.Y,b.Y)+SpiderPose.Radius*BodyScale,hi=Math.Min(a.Y+a.H,b.Y+b.H)-SpiderPose.Radius*BodyScale;
+            double margin=SpiderPose.Radius*Scale*LifeSize*Math.Max(pixelScale,Math.Max(a.Dpi,b.Dpi));
+            double lo=Math.Max(a.Y,b.Y)+margin,hi=Math.Min(a.Y+a.H,b.Y+b.H)-margin;
             if(hi>=lo) {
                 double x=b.Center.X>a.Center.X?a.X+a.W:a.X;
                 V gate=new V(x,Math.Max(lo,Math.Min(hi,destination.Y)));
                 if((gate-Spider).Length>4*BodyScale) return gate;
                 return new V(b.Center.X>a.Center.X?b.X+3:b.X+b.W-3,gate.Y);
             }
-            lo=Math.Max(a.X,b.X)+SpiderPose.Radius*BodyScale;hi=Math.Min(a.X+a.W,b.X+b.W)-SpiderPose.Radius*BodyScale;
+            lo=Math.Max(a.X,b.X)+margin;hi=Math.Min(a.X+a.W,b.X+b.W)-margin;
             if(hi>=lo) {
                 double y=b.Center.Y>a.Center.Y?a.Y+a.H:a.Y;
                 V gate=new V(Math.Max(lo,Math.Min(hi,destination.X)),y);
@@ -289,7 +297,10 @@ namespace CornerSpider {
             if(step>.01 && (next-Spider).Length<.01 && AreaAt(Spider)!=AreaAt(destination)) {
                 // A layout may contain a real gap. Cross it deliberately, never strand the pet.
                 // Turning or braking with planted feet is not a blocked screen edge.
-                PrepareJump(Areas[AreaAt(destination)].Clamp(dest,SpiderPose.Radius*BodyScale),"transit");Target=destination;return false;
+                bool returning=State==Mood.Return;
+                PrepareJump(Areas[AreaAt(destination)].Clamp(dest,SpiderPose.Radius*BodyScale),"transit");
+                Target=returning?Home:destination;
+                return false;
             }
             StepPhase+=(next-Spider).Length/(4.5*BodyScale);Spider=next;return false;
         }

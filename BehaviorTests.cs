@@ -8,12 +8,10 @@ class BehaviorTests {
     static void Main() {
         try {
             var w=New();
-            Assert(w.Width-w.Home.X<125 && w.Home.Y<150,"Default retreat sits close to both sides of its corner");
-            var retreat=SilkProfile.Get(w.Species);
-            double sleeveEnd=Math.Max(-retreat.Along(0),retreat.Along(1))*retreat.Length*w.HomeScale;
+            Assert(w.Width-w.Home.X<55 && w.Home.Y<55,"The sleeve is tucked into the corner vertex");
             Assert((w.Clamp(w.NestEntrance)-w.NestEntrance).Length<.001 &&
-                (w.Clamp(w.NestExit)-w.NestExit).Length<.001 &&
-                (w.NestEntrance-w.Home).Length>sleeveEnd,"Both nest ends clear the sleeve and the whole spider fits");
+                (w.NestExit-w.NestEntrance).Length<.001 &&
+                (w.NestEntrance-w.Home).Length>40*w.HomeScale,"The room-side opening has a full-size approach");
             foreach(string corner in new string[]{"TopLeft","TopRight","BottomLeft","BottomRight"}) {
                 w.Corner=corner; w.UpdateHome(); w.GoHome(); Advance(w,50,away);
                 Assert(w.Spider.X>=0 && w.Spider.X<=w.Width && w.Spider.Y>=0 && w.Spider.Y<=w.Height,"Corner bounds");

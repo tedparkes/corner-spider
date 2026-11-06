@@ -90,7 +90,7 @@ namespace CornerSpider {
                     d.PushOpacity(l.Stage==LifeStage.MaleMeal?Math.Max(0,1-l.StageAge/6):1);DrawSpider(d,visitorArt,mate);d.Pop(); }
             }
             if(w.HasSac) {
-                V p=w.Home+w.NestForward*48*w.HomeScale;double s=w.HomeScale;
+                V p=w.Home+w.NestRoomDirection*48*w.HomeScale;double s=w.HomeScale;
                 double grow=l.Stage==LifeStage.Laying?Math.Min(1,l.StageAge/30):1;
                 d.PushOpacity(grow);Oval(d,Glow("#ece6d2","#a69f8b"),p.X,p.Y,10*s,13*s);
                 if(SkinCatalog.Get(w.Species).Pattern=="BrownWidow") for(int i=0;i<13;i++) { double a=i*Math.PI*2/13;Line(d,"#ddd4bc",1.5*s,p.X+Math.Cos(a)*9*s,p.Y+Math.Sin(a)*12*s,p.X+Math.Cos(a)*13*s,p.Y+Math.Sin(a)*16*s); }

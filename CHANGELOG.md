@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 1.1.0-alpha.7 (local preview)
+
+- Tuck cocoon-style retreats into the corner vertex with tapered silk extending
+  along both edges, following the sketched placement.
+- Open the sleeve toward the room. The spider crawls in head first, fits its
+  pose inside, and backs out through the same opening.
+- Use both screens' clearance at a display crossing so a return to the corner
+  stays smooth when DPI changes.
+
 ## 1.1.0-alpha.6 (local preview)
 
 - Give the Cross orb a rounder capture field, clear hub and wider spiral

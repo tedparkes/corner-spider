@@ -226,9 +226,10 @@ namespace CornerSpider {
         }
         public static void DrawSpider(DrawingContext d,World w,string species) {
             if(SkinCatalog.Get(species).Category!="Jumping spiders") { DrawFamilySpider(d,w,SkinCatalog.Get(species));return; }
+            double scale=w.DrawBodyScale;
             d.PushTransform(new TranslateTransform(w.Spider.X,w.Spider.Y));
-            Oval(d,B("#16000000"),0,12*w.BodyScale,18*w.BodyScale,9*w.BodyScale);
-            d.PushTransform(new TranslateTransform(0,-w.Lift));d.PushTransform(new ScaleTransform(w.BodyScale,w.BodyScale));
+            Oval(d,B("#16000000"),0,12*scale,18*scale,9*scale);
+            d.PushTransform(new TranslateTransform(0,-w.Lift));d.PushTransform(new ScaleTransform(scale,scale));
             d.PushTransform(new RotateTransform(w.Angle));
             // Feet stay in their own articulated frame while the body lowers to brace.
             for(int leg=3;leg>=0;leg--) for(int side=-1;side<=1;side+=2)

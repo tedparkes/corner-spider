@@ -79,10 +79,11 @@ namespace CornerSpider {
             if(exclusive) { ClearPlay();Spider=Home;Speed=GaitBlend=0;Angle=desiredAngle=NestAngle;State=Mood.Sleep;StateTime=1;nestInside=true;nestRest=Math.Min(1,nestRest+dt); }
             if(l.Stage==LifeStage.Courting || l.Stage==LifeStage.Mating || l.Stage==LifeStage.MaleMeal) {
                 nestRest=0;State=l.Stage==LifeStage.Courting?Mood.Inspect:l.Stage==LifeStage.MaleMeal?Mood.Eat:Mood.Groom;StateTime=l.StageAge;
-                if(l.Stage==LifeStage.MaleMeal) Spider=Home+NestForward*(12*HomeScale*Math.Min(1,l.StageAge/.22));
+                if(HasCornerSleeve) Angle=desiredAngle=(NestAngle+180)%360;
+                if(l.Stage==LifeStage.MaleMeal) Spider=Home+NestRoomDirection*(12*HomeScale*Math.Min(1,l.StageAge/.22));
             }
-            if(l.Stage==LifeStage.Molting) Spider=Home+NestForward*(10*Math.Max(0,(l.StageAge-30)/15)*HomeScale);
-            if(l.Stage==LifeStage.Recovering) Spider=Home+NestForward*((10+20*Math.Min(1,l.StageAge/90))*HomeScale);
+            if(l.Stage==LifeStage.Molting) Spider=Home+NestRoomDirection*(10*Math.Max(0,(l.StageAge-30)/15)*HomeScale);
+            if(l.Stage==LifeStage.Recovering) Spider=Home+NestRoomDirection*((10+20*Math.Min(1,l.StageAge/90))*HomeScale);
             switch(l.Stage) {
                 case LifeStage.Molting:if(l.StageAge>=45) { l.Molts++;l.GrowthAt=l.Age;l.GrowthSpan=MoltHours*3600;l.NextMolt=l.Age+l.GrowthSpan;LifeEnter(LifeStage.Recovering); }break;
                 case LifeStage.Recovering:if(l.StageAge>=90) { LifeEnter(LifeStage.Quiet);Wake(); }break;
@@ -99,7 +100,7 @@ namespace CornerSpider {
         }
         public V MatePosition {
             get { var l=Life;V start=Home+new V(Corner.EndsWith("Right")?-1:1,Corner.StartsWith("Top")?1:-1)*135*HomeScale;
-                V contact=Home+NestForward*38*HomeScale;
+                V contact=Home+NestRoomDirection*38*HomeScale;
                 if(l.Stage==LifeStage.Courting) { double t=Math.Min(1,l.StageAge/28);return start+(contact-start)*(t*t*(3-2*t)); }
                 if(l.Stage==LifeStage.MaleLeaving) return contact+(DeparturePoint(0)-contact)*Math.Min(1,l.StageAge/12);
                 return contact;
@@ -114,7 +115,10 @@ namespace CornerSpider {
         public V BabyPosition(int index) {
             double a=index*2.399+Math.Sin(Life.Age*.13+index)*.18,r=(30+index*6)*HomeScale;
             V nest=Home+new V(Math.Cos(a),Math.Sin(a))*r;
-            if(Life.Stage!=LifeStage.Dispersing) return Areas[HomeArea].Clamp(nest,10*HomeScale);
+            if(Life.Stage!=LifeStage.Dispersing) {
+                double margin=HasCornerSleeve?Math.Max(10,SpiderPose.Radius*BabySize):10;
+                return Areas[HomeArea].Clamp(nest,margin*HomeScale);
+            }
             double t=Math.Max(0,Math.Min(1,(Life.StageAge-index*5)/(DepartureSeconds-25)));
             return nest+(DeparturePoint(index)-nest)*(t*t*(3-2*t));
         }

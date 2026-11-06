@@ -6,20 +6,46 @@ namespace CornerSpider {
         bool nestInside;
         List<V> nestRoute;
         int nestWaypoint;
+        public bool HasCornerSleeve { get { return !IsColonyResident && !WebDweller && !HuntsSpiders; } }
         public V NestForward { get { double a=NestAngle*Math.PI/180;return new V(Math.Sin(a),-Math.Cos(a)); } }
+        public V NestRoomDirection { get { return NestForward*(HasCornerSleeve?-1:1); } }
         double NestClearance { get { return SpiderPose.Radius*Math.Max(HomeScale*LifeSize,BodyScale); } }
+        public double DrawBodyScale {
+            get {
+                double scale=BodyScale;
+                if(!HasCornerSleeve || (!nestInside && (Spider-Home).Length>.001)) return scale;
+                var area=Areas[HomeArea];
+                double x=Math.Min(Spider.X-area.X,area.X+area.W-Spider.X);
+                double y=Math.Min(Spider.Y-area.Y,area.Y+area.H-Spider.Y);
+                // Folded legs need less clearance than a walking stance.
+                double radius=SpiderPose.Radius-20*NestTuck;
+                return Math.Min(scale,Math.Max(.001,Math.Min(x,y)/radius));
+            }
+        }
         // A real entrance, measured on the retreat's long axis. Both ends stay
         // on that axis even on an unusually small work area.
         double NestRun {
             get {
                 var a=Areas[HomeArea];double margin=NestClearance;
+                if(HasCornerSleeve) {
+                    V room=NestRoomDirection;
+                    double horizontal=room.X>0?a.X+a.W-Home.X:Home.X-a.X;
+                    double vertical=room.Y>0?a.Y+a.H-Home.Y:Home.Y-a.Y;
+                    return Math.Max(0,Math.Min(96*HomeScale,Math.Min(
+                        horizontal-Math.Min(margin,a.W/2),vertical-Math.Min(margin,a.H/2))*Math.Sqrt(2)));
+                }
                 double x=Math.Min(Home.X-a.X,a.X+a.W-Home.X)-Math.Min(margin,a.W/2);
                 double y=Math.Min(Home.Y-a.Y,a.Y+a.H-Home.Y)-Math.Min(margin,a.H/2);
                 return Math.Max(0,Math.Min(96*HomeScale,Math.Min(x,y)*Math.Sqrt(2)));
             }
         }
-        public V NestEntrance { get { return Home-NestForward*NestRun; } }
-        public V NestExit { get { return Home+NestForward*NestRun; } }
+        public V NestEntrance {
+            get {
+                V mouth=Home-NestForward*NestRun;
+                return HasCornerSleeve?Areas[HomeArea].Clamp(mouth,NestClearance):mouth;
+            }
+        }
+        public V NestExit { get { return HasCornerSleeve?NestEntrance:Home+NestForward*NestRun; } }
         public bool UnderNestSilk { get { return nestInside && (Spider-Home).Length<150*HomeScale; } }
         void ResetNestRoute() { nestRoute=null;nestWaypoint=0; }
         void StartNestExit() { cornerWaypoint=null;ResetNestRoute();Enter(Mood.ExitNest); }
@@ -28,6 +54,12 @@ namespace CornerSpider {
         // A tiny visibility graph also handles starting on the far side of it.
         void PlanNestEntry() {
             nestRoute=new List<V>();nestWaypoint=0;
+            if(HasCornerSleeve) {
+                V approach=SleeveApproach(Areas[HomeArea]);
+                if((approach-Spider).Length>.001) nestRoute.Add(approach);
+                nestRoute.Add(NestEntrance);
+                return;
+            }
             if(!WebDweller && !IsColonyResident && NestRun>=65*HomeScale && PlanSleeveEntry()) return;
             var a=Areas[HomeArea];double margin=NestClearance;
             double hx=Math.Max(0,Math.Min(90*HomeScale,Math.Min(Home.X-a.X,a.X+a.W-Home.X)-Math.Min(margin,a.W/2)));
@@ -138,7 +170,10 @@ namespace CornerSpider {
             if((Spider-Home).Length<2*HomeScale) { Spider=Home;nestInside=true;desiredAngle=NestAngle;Enter(Mood.Sleep);return; }
             if(UnderNestSilk) { ResetNestRoute();Enter(Mood.EnterNest);return; }
             // Keep the existing perimeter and cross-monitor route until local.
-            if(AreaAt(Spider)!=HomeArea || cornerWaypoint.HasValue) { BurstMove(Home,190,dt,false);return; }
+            if(AreaAt(Spider)!=HomeArea || cornerWaypoint.HasValue) {
+                BurstMove(HasCornerSleeve?NestEntrance:Home,190,dt,false);
+                return;
+            }
             if(nestRoute==null) PlanNestEntry();
             if(nestWaypoint<nestRoute.Count) {
                 if(BurstMove(nestRoute[nestWaypoint],150,dt,false)) nestWaypoint++;
@@ -147,15 +182,32 @@ namespace CornerSpider {
             nestInside=true;Face(Home);Enter(Mood.EnterNest);
         }
         void CrawlIntoNest(double dt) {
-            Face(Home);
+            if(HasCornerSleeve) desiredAngle=NestAngle;
+            else Face(Home);
             // Hold at the mouth to finish turning, then keep a deliberate gait.
             if(StateTime<.3 || Math.Abs(AngleDelta(Angle,desiredAngle))>8) { Speed=0;return; }
-            if(Move(Home,38,dt)) { desiredAngle=NestAngle;Enter(Mood.Sleep); }
+            bool arrived=HasCornerSleeve?CrawlSleeve(Home,38,dt):Move(Home,38,dt);
+            if(arrived) { desiredAngle=NestAngle;Enter(Mood.Sleep); }
         }
         void CrawlOutOfNest(double dt) {
             desiredAngle=NestAngle;
             if(nestRest>0 || StateTime<.3 || Math.Abs(AngleDelta(Angle,desiredAngle))>8) { Speed=0;return; }
-            if(Move(NestExit,42,dt)) { nestInside=false;decision=Between(4,8);Enter(HasFly && !GuestPrey?Mood.Notice:Mood.Rest); }
+            bool arrived=HasCornerSleeve?CrawlSleeve(NestExit,42,dt):Move(NestExit,42,dt);
+            if(arrived) { nestInside=false;decision=Between(4,8);Enter(HasFly && !GuestPrey?Mood.Notice:Mood.Rest); }
+        }
+        bool CrawlSleeve(V destination,double pace,double dt) {
+            // The short corridor stays in the home area. Use the sleeve's
+            // fitted pose here so the normal walking margin does not block it.
+            V delta=destination-Spider;
+            double distance=delta.Length;
+            Speed=pace*HomeScale;
+            double step=Math.Min(distance,Speed*dt);
+            if(distance>.000001) Spider+=delta*(step/distance);
+            StepPhase+=step/(4.5*DrawBodyScale);
+            if(step<distance) return false;
+            Spider=destination;
+            Speed=0;
+            return true;
         }
     }
 }

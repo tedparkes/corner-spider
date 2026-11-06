@@ -7,7 +7,7 @@ static class HammockTests {
     static void Check(bool ok,string message) { checks++;if(!ok) throw new Exception("Hammock: "+message); }
     public static void Run() {
         string[] corners={"TopLeft","TopRight","BottomLeft","BottomRight"};
-        double[] angles={225,135,315,45};
+        double[] angles={315,45,225,135};
         foreach(var skin in SkinCatalog.All) {
             var silk=SilkProfile.Get(skin.Id);
             for(int i=0;i<=100;i++) for(int side=-1;side<=1;side+=2) {
@@ -34,7 +34,7 @@ static class HammockTests {
                     if(leg==0) { V3 axis=p.Ankle3-p.Hip3,knee=p.Knee3-p.Hip3;Check(Math.Abs(axis.X*knee.Y-axis.Y*knee.X)<.0001,"folded front hinge stays in its radial plane"); }
                     double angle=w.Angle*Math.PI/180;
                     foreach(V joint in new[]{p.Root,p.Hip,p.Knee,p.Ankle,p.Toe,p.Tip}) {
-                        V at=w.Spider+new V(joint.X*Math.Cos(angle)-joint.Y*Math.Sin(angle),joint.X*Math.Sin(angle)+joint.Y*Math.Cos(angle))*w.BodyScale;
+                        V at=w.Spider+new V(joint.X*Math.Cos(angle)-joint.Y*Math.Sin(angle),joint.X*Math.Sin(angle)+joint.Y*Math.Cos(angle))*w.DrawBodyScale;
                         Check(w.Areas[1].Contains(at),"folded limbs stay within the home monitor at every size and DPI");
                     }
                 }

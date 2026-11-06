@@ -37,7 +37,8 @@ static class LifeTests {
         w.Life.NextMolt=w.Life.Age+99999;w.Life.NextMate=w.Life.Age+99999;
         w.Spider=w.Home;w.State=Mood.Rest;Check(w.InviteMate(),"female accepts a same-species visit when free");
         Step(w,29);Check(w.Life.Stage==LifeStage.Mating,"readable courtship precedes mating");
-        V meeting=w.MatePosition-w.Home;Check(meeting.X*w.NestForward.X+meeting.Y*w.NestForward.Y>0,"male reaches the female's face rather than her abdomen");
+        double facing=w.Angle*Math.PI/180;
+        V meeting=w.MatePosition-w.Home;Check(meeting.X*Math.Sin(facing)-meeting.Y*Math.Cos(facing)>0,"male reaches the female's face");
         Step(w,24);Check(w.Life.Stage==LifeStage.MaleLeaving || w.Life.Stage==LifeStage.MaleMeal,"male departure or cannibalism follows mating");
         Step(w,14);Check(w.Life.Stage==LifeStage.Gravid,"gravid development begins after the visit");
         w.Life.StageAge=World.GravidSeconds/2;Check(w.GravidAmount>.49 && w.GravidAmount<.51,"abdomen fills gradually");

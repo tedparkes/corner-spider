@@ -11,7 +11,10 @@ static class NestEntryTests {
         bool entered=false;int crawlSteps=0;double crawlPhase=0,lastAlong=-10000;
         for(int i=0;i<12000 && w.State!=Mood.Sleep;i++) {
             V before=w.Spider;Mood state=w.State;w.Tick(dt,away);
-            Check((w.Spider-before).Length<200*w.BodyScale*dt+2*w.BodyScale,"return has no teleport or abrupt position change");
+            Check((w.Spider-before).Length<200*w.BodyScale*dt+2*w.BodyScale,
+                "return has no teleport or abrupt position change: "+w.Corner+", size="+w.Scale+
+                ", DPI="+w.Areas[w.HomeArea].Dpi+", "+state+" -> "+w.State+
+                ", from="+before.X+","+before.Y+" to="+w.Spider.X+","+w.Spider.Y);
             Check(w.InsideAny(w.Spider),"approach stays on the display");
             if(w.State==Mood.EnterNest) {
                 if(!entered) { if(requireEntrance) Check((w.Spider-w.NestEntrance).Length<.01,"crawl begins at an end, not the cocoon side");crawlPhase=w.StepPhase; }
@@ -28,16 +31,20 @@ static class NestEntryTests {
                 for(int side=-1;side<=1;side+=2) for(int leg=0;leg<4;leg++) {
                     var pose=SpiderPose.Leg(w,side,leg);
                     foreach(V joint in new[]{pose.Knee,pose.Ankle,pose.Tip}) {
-                        V at=w.Spider+new V(joint.X*Math.Cos(angle)-joint.Y*Math.Sin(angle),joint.X*Math.Sin(angle)+joint.Y*Math.Cos(angle))*w.BodyScale;
+                        V at=w.Spider+new V(joint.X*Math.Cos(angle)-joint.Y*Math.Sin(angle),joint.X*Math.Sin(angle)+joint.Y*Math.Cos(angle))*w.DrawBodyScale;
                         Check(w.Areas[w.HomeArea].Contains(at),"entrance keeps the whole leg pose on the home display");
                     }
                 }
             } else if(w.State==Mood.Return) {
                 Check(!w.UnderNestSilk,"approaching from outside does not fade under the silk");
                 // The centre of the body must never cross a side wall on its way to the mouth.
-                Check(Math.Abs(Across(w,w.Spider))>32 || Math.Abs(Along(w,w.Spider))>60,
-                    "return route stays outside the cocoon body: "+w.Corner+", scale="+w.Scale+
-                    ", DPI="+w.Areas[w.HomeArea].Dpi+", along="+Along(w,w.Spider)+", across="+Across(w,w.Spider));
+                if(w.HasCornerSleeve) Check(w.AreaAt(w.Spider)!=w.HomeArea ||
+                    Math.Abs(Across(w,w.Spider))>32 || Along(w,w.Spider)<-16,
+                    "the walking approach stays clear of the sleeping area: "+
+                    w.Corner+", size="+w.Scale+", DPI="+w.Areas[w.HomeArea].Dpi+
+                    ", screen="+w.AreaAt(w.Spider)+", along="+Along(w,w.Spider)+", across="+Across(w,w.Spider));
+                else Check(Math.Abs(Across(w,w.Spider))>32 || Math.Abs(Along(w,w.Spider))>60,
+                    "return route stays outside the cocoon body");
             }
         }
         Check(w.State==Mood.Sleep && (w.Spider-w.Home).Length<.01,"return finishes inside the retreat: corner="+w.Corner+", scale="+w.Scale+", dpi="+w.Areas[w.HomeArea].Dpi+", state="+w.State+", position="+w.Spider.X+","+w.Spider.Y+", home="+w.Home.X+","+w.Home.Y);
@@ -54,7 +61,7 @@ static class NestEntryTests {
             double web=w.Web;w.Wake();Check(w.State==Mood.ExitNest && w.NestTuck==1,"wake starts by unfolding in the pocket");
             for(int i=0;i<320 && w.State==Mood.ExitNest;i++) {
                 V before=w.Spider;double tuck=w.NestTuck;w.Tick(.025,away);
-                Check(Math.Abs(Across(w,w.Spider))<.01,"waking spider leaves through the other end");
+                Check(Math.Abs(Across(w,w.Spider))<.01,"waking spider stays on the axis of the opening");
                 if(tuck>0) Check((w.Spider-before).Length<.001,"unfolds before walking out");
             }
             Check(w.State==Mood.Rest && (w.Spider-w.NestExit).Length<.01 && !w.UnderNestSilk,"exit clears the silk completely");

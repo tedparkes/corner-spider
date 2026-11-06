@@ -13,7 +13,7 @@ using Forms=System.Windows.Forms;
 [assembly:System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.8")]
 [assembly:System.Reflection.AssemblyVersion("1.1.0.0")]
 [assembly:System.Reflection.AssemblyFileVersion("1.1.0.0")]
-[assembly:System.Reflection.AssemblyInformationalVersion("1.1.0-alpha.6")]
+[assembly:System.Reflection.AssemblyInformationalVersion("1.1.0-alpha.7")]
 [assembly:System.Reflection.AssemblyTitle("Corner Spider")]
 [assembly:System.Reflection.AssemblyProduct("Corner Spider")]
 [assembly:System.Reflection.AssemblyDescription("A local jumping-spider companion for the Windows desktop.")]
@@ -126,6 +126,7 @@ namespace CornerSpider {
             World.FingerTone=Settings.FingerTone;World.WebVisibility=Settings.WebVisibility;
             World.AttentionDistance=Settings.AttentionDistance;World.DismissDistance=Settings.DismissDistance;World.NextFly=Math.Min(35,World.FlyInterval);
             BuildTray();RefreshDisplays();World.Spider=World.Home;World.RestoreLife();
+            if(World.HasCornerSleeve && !World.LifeBusy) World.GoHome(false);
             World.KeepBabies=Settings.KeepBabies;World.ResidentLimit=Settings.ResidentLimit;World.RestoreResidents(Settings.Colonists);
             Updates=new UpdateController(this);
             timer.Interval=TimeSpan.FromMilliseconds(33);timer.Tick+=OnTick;

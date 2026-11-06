@@ -17,13 +17,13 @@ namespace CornerSpider {
             Check(entering && w.State==Mood.Sleep && w.UnderNestSilk,"native world crawls inside before its silk cover and sleep pose");
             for(int i=0;i<100;i++) w.Tick(.025,new V(-10000,-10000));w.Wake();
             for(int i=0;i<400 && w.State==Mood.ExitNest;i++) w.Tick(.025,new V(-10000,-10000));
-            Check(w.State==Mood.Rest && !w.UnderNestSilk && (w.Spider-w.NestExit).Length<.01,"native world leaves through the other end on waking");
+            Check(w.State==Mood.Rest && !w.UnderNestSilk && (w.Spider-w.NestExit).Length<.01,"native world clears the opening on waking");
             w.AutoFeed=w.CursorPlay=true;host.Render();
         }
         static World EntryScene(string corner) {
             var w=new World(1000,800,39);w.AutoFeed=w.CursorPlay=false;w.Corner=corner;w.SetScale(1.5);w.Web=.8;
             V f=w.NestForward;double side=corner.StartsWith("Top")==corner.EndsWith("Right")?1:-1;
-            w.Spider=w.Home+new V(f.Y,-f.X)*(150*w.HomeScale*side);w.Angle=31;w.GoHome();return w;
+            w.Spider=w.Clamp(w.Home+new V(f.Y,-f.X)*(150*w.HomeScale*side));w.Angle=31;w.GoHome();return w;
         }
         static double EntryAlong(World w) { V p=(w.Spider-w.Home)*(1/w.HomeScale),f=w.NestForward;return p.X*f.X+p.Y*f.Y; }
         static bool EntryStage(World w,int stage) {
@@ -32,7 +32,7 @@ namespace CornerSpider {
             if(stage==2) return w.State==Mood.EnterNest && EntryAlong(w)>-55;
             if(stage==3) return w.State==Mood.EnterNest && EntryAlong(w)>-20;
             if(stage==4) return w.State==Mood.Sleep && w.NestTuck==1;
-            return w.State==Mood.ExitNest && EntryAlong(w)>45;
+            return w.State==Mood.ExitNest && EntryAlong(w)<-45;
         }
         static void DrawEntryScene(DrawingContext d,PetCanvas canvas,World w,bool dark) {
             d.PushClip(new RectangleGeometry(new Rect(0,0,500,500)));
@@ -41,7 +41,7 @@ namespace CornerSpider {
             canvas.DrawNestScene(d,w,"Bold");d.Pop();d.Pop();
         }
         public static void RenderNestEntry(string folder) {
-            string[] names={"Walk around the outside","Line up at the end","Head and front legs enter","Abdomen follows through","Settle inside the silk","Wake and crawl out the other end"};
+            string[] names={"Approach from the room","Line up at the opening","Head and front legs enter","Abdomen follows through","Settle inside the silk","Wake and back out"};
             var canvas=new PetCanvas();
             foreach(bool dark in new[]{true,false}) {
                 var visual=new DrawingVisual();using(var d=visual.RenderOpen()) {

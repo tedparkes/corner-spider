@@ -100,6 +100,61 @@ namespace CornerSpider {
             return RetreatCurvePoint(a,c,e,b,join);
         }
 
+        static Point CornerPocketJoint(SilkProfile profile,double width,double length,int side,double t) {
+            Point point=PocketPoint(profile,side,t);
+            double x=point.X*width,y=point.Y*length;
+            const double diagonal=.7071067811865476;
+            return new Point((x-y)*diagonal,(x+y)*diagonal);
+        }
+
+        static void CornerPocketFrame(DrawingContext d,SilkProfile profile,int level,int repairs,
+                                      double ex,double ey,double width,double length) {
+            // The pouch is against the corner. Two long, shallow runs follow
+            // the walls and taper into the short fibers carrying each flank.
+            for(int wall=0;wall<2;wall++) {
+                bool top=wall==0;
+                int side=top?-1:1;
+                var random=new Random(profile.Seed+517+wall*311);
+                double reach=top?165:180;
+                Point root=top?new Point(ex-reach,-ey):new Point(ex,reach-ey);
+                Point shoulder=CornerPocketJoint(profile,width,length,side,.72);
+                Point c=top?new Point(root.X+reach*.36,root.Y+1.8):
+                    new Point(root.X-1.6,root.Y-reach*.39);
+                Point e=top?new Point(shoulder.X-20,shoulder.Y-7):
+                    new Point(shoulder.X+8,shoulder.Y+24);
+                Curve(d,"#573c484c",1.02,root,c,e,shoulder);
+                Curve(d,"#9eeef3e7",.45,root,c,e,shoulder);
+                RetreatAttachment(d,root,top,6);
+
+                Point first=CornerPocketJoint(profile,width,length,side,.20);
+                Point last=CornerPocketJoint(profile,width,length,side,.48);
+                for(int i=0;i<3;i++) {
+                    double distance=8+i*13+RetreatRange(random,-1.6,1.6);
+                    Point anchor=top?new Point(ex-distance,-ey):new Point(ex,distance-ey);
+                    RetreatAttachment(d,anchor,top,RetreatRange(random,4.5,6.8));
+                    Point end=RetreatMix(first,last,.16+i*.34);
+                    RetreatFiber(d,anchor,end,RetreatRange(random,-1.6,2.5),i==1?.55:.36,.49,i!=2);
+                }
+                for(int i=0;i<6;i++) {
+                    double t=.21+i*.13+RetreatRange(random,-.027,.027);
+                    Point join=RetreatCurvePoint(root,c,e,shoulder,t);
+                    double stagger=RetreatRange(random,-8,9);
+                    Point anchor=top?new Point(join.X+stagger,-ey):new Point(ex,join.Y+stagger);
+                    RetreatAttachment(d,anchor,top,4.7+i*.25);
+                    RetreatFiber(d,anchor,join,RetreatRange(random,-.9,2.2),
+                        i%3==1?.29:.36,.28+i*.031,i%3==0);
+                }
+                // Keep older web fibers in place as the tucked seams thicken.
+                for(int i=0;i<6+level/4+repairs/2;i++) {
+                    double t=RetreatRange(random,.61,.95);
+                    Point a=RetreatCurvePoint(root,c,e,shoulder,t);
+                    Point b=CornerPocketJoint(profile,width,length,side,RetreatRange(random,.28,.72));
+                    RetreatFiber(d,a,b,RetreatRange(random,-2,3),i%5==0?.38:.22,
+                        RetreatRange(random,.17,.37),i%7==0);
+                }
+            }
+        }
+
         static void RetreatFoundation(DrawingContext d,SilkProfile profile,int level,int repairs,
                                        double ex,double ey,bool resident,bool portiaVolume) {
             var random=new Random(profile.Seed+77);
@@ -305,6 +360,10 @@ namespace CornerSpider {
             nestLevel=level;nestRepairs=repairs;nestEdgeX=edgeX;nestEdgeY=edgeY;nestSpecies=species;NestBuilds++;
             SilkProfile profile=SilkProfile.Get(species);
             bool platform=profile.Scaffold;
+            bool cornerPocket=!resident && !platform;
+            double fit=cornerPocket?Math.Min(1,Math.Min(edgeX,edgeY)/48):1;
+            double sleeveWidth=profile.Width*(cornerPocket?.90*fit:1);
+            double sleeveLength=cornerPocket?Math.Min(.78,.72*profile.Length)*fit:profile.Length;
             // The border-facing half of an attachment pad must remain inside
             // the work area when the corner is mirrored or space is tight.
             const double clearSide=256;
@@ -313,8 +372,10 @@ namespace CornerSpider {
             nestBack=new DrawingGroup();nestFront=new DrawingGroup();
             using(var d=nestBack.Open()) {
                 d.PushClip(cornerClip);
-                RetreatFoundation(d,profile,level,repairs,edgeX,edgeY,resident,platform && !SkinCatalog.Get(species).Male);
-                d.PushTransform(new RotateTransform(135));d.PushTransform(new ScaleTransform(profile.Width,profile.Length));
+                if(cornerPocket) CornerPocketFrame(d,profile,level,repairs,edgeX,edgeY,sleeveWidth,sleeveLength);
+                else RetreatFoundation(d,profile,level,repairs,edgeX,edgeY,resident,platform && !SkinCatalog.Get(species).Male);
+                d.PushTransform(new RotateTransform(cornerPocket?45:135));
+                d.PushTransform(new ScaleTransform(sleeveWidth,sleeveLength));
                 if(platform) DrawPortiaPlatform(d,profile,level,repairs);
                 else {
                     var shape=Pocket(profile,.018,.985,3.7);
@@ -333,7 +394,8 @@ namespace CornerSpider {
             using(var d=nestFront.Open()) {
                 if(!platform) {
                     d.PushClip(cornerClip);
-                    d.PushTransform(new RotateTransform(135));d.PushTransform(new ScaleTransform(profile.Width,profile.Length));
+                    d.PushTransform(new RotateTransform(cornerPocket?45:135));
+                    d.PushTransform(new ScaleTransform(sleeveWidth,sleeveLength));
                     var roof=Pocket(profile,.058,.958,13.2);
                     d.PushOpacity(Math.Min(1,profile.Density));
                     d.DrawGeometry(B("#08f2f2e4"),null,roof);
