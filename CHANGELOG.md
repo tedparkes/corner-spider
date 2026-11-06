@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+## 1.1.0-alpha.4 (local preview)
+
+- Smooth fine silk with supersampled transparent artwork and high-quality image
+  downscaling. Apply it to prey webs, sleeping retreats, capture webs, resident
+  nests and the settings preview without changing web shapes or opacity controls.
+- Keep only current silk images, reuse them between frames and bound each layer
+  to 2 megapixels. Rebuild for growth, size or display-scale changes; preserve the
+  sampling alignment of existing strands as a web ages.
+- Add subpixel-coverage comparisons against an independent 8x reference, memory
+  bounds and cache-reuse checks, plus before/after render and timing comparisons.
+
 ## 1.1.0-alpha.3 (local preview)
 
 - Make the prey spider build the complete outer frame and all 16 straight radial

@@ -19,6 +19,11 @@ namespace CornerSpider {
         public static int Run(Application app,string[] args) {
             string folder=args.Length>1?Path.GetFullPath(args[1]):Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"diagnostics");Directory.CreateDirectory(folder);
             if(args[0]=="--colony-load-test") return ColonyLoad(app,folder);
+            if(args[0]=="--silk-sampling-test") {
+                log=new StringBuilder("Corner Spider silk sampling checks\n");failures=0;CheckSilkSampling(folder);
+                log.AppendLine("RESULT: "+(failures==0?"PASS":"FAIL")+" ("+failures+" failures).");
+                File.WriteAllText(Path.Combine(folder,"sampling-checks.txt"),log.ToString());return failures==0?0:1;
+            }
             if(args[0]=="--life-preview") { RenderLifePreview(folder);return 0; }if(args[0]=="--desktop-test") return Desktop(app,folder);
             if(args[0]=="--encounter-preview") {
                 log=new StringBuilder();failures=0;CheckGuestSilkRendering();RenderEncounterPreview(folder);
@@ -31,7 +36,7 @@ namespace CornerSpider {
             if(args[0]=="--hammock-preview") { RenderHammockGallery(folder);RenderSilkGallery(folder);return 0; }
             if(args[0]=="--silk-test") {
                 log=new StringBuilder("Corner Spider retreat rendering checks\n");failures=0;
-                try { CheckSilkArt(folder);CheckRetreatVariety(folder);RenderHammockGallery(folder); }
+                try { CheckSilkSampling(folder);CheckSilkArt(folder);CheckRetreatVariety(folder);CheckLivingArt();CheckGuestSilkRendering();RenderHammockGallery(folder); }
                 catch(Exception ex) { Check(false,ex.ToString()); }
                 log.AppendLine("RESULT: "+(failures==0?"PASS":"FAIL")+" ("+failures+" failures).");
                 File.WriteAllText(Path.Combine(folder,"silk-render-checks.txt"),log.ToString());return failures==0?0:1;

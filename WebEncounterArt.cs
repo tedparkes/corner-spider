@@ -11,8 +11,7 @@ namespace CornerSpider {
             public int Complete=-1;
             public int Builds;
             public double Factor,Scale;
-            public BitmapSource Image;
-            public Rect Bounds;
+            public SilkImage Art;
             public DrawingGroup FreshSilk;
             public int FreshComplete=-1;
         }
@@ -45,21 +44,7 @@ namespace CornerSpider {
             if(refresh) {
                 var drawing=new DrawingGroup();using(var layer=drawing.Open()) {
                     for(int i=0;i<complete;i++) GuestCurve(layer,GuestWebPattern.Strand(i),w.GuestWebFactor);
-                }drawing.Freeze();cache.Image=null;
-                if(complete>0) {
-                    // Rasterize at slightly above the actual physical-pixel size.
-                    // Do not send hundreds of translucent curves through WPF's
-                    // layered-window software renderer on every animation frame.
-                    double pixels=Math.Max(2,w.GuestWebScale*1.25);
-                    Rect bounds=drawing.Bounds;bounds.Inflate(1/pixels,1/pixels);
-                    var visual=new DrawingVisual();using(var layer=visual.RenderOpen()) {
-                        layer.PushTransform(new ScaleTransform(pixels,pixels));layer.PushTransform(new TranslateTransform(-bounds.X,-bounds.Y));
-                        layer.DrawDrawing(drawing);layer.Pop();layer.Pop();
-                    }
-                    int width=(int)Math.Ceiling(bounds.Width*pixels),height=(int)Math.Ceiling(bounds.Height*pixels);
-                    var bitmap=new RenderTargetBitmap(width,height,96,96,PixelFormats.Pbgra32);bitmap.Render(visual);bitmap.Freeze();
-                    cache.Image=bitmap;cache.Bounds=new Rect(bounds.X,bounds.Y,width/pixels,height/pixels);
-                }
+                }drawing.Freeze();cache.Art=CacheSilk(drawing,w.GuestWebScale);
                 cache.Complete=complete;cache.Factor=w.GuestWebFactor;cache.Scale=w.GuestWebScale;cache.Builds++;
             }
             if(refresh || cache.FreshComplete!=complete) {
@@ -70,7 +55,7 @@ namespace CornerSpider {
             d.PushOpacity(w.GuestOpacity*.9*w.WebVisibility);
             d.PushTransform(new TranslateTransform(w.GuestCorner.X,w.GuestCorner.Y));
             d.PushTransform(new ScaleTransform((w.GuestInward.X>0?1:-1)*w.GuestWebScale,(w.GuestInward.Y>0?1:-1)*w.GuestWebScale));
-            if(cache.Image!=null) d.DrawImage(cache.Image,cache.Bounds);
+            d.DrawDrawing(cache.Art.Drawing);
             d.DrawDrawing(cache.FreshSilk);
             if(fraction>0 && fraction<1) GuestCurve(d,GuestWebPattern.Strand(active).Prefix(fraction),w.GuestWebFactor);
             d.Pop();d.Pop();

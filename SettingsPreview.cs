@@ -53,8 +53,8 @@ namespace CornerSpider {
             if(silkScale>0) {
                 d.PushTransform(new TranslateTransform(ActualWidth-400*silkScale,0));
                 d.PushTransform(new ScaleTransform(silkScale,silkScale));
-                silkArt.DrawHammock(d,silkPreview,false,Species,true);
-                silkArt.DrawHammock(d,silkPreview,true,Species,true);
+                silkArt.DrawHammock(d,silkPreview,false,Species);
+                silkArt.DrawHammock(d,silkPreview,true,Species);
                 d.Pop();d.Pop();
             }
             preview.SetSpecies(Species);double cycle=preview.Clock%16;

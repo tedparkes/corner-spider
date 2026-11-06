@@ -8,6 +8,8 @@ namespace CornerSpider {
         static readonly Dictionary<string,DrawingGroup> familyBodies=new Dictionary<string,DrawingGroup>();
         readonly World visitorArt=new World(1200,900,42) { AutoFeed=false,CursorPlay=false };
         DrawingGroup livingSilk;
+        SilkImage livingSilkImage;
+        double livingSilkScale=-1;
         string livingSilkKey;
         internal int LivingSilkBuilds;
         static DrawingGroup FamilyBody(SkinProfile skin) {
@@ -109,10 +111,11 @@ namespace CornerSpider {
                         Curve(c,"#6ce4e9df",.35,new Point(start.X,start.Y),new Point(start.X*.55,start.Y*.55),new Point(end.X-4,end.Y-4),new Point(end.X,end.Y));
                     }
                     for(int i=0;i<layers/3;i++) { double a=i*2.4;Oval(c,B("#786c6859"),Math.Cos(a)*48,Math.Sin(a)*56,1.5,2.1); }
-                }livingSilk.Freeze();
+                }livingSilk.Freeze();livingSilkImage=new SilkImage();
             }
+            if(livingSilkImage.Drawing==null || livingSilkScale!=scale) { livingSilkScale=scale;livingSilkImage=CacheSilk(livingSilk,scale); }
             d.PushOpacity(w.WebVisibility);d.PushTransform(new TranslateTransform(w.Home.X,w.Home.Y));d.PushTransform(new ScaleTransform((w.Corner.EndsWith("Right")?-1:1)*scale,(w.Corner.StartsWith("Top")?1:-1)*scale));
-            d.DrawDrawing(livingSilk);d.Pop();d.Pop();d.Pop();
+            d.DrawDrawing(livingSilkImage.Drawing);d.Pop();d.Pop();d.Pop();
         }
         void DrawLifeScene(DrawingContext d,World w) {
             var l=w.Life;

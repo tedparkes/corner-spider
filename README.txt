@@ -1,8 +1,10 @@
-CORNER SPIDER 1.1.0-alpha.3 - LOCAL PREVIEW (NOT YET PUBLISHED)
+CORNER SPIDER 1.1.0-alpha.4 - LOCAL PREVIEW (NOT YET PUBLISHED)
 
 Extract the whole Windows ZIP, then open JumpingSpider.exe or Start-Spider.cmd.
 Requires Windows 10/11 and .NET Framework 4.8. No installer or admin rights.
 This unsigned preview is separate from the published 1.0 release.
+Web strands now use supersampling and higher-quality downscaling for smoother
+edges. See docs/VERIFICATION-WEB-AA.md for this build's rendering checks.
 Prey webs now complete their frame and straight spokes before the interior
 spiral. The builder travels along existing silk and returns to the center.
 See docs/VERIFICATION-WEB-BUILD.md for checks specific to this local change.

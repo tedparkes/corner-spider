@@ -7,7 +7,8 @@ namespace CornerSpider {
         // Two retained layers: the pet rests between the silk floor and its veil.
         // Only this canvas's current pair is retained; growth cannot grow a cache.
         DrawingGroup nestBack,nestFront;
-        CachedArt nestBackImage,nestFrontImage;
+        SilkImage nestBackImage,nestFrontImage;
+        double nestImageScale=-1;
         int nestLevel=-1;
         double nestEdgeX,nestEdgeY;
         string nestSpecies;
@@ -193,7 +194,7 @@ namespace CornerSpider {
                 }
                 d.Pop();d.Pop();
             }nestFront.Freeze();
-            nestBackImage=new CachedArt();nestFrontImage=new CachedArt();
+            nestBackImage=new SilkImage();nestFrontImage=new SilkImage();nestImageScale=-1;
         }
         public void DrawNestScene(DrawingContext d,World w,string species) {
             DrawHammock(d,w,false,species);
@@ -219,12 +220,11 @@ namespace CornerSpider {
             d.PushTransform(new ScaleTransform(scale*(w.Corner.EndsWith("Right")?1:-1),scale*(w.Corner.StartsWith("Top")?1:-1)));
             if(vectorPreview) d.DrawDrawing(front?nestFront:nestBack);
             else {
-                // Only desktop rendering needs 4x image caches. The small settings
-                // thumbnail uses the same frozen vectors without render targets.
-                // Each canvas retains only its current pair, never old growth stages.
-                if(front && nestFrontImage.Image==null) nestFrontImage=CacheArt(nestFront);
-                if(!front && nestBackImage.Image==null) nestBackImage=CacheArt(nestBack);
-                CachedArt art=front?nestFrontImage:nestBackImage;d.DrawImage(art.Image,art.Bounds);
+                // Retain only the current pair, with silk-specific supersampling.
+                if(nestImageScale!=scale) { nestImageScale=scale;nestBackImage=new SilkImage();nestFrontImage=new SilkImage(); }
+                if(front && nestFrontImage.Drawing==null) nestFrontImage=CacheSilk(nestFront,scale);
+                if(!front && nestBackImage.Drawing==null) nestBackImage=CacheSilk(nestBack,scale);
+                d.DrawDrawing((front?nestFrontImage:nestBackImage).Drawing);
             }
             d.Pop();d.Pop();d.Pop();
         }

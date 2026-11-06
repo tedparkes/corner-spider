@@ -69,7 +69,8 @@ namespace CornerSpider {
         }
         static V ColonyAnchor(double ex,double ey,double t,double spread) { return ex<ey?new V(-ex,(t*2-1)*spread):new V((t*2-1)*spread,-ey); }
         DrawingGroup colonyBack,colonyFront;
-        CachedArt colonyBackImage,colonyFrontImage;
+        SilkImage colonyBackImage,colonyFrontImage;
+        double colonySilkScale=-1;
         string colonyKey;
         void DrawColonyRetreat(DrawingContext d,World w,bool front,string species) {
             var a=w.Areas[w.HomeArea];double scale=w.HomeScale,ex=Math.Abs((w.Corner.EndsWith("Right")?a.X+a.W:a.X)-w.Home.X)/scale,ey=Math.Abs((w.Corner.StartsWith("Top")?a.Y:a.Y+a.H)-w.Home.Y)/scale;
@@ -82,9 +83,10 @@ namespace CornerSpider {
                     c.DrawGeometry(B("#1aeef4e6"),P("#a0e4eee1",.7),shape);c.PushClip(shape);var random=new Random(profile.Seed);
                     for(int i=0;i<24+growth+w.WebLayers;i++) { double x=R(random,-50,50);Line(c,"#64edf3e8",.35,x,-50,x+R(random,-18,18),58); }
                     RetreatDetails(c,profile,w.Web);c.Pop();c.Pop();c.Pop();
-                }colonyBack.Freeze();colonyFront.Freeze();colonyBackImage=CacheArt(colonyBack,2);colonyFrontImage=CacheArt(colonyFront,2);
+                }colonyBack.Freeze();colonyFront.Freeze();colonySilkScale=-1;
             }
-            d.PushOpacity(w.WebVisibility);d.PushTransform(new TranslateTransform(w.Home.X,w.Home.Y));d.PushTransform(new ScaleTransform(w.Corner.EndsWith("Right")?-scale:scale,w.Corner.StartsWith("Top")?scale:-scale));var art=front?colonyFrontImage:colonyBackImage;d.DrawImage(art.Image,art.Bounds);d.Pop();d.Pop();d.Pop();
+            if(colonySilkScale!=scale) { colonySilkScale=scale;colonyBackImage=CacheSilk(colonyBack,scale);colonyFrontImage=CacheSilk(colonyFront,scale); }
+            d.PushOpacity(w.WebVisibility);d.PushTransform(new TranslateTransform(w.Home.X,w.Home.Y));d.PushTransform(new ScaleTransform(w.Corner.EndsWith("Right")?-scale:scale,w.Corner.StartsWith("Top")?scale:-scale));d.DrawDrawing((front?colonyFrontImage:colonyBackImage).Drawing);d.Pop();d.Pop();d.Pop();
         }
     }
 }

@@ -1,0 +1,1836 @@
+Corner Spider retreat rendering checks
+SAMPLING scale=0.2: default MSE=13.7069, filtered MSE=0.1765
+PASS: filtered strands are closer to an independent 8x area-sampled reference at scale 0.2
+PASS: silk keeps frozen premultiplied-alpha images
+SAMPLING scale=0.55: default MSE=60.1212, filtered MSE=3.7245
+PASS: filtered strands are closer to an independent 8x area-sampled reference at scale 0.55
+PASS: silk keeps frozen premultiplied-alpha images
+SAMPLING scale=1: default MSE=205.3496, filtered MSE=14.1185
+PASS: filtered strands are closer to an independent 8x area-sampled reference at scale 1
+PASS: silk keeps frozen premultiplied-alpha images
+SAMPLING scale=1.8: default MSE=393.4964, filtered MSE=45.1035
+PASS: filtered strands are closer to an independent 8x area-sampled reference at scale 1.8
+PASS: silk keeps frozen premultiplied-alpha images
+PASS: silk filtering reduces aggregate subpixel coverage error by at least 25 percent
+BOUNDED: 1616 x 1293 pixels
+PASS: large silk has a bounded raster allocation
+PASS: an empty web uses no bitmap
+PASS: unchanged frames reuse silk samples: Regal
+PASS: size changes replace current silk samples once: Regal
+PASS: unchanged frames reuse silk samples: RegalMale
+PASS: size changes replace current silk samples once: RegalMale
+PASS: unchanged frames reuse silk samples: BoldFemale
+PASS: size changes replace current silk samples once: BoldFemale
+PASS: unchanged frames reuse silk samples: Bold
+PASS: size changes replace current silk samples once: Bold
+PASS: unchanged frames reuse silk samples: Zebra
+PASS: size changes replace current silk samples once: Zebra
+PASS: unchanged frames reuse silk samples: ZebraMale
+PASS: size changes replace current silk samples once: ZebraMale
+PASS: unchanged frames reuse silk samples: Tan
+PASS: size changes replace current silk samples once: Tan
+PASS: unchanged frames reuse silk samples: TanMale
+PASS: size changes replace current silk samples once: TanMale
+PASS: unchanged frames reuse silk samples: RedBackFemale
+PASS: size changes replace current silk samples once: RedBackFemale
+PASS: unchanged frames reuse silk samples: RedBack
+PASS: size changes replace current silk samples once: RedBack
+PASS: unchanged frames reuse silk samples: Emerald
+PASS: size changes replace current silk samples once: Emerald
+PASS: unchanged frames reuse silk samples: EmeraldMale
+PASS: size changes replace current silk samples once: EmeraldMale
+PASS: unchanged frames reuse silk samples: GrayWall
+PASS: size changes replace current silk samples once: GrayWall
+PASS: unchanged frames reuse silk samples: GrayWallMale
+PASS: size changes replace current silk samples once: GrayWallMale
+PASS: unchanged frames reuse silk samples: PantropicalFemale
+PASS: size changes replace current silk samples once: PantropicalFemale
+PASS: unchanged frames reuse silk samples: Pantropical
+PASS: size changes replace current silk samples once: Pantropical
+PASS: unchanged frames reuse silk samples: ApacheFemale
+PASS: size changes replace current silk samples once: ApacheFemale
+PASS: unchanged frames reuse silk samples: Apache
+PASS: size changes replace current silk samples once: Apache
+PASS: unchanged frames reuse silk samples: PortiaLabiata
+PASS: size changes replace current silk samples once: PortiaLabiata
+PASS: unchanged frames reuse silk samples: HyllusDiardiGreen
+PASS: size changes replace current silk samples once: HyllusDiardiGreen
+PASS: unchanged frames reuse silk samples: PortiaLabiataMale
+PASS: size changes replace current silk samples once: PortiaLabiataMale
+PASS: unchanged frames reuse silk samples: HyllusDiardiMale
+PASS: size changes replace current silk samples once: HyllusDiardiMale
+PASS: unchanged frames reuse silk samples: GardenOrb
+PASS: size changes replace current silk samples once: GardenOrb
+PASS: unchanged frames reuse silk samples: GardenOrbMale
+PASS: size changes replace current silk samples once: GardenOrbMale
+PASS: unchanged frames reuse silk samples: CrossOrb
+PASS: size changes replace current silk samples once: CrossOrb
+PASS: unchanged frames reuse silk samples: CrossOrbMale
+PASS: size changes replace current silk samples once: CrossOrbMale
+PASS: unchanged frames reuse silk samples: MarbledOrb
+PASS: size changes replace current silk samples once: MarbledOrb
+PASS: unchanged frames reuse silk samples: MarbledOrbMale
+PASS: size changes replace current silk samples once: MarbledOrbMale
+PASS: unchanged frames reuse silk samples: GoldenOrb
+PASS: size changes replace current silk samples once: GoldenOrb
+PASS: unchanged frames reuse silk samples: GoldenOrbMale
+PASS: size changes replace current silk samples once: GoldenOrbMale
+PASS: unchanged frames reuse silk samples: SouthernWidow
+PASS: size changes replace current silk samples once: SouthernWidow
+PASS: unchanged frames reuse silk samples: SouthernWidowMale
+PASS: size changes replace current silk samples once: SouthernWidowMale
+PASS: unchanged frames reuse silk samples: BrownWidow
+PASS: size changes replace current silk samples once: BrownWidow
+PASS: unchanged frames reuse silk samples: BrownWidowMale
+PASS: size changes replace current silk samples once: BrownWidowMale
+PASS: unchanged frames reuse silk samples: RedbackWidow
+PASS: size changes replace current silk samples once: RedbackWidow
+PASS: unchanged frames reuse silk samples: RedbackWidowMale
+PASS: size changes replace current silk samples once: RedbackWidowMale
+PASS: unchanged frames reuse silk samples: HouseTangle
+PASS: size changes replace current silk samples once: HouseTangle
+PASS: unchanged frames reuse silk samples: HouseTangleMale
+PASS: size changes replace current silk samples once: HouseTangleMale
+PASS: unchanged frames reuse silk samples: BarnFunnel
+PASS: size changes replace current silk samples once: BarnFunnel
+PASS: unchanged frames reuse silk samples: BarnFunnelMale
+PASS: size changes replace current silk samples once: BarnFunnelMale
+PASS: unchanged frames reuse silk samples: Nebula
+PASS: size changes replace current silk samples once: Nebula
+PASS: unchanged frames reuse silk samples: NebulaMale
+PASS: size changes replace current silk samples once: NebulaMale
+PASS: unchanged frames reuse silk samples: Crystal
+PASS: size changes replace current silk samples once: Crystal
+PASS: unchanged frames reuse silk samples: CrystalMale
+PASS: size changes replace current silk samples once: CrystalMale
+PASS: unchanged frames reuse silk samples: Copperbot
+PASS: size changes replace current silk samples once: Copperbot
+PASS: unchanged frames reuse silk samples: CopperbotMale
+PASS: size changes replace current silk samples once: CopperbotMale
+PASS: hammock opacity fades and restores its original alpha: 0.5
+PASS: opacity changes retain cached art and nest progress
+PASS: hammock opacity fades and restores its original alpha: 0
+PASS: opacity changes retain cached art and nest progress
+PASS: hammock opacity fades and restores its original alpha: 1
+PASS: opacity changes retain cached art and nest progress
+PASS: retreat has multiple visible attachments to both desktop edges: Regal / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Regal / TopLeft
+PASS: static silk reuses its retained artwork: Regal / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Regal / TopRight
+PASS: retreat preserves clear desktop outside its corner: Regal / TopRight
+PASS: static silk reuses its retained artwork: Regal / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Regal / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Regal / BottomLeft
+PASS: static silk reuses its retained artwork: Regal / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Regal / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Regal / BottomRight
+PASS: static silk reuses its retained artwork: Regal / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: RegalMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: RegalMale / TopLeft
+PASS: static silk reuses its retained artwork: RegalMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RegalMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: RegalMale / TopRight
+PASS: static silk reuses its retained artwork: RegalMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: RegalMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: RegalMale / BottomLeft
+PASS: static silk reuses its retained artwork: RegalMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RegalMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: RegalMale / BottomRight
+PASS: static silk reuses its retained artwork: RegalMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: BoldFemale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: BoldFemale / TopLeft
+PASS: static silk reuses its retained artwork: BoldFemale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: BoldFemale / TopRight
+PASS: retreat preserves clear desktop outside its corner: BoldFemale / TopRight
+PASS: static silk reuses its retained artwork: BoldFemale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: BoldFemale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: BoldFemale / BottomLeft
+PASS: static silk reuses its retained artwork: BoldFemale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: BoldFemale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: BoldFemale / BottomRight
+PASS: static silk reuses its retained artwork: BoldFemale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Bold / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Bold / TopLeft
+PASS: static silk reuses its retained artwork: Bold / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Bold / TopRight
+PASS: retreat preserves clear desktop outside its corner: Bold / TopRight
+PASS: static silk reuses its retained artwork: Bold / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Bold / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Bold / BottomLeft
+PASS: static silk reuses its retained artwork: Bold / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Bold / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Bold / BottomRight
+PASS: static silk reuses its retained artwork: Bold / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Zebra / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Zebra / TopLeft
+PASS: static silk reuses its retained artwork: Zebra / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Zebra / TopRight
+PASS: retreat preserves clear desktop outside its corner: Zebra / TopRight
+PASS: static silk reuses its retained artwork: Zebra / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Zebra / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Zebra / BottomLeft
+PASS: static silk reuses its retained artwork: Zebra / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Zebra / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Zebra / BottomRight
+PASS: static silk reuses its retained artwork: Zebra / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: ZebraMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: ZebraMale / TopLeft
+PASS: static silk reuses its retained artwork: ZebraMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: ZebraMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: ZebraMale / TopRight
+PASS: static silk reuses its retained artwork: ZebraMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: ZebraMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: ZebraMale / BottomLeft
+PASS: static silk reuses its retained artwork: ZebraMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: ZebraMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: ZebraMale / BottomRight
+PASS: static silk reuses its retained artwork: ZebraMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Tan / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Tan / TopLeft
+PASS: static silk reuses its retained artwork: Tan / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Tan / TopRight
+PASS: retreat preserves clear desktop outside its corner: Tan / TopRight
+PASS: static silk reuses its retained artwork: Tan / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Tan / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Tan / BottomLeft
+PASS: static silk reuses its retained artwork: Tan / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Tan / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Tan / BottomRight
+PASS: static silk reuses its retained artwork: Tan / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: TanMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: TanMale / TopLeft
+PASS: static silk reuses its retained artwork: TanMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: TanMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: TanMale / TopRight
+PASS: static silk reuses its retained artwork: TanMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: TanMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: TanMale / BottomLeft
+PASS: static silk reuses its retained artwork: TanMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: TanMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: TanMale / BottomRight
+PASS: static silk reuses its retained artwork: TanMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: RedBackFemale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: RedBackFemale / TopLeft
+PASS: static silk reuses its retained artwork: RedBackFemale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RedBackFemale / TopRight
+PASS: retreat preserves clear desktop outside its corner: RedBackFemale / TopRight
+PASS: static silk reuses its retained artwork: RedBackFemale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: RedBackFemale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: RedBackFemale / BottomLeft
+PASS: static silk reuses its retained artwork: RedBackFemale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RedBackFemale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: RedBackFemale / BottomRight
+PASS: static silk reuses its retained artwork: RedBackFemale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: RedBack / TopLeft
+PASS: retreat preserves clear desktop outside its corner: RedBack / TopLeft
+PASS: static silk reuses its retained artwork: RedBack / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RedBack / TopRight
+PASS: retreat preserves clear desktop outside its corner: RedBack / TopRight
+PASS: static silk reuses its retained artwork: RedBack / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: RedBack / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: RedBack / BottomLeft
+PASS: static silk reuses its retained artwork: RedBack / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RedBack / BottomRight
+PASS: retreat preserves clear desktop outside its corner: RedBack / BottomRight
+PASS: static silk reuses its retained artwork: RedBack / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Emerald / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Emerald / TopLeft
+PASS: static silk reuses its retained artwork: Emerald / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Emerald / TopRight
+PASS: retreat preserves clear desktop outside its corner: Emerald / TopRight
+PASS: static silk reuses its retained artwork: Emerald / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Emerald / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Emerald / BottomLeft
+PASS: static silk reuses its retained artwork: Emerald / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Emerald / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Emerald / BottomRight
+PASS: static silk reuses its retained artwork: Emerald / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: EmeraldMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: EmeraldMale / TopLeft
+PASS: static silk reuses its retained artwork: EmeraldMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: EmeraldMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: EmeraldMale / TopRight
+PASS: static silk reuses its retained artwork: EmeraldMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: EmeraldMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: EmeraldMale / BottomLeft
+PASS: static silk reuses its retained artwork: EmeraldMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: EmeraldMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: EmeraldMale / BottomRight
+PASS: static silk reuses its retained artwork: EmeraldMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWall / TopLeft
+PASS: retreat preserves clear desktop outside its corner: GrayWall / TopLeft
+PASS: static silk reuses its retained artwork: GrayWall / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWall / TopRight
+PASS: retreat preserves clear desktop outside its corner: GrayWall / TopRight
+PASS: static silk reuses its retained artwork: GrayWall / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWall / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: GrayWall / BottomLeft
+PASS: static silk reuses its retained artwork: GrayWall / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWall / BottomRight
+PASS: retreat preserves clear desktop outside its corner: GrayWall / BottomRight
+PASS: static silk reuses its retained artwork: GrayWall / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWallMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: GrayWallMale / TopLeft
+PASS: static silk reuses its retained artwork: GrayWallMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWallMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: GrayWallMale / TopRight
+PASS: static silk reuses its retained artwork: GrayWallMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWallMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: GrayWallMale / BottomLeft
+PASS: static silk reuses its retained artwork: GrayWallMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GrayWallMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: GrayWallMale / BottomRight
+PASS: static silk reuses its retained artwork: GrayWallMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: PantropicalFemale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: PantropicalFemale / TopLeft
+PASS: static silk reuses its retained artwork: PantropicalFemale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: PantropicalFemale / TopRight
+PASS: retreat preserves clear desktop outside its corner: PantropicalFemale / TopRight
+PASS: static silk reuses its retained artwork: PantropicalFemale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: PantropicalFemale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: PantropicalFemale / BottomLeft
+PASS: static silk reuses its retained artwork: PantropicalFemale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: PantropicalFemale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: PantropicalFemale / BottomRight
+PASS: static silk reuses its retained artwork: PantropicalFemale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Pantropical / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Pantropical / TopLeft
+PASS: static silk reuses its retained artwork: Pantropical / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Pantropical / TopRight
+PASS: retreat preserves clear desktop outside its corner: Pantropical / TopRight
+PASS: static silk reuses its retained artwork: Pantropical / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Pantropical / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Pantropical / BottomLeft
+PASS: static silk reuses its retained artwork: Pantropical / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Pantropical / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Pantropical / BottomRight
+PASS: static silk reuses its retained artwork: Pantropical / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: ApacheFemale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: ApacheFemale / TopLeft
+PASS: static silk reuses its retained artwork: ApacheFemale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: ApacheFemale / TopRight
+PASS: retreat preserves clear desktop outside its corner: ApacheFemale / TopRight
+PASS: static silk reuses its retained artwork: ApacheFemale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: ApacheFemale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: ApacheFemale / BottomLeft
+PASS: static silk reuses its retained artwork: ApacheFemale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: ApacheFemale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: ApacheFemale / BottomRight
+PASS: static silk reuses its retained artwork: ApacheFemale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Apache / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Apache / TopLeft
+PASS: static silk reuses its retained artwork: Apache / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Apache / TopRight
+PASS: retreat preserves clear desktop outside its corner: Apache / TopRight
+PASS: static silk reuses its retained artwork: Apache / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Apache / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Apache / BottomLeft
+PASS: static silk reuses its retained artwork: Apache / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Apache / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Apache / BottomRight
+PASS: static silk reuses its retained artwork: Apache / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: PortiaLabiata / TopLeft
+PASS: retreat preserves clear desktop outside its corner: PortiaLabiata / TopLeft
+PASS: static silk reuses its retained artwork: PortiaLabiata / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: PortiaLabiata / TopRight
+PASS: retreat preserves clear desktop outside its corner: PortiaLabiata / TopRight
+PASS: static silk reuses its retained artwork: PortiaLabiata / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: PortiaLabiata / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: PortiaLabiata / BottomLeft
+PASS: static silk reuses its retained artwork: PortiaLabiata / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: PortiaLabiata / BottomRight
+PASS: retreat preserves clear desktop outside its corner: PortiaLabiata / BottomRight
+PASS: static silk reuses its retained artwork: PortiaLabiata / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: HyllusDiardiGreen / TopLeft
+PASS: retreat preserves clear desktop outside its corner: HyllusDiardiGreen / TopLeft
+PASS: static silk reuses its retained artwork: HyllusDiardiGreen / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: HyllusDiardiGreen / TopRight
+PASS: retreat preserves clear desktop outside its corner: HyllusDiardiGreen / TopRight
+PASS: static silk reuses its retained artwork: HyllusDiardiGreen / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: HyllusDiardiGreen / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: HyllusDiardiGreen / BottomLeft
+PASS: static silk reuses its retained artwork: HyllusDiardiGreen / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: HyllusDiardiGreen / BottomRight
+PASS: retreat preserves clear desktop outside its corner: HyllusDiardiGreen / BottomRight
+PASS: static silk reuses its retained artwork: HyllusDiardiGreen / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: PortiaLabiataMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: PortiaLabiataMale / TopLeft
+PASS: static silk reuses its retained artwork: PortiaLabiataMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: PortiaLabiataMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: PortiaLabiataMale / TopRight
+PASS: static silk reuses its retained artwork: PortiaLabiataMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: PortiaLabiataMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: PortiaLabiataMale / BottomLeft
+PASS: static silk reuses its retained artwork: PortiaLabiataMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: PortiaLabiataMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: PortiaLabiataMale / BottomRight
+PASS: static silk reuses its retained artwork: PortiaLabiataMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: HyllusDiardiMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: HyllusDiardiMale / TopLeft
+PASS: static silk reuses its retained artwork: HyllusDiardiMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: HyllusDiardiMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: HyllusDiardiMale / TopRight
+PASS: static silk reuses its retained artwork: HyllusDiardiMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: HyllusDiardiMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: HyllusDiardiMale / BottomLeft
+PASS: static silk reuses its retained artwork: HyllusDiardiMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: HyllusDiardiMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: HyllusDiardiMale / BottomRight
+PASS: static silk reuses its retained artwork: HyllusDiardiMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: GardenOrb / TopLeft
+PASS: retreat preserves clear desktop outside its corner: GardenOrb / TopLeft
+PASS: static silk reuses its retained artwork: GardenOrb / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GardenOrb / TopRight
+PASS: retreat preserves clear desktop outside its corner: GardenOrb / TopRight
+PASS: static silk reuses its retained artwork: GardenOrb / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: GardenOrb / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: GardenOrb / BottomLeft
+PASS: static silk reuses its retained artwork: GardenOrb / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GardenOrb / BottomRight
+PASS: retreat preserves clear desktop outside its corner: GardenOrb / BottomRight
+PASS: static silk reuses its retained artwork: GardenOrb / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: GardenOrbMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: GardenOrbMale / TopLeft
+PASS: static silk reuses its retained artwork: GardenOrbMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GardenOrbMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: GardenOrbMale / TopRight
+PASS: static silk reuses its retained artwork: GardenOrbMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: GardenOrbMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: GardenOrbMale / BottomLeft
+PASS: static silk reuses its retained artwork: GardenOrbMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GardenOrbMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: GardenOrbMale / BottomRight
+PASS: static silk reuses its retained artwork: GardenOrbMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: CrossOrb / TopLeft
+PASS: retreat preserves clear desktop outside its corner: CrossOrb / TopLeft
+PASS: static silk reuses its retained artwork: CrossOrb / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: CrossOrb / TopRight
+PASS: retreat preserves clear desktop outside its corner: CrossOrb / TopRight
+PASS: static silk reuses its retained artwork: CrossOrb / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: CrossOrb / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: CrossOrb / BottomLeft
+PASS: static silk reuses its retained artwork: CrossOrb / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: CrossOrb / BottomRight
+PASS: retreat preserves clear desktop outside its corner: CrossOrb / BottomRight
+PASS: static silk reuses its retained artwork: CrossOrb / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: CrossOrbMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: CrossOrbMale / TopLeft
+PASS: static silk reuses its retained artwork: CrossOrbMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: CrossOrbMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: CrossOrbMale / TopRight
+PASS: static silk reuses its retained artwork: CrossOrbMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: CrossOrbMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: CrossOrbMale / BottomLeft
+PASS: static silk reuses its retained artwork: CrossOrbMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: CrossOrbMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: CrossOrbMale / BottomRight
+PASS: static silk reuses its retained artwork: CrossOrbMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: MarbledOrb / TopLeft
+PASS: retreat preserves clear desktop outside its corner: MarbledOrb / TopLeft
+PASS: static silk reuses its retained artwork: MarbledOrb / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: MarbledOrb / TopRight
+PASS: retreat preserves clear desktop outside its corner: MarbledOrb / TopRight
+PASS: static silk reuses its retained artwork: MarbledOrb / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: MarbledOrb / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: MarbledOrb / BottomLeft
+PASS: static silk reuses its retained artwork: MarbledOrb / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: MarbledOrb / BottomRight
+PASS: retreat preserves clear desktop outside its corner: MarbledOrb / BottomRight
+PASS: static silk reuses its retained artwork: MarbledOrb / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: MarbledOrbMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: MarbledOrbMale / TopLeft
+PASS: static silk reuses its retained artwork: MarbledOrbMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: MarbledOrbMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: MarbledOrbMale / TopRight
+PASS: static silk reuses its retained artwork: MarbledOrbMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: MarbledOrbMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: MarbledOrbMale / BottomLeft
+PASS: static silk reuses its retained artwork: MarbledOrbMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: MarbledOrbMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: MarbledOrbMale / BottomRight
+PASS: static silk reuses its retained artwork: MarbledOrbMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: GoldenOrb / TopLeft
+PASS: retreat preserves clear desktop outside its corner: GoldenOrb / TopLeft
+PASS: static silk reuses its retained artwork: GoldenOrb / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GoldenOrb / TopRight
+PASS: retreat preserves clear desktop outside its corner: GoldenOrb / TopRight
+PASS: static silk reuses its retained artwork: GoldenOrb / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: GoldenOrb / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: GoldenOrb / BottomLeft
+PASS: static silk reuses its retained artwork: GoldenOrb / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GoldenOrb / BottomRight
+PASS: retreat preserves clear desktop outside its corner: GoldenOrb / BottomRight
+PASS: static silk reuses its retained artwork: GoldenOrb / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: GoldenOrbMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: GoldenOrbMale / TopLeft
+PASS: static silk reuses its retained artwork: GoldenOrbMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GoldenOrbMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: GoldenOrbMale / TopRight
+PASS: static silk reuses its retained artwork: GoldenOrbMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: GoldenOrbMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: GoldenOrbMale / BottomLeft
+PASS: static silk reuses its retained artwork: GoldenOrbMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: GoldenOrbMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: GoldenOrbMale / BottomRight
+PASS: static silk reuses its retained artwork: GoldenOrbMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: SouthernWidow / TopLeft
+PASS: retreat preserves clear desktop outside its corner: SouthernWidow / TopLeft
+PASS: static silk reuses its retained artwork: SouthernWidow / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: SouthernWidow / TopRight
+PASS: retreat preserves clear desktop outside its corner: SouthernWidow / TopRight
+PASS: static silk reuses its retained artwork: SouthernWidow / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: SouthernWidow / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: SouthernWidow / BottomLeft
+PASS: static silk reuses its retained artwork: SouthernWidow / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: SouthernWidow / BottomRight
+PASS: retreat preserves clear desktop outside its corner: SouthernWidow / BottomRight
+PASS: static silk reuses its retained artwork: SouthernWidow / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: SouthernWidowMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: SouthernWidowMale / TopLeft
+PASS: static silk reuses its retained artwork: SouthernWidowMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: SouthernWidowMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: SouthernWidowMale / TopRight
+PASS: static silk reuses its retained artwork: SouthernWidowMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: SouthernWidowMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: SouthernWidowMale / BottomLeft
+PASS: static silk reuses its retained artwork: SouthernWidowMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: SouthernWidowMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: SouthernWidowMale / BottomRight
+PASS: static silk reuses its retained artwork: SouthernWidowMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: BrownWidow / TopLeft
+PASS: retreat preserves clear desktop outside its corner: BrownWidow / TopLeft
+PASS: static silk reuses its retained artwork: BrownWidow / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: BrownWidow / TopRight
+PASS: retreat preserves clear desktop outside its corner: BrownWidow / TopRight
+PASS: static silk reuses its retained artwork: BrownWidow / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: BrownWidow / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: BrownWidow / BottomLeft
+PASS: static silk reuses its retained artwork: BrownWidow / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: BrownWidow / BottomRight
+PASS: retreat preserves clear desktop outside its corner: BrownWidow / BottomRight
+PASS: static silk reuses its retained artwork: BrownWidow / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: BrownWidowMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: BrownWidowMale / TopLeft
+PASS: static silk reuses its retained artwork: BrownWidowMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: BrownWidowMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: BrownWidowMale / TopRight
+PASS: static silk reuses its retained artwork: BrownWidowMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: BrownWidowMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: BrownWidowMale / BottomLeft
+PASS: static silk reuses its retained artwork: BrownWidowMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: BrownWidowMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: BrownWidowMale / BottomRight
+PASS: static silk reuses its retained artwork: BrownWidowMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: RedbackWidow / TopLeft
+PASS: retreat preserves clear desktop outside its corner: RedbackWidow / TopLeft
+PASS: static silk reuses its retained artwork: RedbackWidow / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RedbackWidow / TopRight
+PASS: retreat preserves clear desktop outside its corner: RedbackWidow / TopRight
+PASS: static silk reuses its retained artwork: RedbackWidow / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: RedbackWidow / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: RedbackWidow / BottomLeft
+PASS: static silk reuses its retained artwork: RedbackWidow / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RedbackWidow / BottomRight
+PASS: retreat preserves clear desktop outside its corner: RedbackWidow / BottomRight
+PASS: static silk reuses its retained artwork: RedbackWidow / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: RedbackWidowMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: RedbackWidowMale / TopLeft
+PASS: static silk reuses its retained artwork: RedbackWidowMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RedbackWidowMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: RedbackWidowMale / TopRight
+PASS: static silk reuses its retained artwork: RedbackWidowMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: RedbackWidowMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: RedbackWidowMale / BottomLeft
+PASS: static silk reuses its retained artwork: RedbackWidowMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: RedbackWidowMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: RedbackWidowMale / BottomRight
+PASS: static silk reuses its retained artwork: RedbackWidowMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: HouseTangle / TopLeft
+PASS: retreat preserves clear desktop outside its corner: HouseTangle / TopLeft
+PASS: static silk reuses its retained artwork: HouseTangle / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: HouseTangle / TopRight
+PASS: retreat preserves clear desktop outside its corner: HouseTangle / TopRight
+PASS: static silk reuses its retained artwork: HouseTangle / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: HouseTangle / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: HouseTangle / BottomLeft
+PASS: static silk reuses its retained artwork: HouseTangle / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: HouseTangle / BottomRight
+PASS: retreat preserves clear desktop outside its corner: HouseTangle / BottomRight
+PASS: static silk reuses its retained artwork: HouseTangle / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: HouseTangleMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: HouseTangleMale / TopLeft
+PASS: static silk reuses its retained artwork: HouseTangleMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: HouseTangleMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: HouseTangleMale / TopRight
+PASS: static silk reuses its retained artwork: HouseTangleMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: HouseTangleMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: HouseTangleMale / BottomLeft
+PASS: static silk reuses its retained artwork: HouseTangleMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: HouseTangleMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: HouseTangleMale / BottomRight
+PASS: static silk reuses its retained artwork: HouseTangleMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: BarnFunnel / TopLeft
+PASS: retreat preserves clear desktop outside its corner: BarnFunnel / TopLeft
+PASS: static silk reuses its retained artwork: BarnFunnel / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: BarnFunnel / TopRight
+PASS: retreat preserves clear desktop outside its corner: BarnFunnel / TopRight
+PASS: static silk reuses its retained artwork: BarnFunnel / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: BarnFunnel / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: BarnFunnel / BottomLeft
+PASS: static silk reuses its retained artwork: BarnFunnel / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: BarnFunnel / BottomRight
+PASS: retreat preserves clear desktop outside its corner: BarnFunnel / BottomRight
+PASS: static silk reuses its retained artwork: BarnFunnel / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: BarnFunnelMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: BarnFunnelMale / TopLeft
+PASS: static silk reuses its retained artwork: BarnFunnelMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: BarnFunnelMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: BarnFunnelMale / TopRight
+PASS: static silk reuses its retained artwork: BarnFunnelMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: BarnFunnelMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: BarnFunnelMale / BottomLeft
+PASS: static silk reuses its retained artwork: BarnFunnelMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: BarnFunnelMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: BarnFunnelMale / BottomRight
+PASS: static silk reuses its retained artwork: BarnFunnelMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Nebula / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Nebula / TopLeft
+PASS: static silk reuses its retained artwork: Nebula / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Nebula / TopRight
+PASS: retreat preserves clear desktop outside its corner: Nebula / TopRight
+PASS: static silk reuses its retained artwork: Nebula / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Nebula / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Nebula / BottomLeft
+PASS: static silk reuses its retained artwork: Nebula / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Nebula / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Nebula / BottomRight
+PASS: static silk reuses its retained artwork: Nebula / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: NebulaMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: NebulaMale / TopLeft
+PASS: static silk reuses its retained artwork: NebulaMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: NebulaMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: NebulaMale / TopRight
+PASS: static silk reuses its retained artwork: NebulaMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: NebulaMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: NebulaMale / BottomLeft
+PASS: static silk reuses its retained artwork: NebulaMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: NebulaMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: NebulaMale / BottomRight
+PASS: static silk reuses its retained artwork: NebulaMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Crystal / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Crystal / TopLeft
+PASS: static silk reuses its retained artwork: Crystal / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Crystal / TopRight
+PASS: retreat preserves clear desktop outside its corner: Crystal / TopRight
+PASS: static silk reuses its retained artwork: Crystal / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Crystal / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Crystal / BottomLeft
+PASS: static silk reuses its retained artwork: Crystal / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Crystal / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Crystal / BottomRight
+PASS: static silk reuses its retained artwork: Crystal / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: CrystalMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: CrystalMale / TopLeft
+PASS: static silk reuses its retained artwork: CrystalMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: CrystalMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: CrystalMale / TopRight
+PASS: static silk reuses its retained artwork: CrystalMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: CrystalMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: CrystalMale / BottomLeft
+PASS: static silk reuses its retained artwork: CrystalMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: CrystalMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: CrystalMale / BottomRight
+PASS: static silk reuses its retained artwork: CrystalMale / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: Copperbot / TopLeft
+PASS: retreat preserves clear desktop outside its corner: Copperbot / TopLeft
+PASS: static silk reuses its retained artwork: Copperbot / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Copperbot / TopRight
+PASS: retreat preserves clear desktop outside its corner: Copperbot / TopRight
+PASS: static silk reuses its retained artwork: Copperbot / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: Copperbot / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: Copperbot / BottomLeft
+PASS: static silk reuses its retained artwork: Copperbot / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: Copperbot / BottomRight
+PASS: retreat preserves clear desktop outside its corner: Copperbot / BottomRight
+PASS: static silk reuses its retained artwork: Copperbot / BottomRight
+PASS: retreat has multiple visible attachments to both desktop edges: CopperbotMale / TopLeft
+PASS: retreat preserves clear desktop outside its corner: CopperbotMale / TopLeft
+PASS: static silk reuses its retained artwork: CopperbotMale / TopLeft
+PASS: retreat has multiple visible attachments to both desktop edges: CopperbotMale / TopRight
+PASS: retreat preserves clear desktop outside its corner: CopperbotMale / TopRight
+PASS: static silk reuses its retained artwork: CopperbotMale / TopRight
+PASS: retreat has multiple visible attachments to both desktop edges: CopperbotMale / BottomLeft
+PASS: retreat preserves clear desktop outside its corner: CopperbotMale / BottomLeft
+PASS: static silk reuses its retained artwork: CopperbotMale / BottomLeft
+PASS: retreat has multiple visible attachments to both desktop edges: CopperbotMale / BottomRight
+PASS: retreat preserves clear desktop outside its corner: CopperbotMale / BottomRight
+PASS: static silk reuses its retained artwork: CopperbotMale / BottomRight
+PASS: switching species replaces the retained silk style immediately
+PASS: saved silk progress still controls growth layers
+PASS: growing silk preserves existing threads rather than rearranging them: Regal
+PASS: growing silk preserves existing threads rather than rearranging them: RegalMale
+PASS: growing silk preserves existing threads rather than rearranging them: BoldFemale
+PASS: growing silk preserves existing threads rather than rearranging them: Bold
+PASS: growing silk preserves existing threads rather than rearranging them: Zebra
+PASS: growing silk preserves existing threads rather than rearranging them: ZebraMale
+PASS: growing silk preserves existing threads rather than rearranging them: Tan
+PASS: growing silk preserves existing threads rather than rearranging them: TanMale
+PASS: growing silk preserves existing threads rather than rearranging them: RedBackFemale
+PASS: growing silk preserves existing threads rather than rearranging them: RedBack
+PASS: growing silk preserves existing threads rather than rearranging them: Emerald
+PASS: growing silk preserves existing threads rather than rearranging them: EmeraldMale
+PASS: growing silk preserves existing threads rather than rearranging them: GrayWall
+PASS: growing silk preserves existing threads rather than rearranging them: GrayWallMale
+PASS: growing silk preserves existing threads rather than rearranging them: PantropicalFemale
+PASS: growing silk preserves existing threads rather than rearranging them: Pantropical
+PASS: growing silk preserves existing threads rather than rearranging them: ApacheFemale
+PASS: growing silk preserves existing threads rather than rearranging them: Apache
+PASS: growing silk preserves existing threads rather than rearranging them: PortiaLabiata
+PASS: growing silk preserves existing threads rather than rearranging them: HyllusDiardiGreen
+PASS: growing silk preserves existing threads rather than rearranging them: PortiaLabiataMale
+PASS: growing silk preserves existing threads rather than rearranging them: HyllusDiardiMale
+PASS: growing silk preserves existing threads rather than rearranging them: GardenOrb
+PASS: growing silk preserves existing threads rather than rearranging them: GardenOrbMale
+PASS: growing silk preserves existing threads rather than rearranging them: CrossOrb
+PASS: growing silk preserves existing threads rather than rearranging them: CrossOrbMale
+PASS: growing silk preserves existing threads rather than rearranging them: MarbledOrb
+PASS: growing silk preserves existing threads rather than rearranging them: MarbledOrbMale
+PASS: growing silk preserves existing threads rather than rearranging them: GoldenOrb
+PASS: growing silk preserves existing threads rather than rearranging them: GoldenOrbMale
+PASS: growing silk preserves existing threads rather than rearranging them: SouthernWidow
+PASS: growing silk preserves existing threads rather than rearranging them: SouthernWidowMale
+PASS: growing silk preserves existing threads rather than rearranging them: BrownWidow
+PASS: growing silk preserves existing threads rather than rearranging them: BrownWidowMale
+PASS: growing silk preserves existing threads rather than rearranging them: RedbackWidow
+PASS: growing silk preserves existing threads rather than rearranging them: RedbackWidowMale
+PASS: growing silk preserves existing threads rather than rearranging them: HouseTangle
+PASS: growing silk preserves existing threads rather than rearranging them: HouseTangleMale
+PASS: growing silk preserves existing threads rather than rearranging them: BarnFunnel
+PASS: growing silk preserves existing threads rather than rearranging them: BarnFunnelMale
+PASS: growing silk preserves existing threads rather than rearranging them: Nebula
+PASS: growing silk preserves existing threads rather than rearranging them: NebulaMale
+PASS: growing silk preserves existing threads rather than rearranging them: Crystal
+PASS: growing silk preserves existing threads rather than rearranging them: CrystalMale
+PASS: growing silk preserves existing threads rather than rearranging them: Copperbot
+PASS: growing silk preserves existing threads rather than rearranging them: CopperbotMale
+PASS: retreat silhouettes visibly differ before texture: Bold / Regal
+PASS: retreat silhouettes visibly differ before texture: Zebra / Regal
+PASS: retreat silhouettes visibly differ before texture: Zebra / Bold
+PASS: retreat silhouettes visibly differ before texture: Tan / Regal
+PASS: retreat silhouettes visibly differ before texture: Tan / Bold
+PASS: retreat silhouettes visibly differ before texture: Tan / Zebra
+PASS: retreat silhouettes visibly differ before texture: RedBackFemale / Regal
+PASS: retreat silhouettes visibly differ before texture: RedBackFemale / Bold
+PASS: retreat silhouettes visibly differ before texture: RedBackFemale / Zebra
+PASS: retreat silhouettes visibly differ before texture: RedBackFemale / Tan
+PASS: retreat silhouettes visibly differ before texture: Emerald / Regal
+PASS: retreat silhouettes visibly differ before texture: Emerald / Bold
+PASS: retreat silhouettes visibly differ before texture: Emerald / Zebra
+PASS: retreat silhouettes visibly differ before texture: Emerald / Tan
+PASS: retreat silhouettes visibly differ before texture: Emerald / RedBackFemale
+PASS: retreat silhouettes visibly differ before texture: GrayWall / Regal
+PASS: retreat silhouettes visibly differ before texture: GrayWall / Bold
+PASS: retreat silhouettes visibly differ before texture: GrayWall / Zebra
+PASS: retreat silhouettes visibly differ before texture: GrayWall / Tan
+PASS: retreat silhouettes visibly differ before texture: GrayWall / RedBackFemale
+PASS: retreat silhouettes visibly differ before texture: GrayWall / Emerald
+PASS: retreat silhouettes visibly differ before texture: Pantropical / Regal
+PASS: retreat silhouettes visibly differ before texture: Pantropical / Bold
+PASS: retreat silhouettes visibly differ before texture: Pantropical / Zebra
+PASS: retreat silhouettes visibly differ before texture: Pantropical / Tan
+PASS: retreat silhouettes visibly differ before texture: Pantropical / RedBackFemale
+PASS: retreat silhouettes visibly differ before texture: Pantropical / Emerald
+PASS: retreat silhouettes visibly differ before texture: Pantropical / GrayWall
+PASS: retreat silhouettes visibly differ before texture: Apache / Regal
+PASS: retreat silhouettes visibly differ before texture: Apache / Bold
+PASS: retreat silhouettes visibly differ before texture: Apache / Zebra
+PASS: retreat silhouettes visibly differ before texture: Apache / Tan
+PASS: retreat silhouettes visibly differ before texture: Apache / RedBackFemale
+PASS: retreat silhouettes visibly differ before texture: Apache / Emerald
+PASS: retreat silhouettes visibly differ before texture: Apache / GrayWall
+PASS: retreat silhouettes visibly differ before texture: Apache / Pantropical
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / Regal
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / Bold
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / Zebra
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / Tan
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / RedBackFemale
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / Emerald
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / GrayWall
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / Pantropical
+PASS: retreat silhouettes visibly differ before texture: PortiaLabiata / Apache
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / Regal
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / Bold
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / Zebra
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / Tan
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / RedBackFemale
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / Emerald
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / GrayWall
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / Pantropical
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / Apache
+PASS: retreat silhouettes visibly differ before texture: HyllusDiardiGreen / PortiaLabiata
+PASS: visible vector silk at 0.2: Regal
+PASS: visible vector silk at 1: Regal
+PASS: visible vector silk at 1.8: Regal
+PASS: visible vector silk at 0.2: RegalMale
+PASS: visible vector silk at 1: RegalMale
+PASS: visible vector silk at 1.8: RegalMale
+PASS: visible vector silk at 0.2: BoldFemale
+PASS: visible vector silk at 1: BoldFemale
+PASS: visible vector silk at 1.8: BoldFemale
+PASS: visible vector silk at 0.2: Bold
+PASS: visible vector silk at 1: Bold
+PASS: visible vector silk at 1.8: Bold
+PASS: visible vector silk at 0.2: Zebra
+PASS: visible vector silk at 1: Zebra
+PASS: visible vector silk at 1.8: Zebra
+PASS: visible vector silk at 0.2: ZebraMale
+PASS: visible vector silk at 1: ZebraMale
+PASS: visible vector silk at 1.8: ZebraMale
+PASS: visible vector silk at 0.2: Tan
+PASS: visible vector silk at 1: Tan
+PASS: visible vector silk at 1.8: Tan
+PASS: visible vector silk at 0.2: TanMale
+PASS: visible vector silk at 1: TanMale
+PASS: visible vector silk at 1.8: TanMale
+PASS: visible vector silk at 0.2: RedBackFemale
+PASS: visible vector silk at 1: RedBackFemale
+PASS: visible vector silk at 1.8: RedBackFemale
+PASS: visible vector silk at 0.2: RedBack
+PASS: visible vector silk at 1: RedBack
+PASS: visible vector silk at 1.8: RedBack
+PASS: visible vector silk at 0.2: Emerald
+PASS: visible vector silk at 1: Emerald
+PASS: visible vector silk at 1.8: Emerald
+PASS: visible vector silk at 0.2: EmeraldMale
+PASS: visible vector silk at 1: EmeraldMale
+PASS: visible vector silk at 1.8: EmeraldMale
+PASS: visible vector silk at 0.2: GrayWall
+PASS: visible vector silk at 1: GrayWall
+PASS: visible vector silk at 1.8: GrayWall
+PASS: visible vector silk at 0.2: GrayWallMale
+PASS: visible vector silk at 1: GrayWallMale
+PASS: visible vector silk at 1.8: GrayWallMale
+PASS: visible vector silk at 0.2: PantropicalFemale
+PASS: visible vector silk at 1: PantropicalFemale
+PASS: visible vector silk at 1.8: PantropicalFemale
+PASS: visible vector silk at 0.2: Pantropical
+PASS: visible vector silk at 1: Pantropical
+PASS: visible vector silk at 1.8: Pantropical
+PASS: visible vector silk at 0.2: ApacheFemale
+PASS: visible vector silk at 1: ApacheFemale
+PASS: visible vector silk at 1.8: ApacheFemale
+PASS: visible vector silk at 0.2: Apache
+PASS: visible vector silk at 1: Apache
+PASS: visible vector silk at 1.8: Apache
+PASS: visible vector silk at 0.2: PortiaLabiata
+PASS: visible vector silk at 1: PortiaLabiata
+PASS: visible vector silk at 1.8: PortiaLabiata
+PASS: visible vector silk at 0.2: HyllusDiardiGreen
+PASS: visible vector silk at 1: HyllusDiardiGreen
+PASS: visible vector silk at 1.8: HyllusDiardiGreen
+PASS: visible vector silk at 0.2: PortiaLabiataMale
+PASS: visible vector silk at 1: PortiaLabiataMale
+PASS: visible vector silk at 1.8: PortiaLabiataMale
+PASS: visible vector silk at 0.2: HyllusDiardiMale
+PASS: visible vector silk at 1: HyllusDiardiMale
+PASS: visible vector silk at 1.8: HyllusDiardiMale
+PASS: visible vector silk at 0.2: GardenOrb
+PASS: visible vector silk at 1: GardenOrb
+PASS: visible vector silk at 1.8: GardenOrb
+PASS: visible vector silk at 0.2: GardenOrbMale
+PASS: visible vector silk at 1: GardenOrbMale
+PASS: visible vector silk at 1.8: GardenOrbMale
+PASS: visible vector silk at 0.2: CrossOrb
+PASS: visible vector silk at 1: CrossOrb
+PASS: visible vector silk at 1.8: CrossOrb
+PASS: visible vector silk at 0.2: CrossOrbMale
+PASS: visible vector silk at 1: CrossOrbMale
+PASS: visible vector silk at 1.8: CrossOrbMale
+PASS: visible vector silk at 0.2: MarbledOrb
+PASS: visible vector silk at 1: MarbledOrb
+PASS: visible vector silk at 1.8: MarbledOrb
+PASS: visible vector silk at 0.2: MarbledOrbMale
+PASS: visible vector silk at 1: MarbledOrbMale
+PASS: visible vector silk at 1.8: MarbledOrbMale
+PASS: visible vector silk at 0.2: GoldenOrb
+PASS: visible vector silk at 1: GoldenOrb
+PASS: visible vector silk at 1.8: GoldenOrb
+PASS: visible vector silk at 0.2: GoldenOrbMale
+PASS: visible vector silk at 1: GoldenOrbMale
+PASS: visible vector silk at 1.8: GoldenOrbMale
+PASS: visible vector silk at 0.2: SouthernWidow
+PASS: visible vector silk at 1: SouthernWidow
+PASS: visible vector silk at 1.8: SouthernWidow
+PASS: visible vector silk at 0.2: SouthernWidowMale
+PASS: visible vector silk at 1: SouthernWidowMale
+PASS: visible vector silk at 1.8: SouthernWidowMale
+PASS: visible vector silk at 0.2: BrownWidow
+PASS: visible vector silk at 1: BrownWidow
+PASS: visible vector silk at 1.8: BrownWidow
+PASS: visible vector silk at 0.2: BrownWidowMale
+PASS: visible vector silk at 1: BrownWidowMale
+PASS: visible vector silk at 1.8: BrownWidowMale
+PASS: visible vector silk at 0.2: RedbackWidow
+PASS: visible vector silk at 1: RedbackWidow
+PASS: visible vector silk at 1.8: RedbackWidow
+PASS: visible vector silk at 0.2: RedbackWidowMale
+PASS: visible vector silk at 1: RedbackWidowMale
+PASS: visible vector silk at 1.8: RedbackWidowMale
+PASS: visible vector silk at 0.2: HouseTangle
+PASS: visible vector silk at 1: HouseTangle
+PASS: visible vector silk at 1.8: HouseTangle
+PASS: visible vector silk at 0.2: HouseTangleMale
+PASS: visible vector silk at 1: HouseTangleMale
+PASS: visible vector silk at 1.8: HouseTangleMale
+PASS: visible vector silk at 0.2: BarnFunnel
+PASS: visible vector silk at 1: BarnFunnel
+PASS: visible vector silk at 1.8: BarnFunnel
+PASS: visible vector silk at 0.2: BarnFunnelMale
+PASS: visible vector silk at 1: BarnFunnelMale
+PASS: visible vector silk at 1.8: BarnFunnelMale
+PASS: visible vector silk at 0.2: Nebula
+PASS: visible vector silk at 1: Nebula
+PASS: visible vector silk at 1.8: Nebula
+PASS: visible vector silk at 0.2: NebulaMale
+PASS: visible vector silk at 1: NebulaMale
+PASS: visible vector silk at 1.8: NebulaMale
+PASS: visible vector silk at 0.2: Crystal
+PASS: visible vector silk at 1: Crystal
+PASS: visible vector silk at 1.8: Crystal
+PASS: visible vector silk at 0.2: CrystalMale
+PASS: visible vector silk at 1: CrystalMale
+PASS: visible vector silk at 1.8: CrystalMale
+PASS: visible vector silk at 0.2: Copperbot
+PASS: visible vector silk at 1: Copperbot
+PASS: visible vector silk at 1.8: Copperbot
+PASS: visible vector silk at 0.2: CopperbotMale
+PASS: visible vector silk at 1: CopperbotMale
+PASS: visible vector silk at 1.8: CopperbotMale
+PASS: open Portia platform versus covered oval: Regal
+PASS: open Portia platform versus covered oval: PortiaLabiata
+PASS: long-term silk adds permanent visible repairs: Regal
+PASS: aging replaces only the current retained silk: Regal
+PASS: web opacity hides aged silk without rebuilding: Regal
+PASS: long-term silk adds permanent visible repairs: RegalMale
+PASS: aging replaces only the current retained silk: RegalMale
+PASS: web opacity hides aged silk without rebuilding: RegalMale
+PASS: long-term silk adds permanent visible repairs: BoldFemale
+PASS: aging replaces only the current retained silk: BoldFemale
+PASS: web opacity hides aged silk without rebuilding: BoldFemale
+PASS: long-term silk adds permanent visible repairs: Bold
+PASS: aging replaces only the current retained silk: Bold
+PASS: web opacity hides aged silk without rebuilding: Bold
+PASS: long-term silk adds permanent visible repairs: Zebra
+PASS: aging replaces only the current retained silk: Zebra
+PASS: web opacity hides aged silk without rebuilding: Zebra
+PASS: long-term silk adds permanent visible repairs: ZebraMale
+PASS: aging replaces only the current retained silk: ZebraMale
+PASS: web opacity hides aged silk without rebuilding: ZebraMale
+PASS: long-term silk adds permanent visible repairs: Tan
+PASS: aging replaces only the current retained silk: Tan
+PASS: web opacity hides aged silk without rebuilding: Tan
+PASS: long-term silk adds permanent visible repairs: TanMale
+PASS: aging replaces only the current retained silk: TanMale
+PASS: web opacity hides aged silk without rebuilding: TanMale
+PASS: long-term silk adds permanent visible repairs: RedBackFemale
+PASS: aging replaces only the current retained silk: RedBackFemale
+PASS: web opacity hides aged silk without rebuilding: RedBackFemale
+PASS: long-term silk adds permanent visible repairs: RedBack
+PASS: aging replaces only the current retained silk: RedBack
+PASS: web opacity hides aged silk without rebuilding: RedBack
+PASS: long-term silk adds permanent visible repairs: Emerald
+PASS: aging replaces only the current retained silk: Emerald
+PASS: web opacity hides aged silk without rebuilding: Emerald
+PASS: long-term silk adds permanent visible repairs: EmeraldMale
+PASS: aging replaces only the current retained silk: EmeraldMale
+PASS: web opacity hides aged silk without rebuilding: EmeraldMale
+PASS: long-term silk adds permanent visible repairs: GrayWall
+PASS: aging replaces only the current retained silk: GrayWall
+PASS: web opacity hides aged silk without rebuilding: GrayWall
+PASS: long-term silk adds permanent visible repairs: GrayWallMale
+PASS: aging replaces only the current retained silk: GrayWallMale
+PASS: web opacity hides aged silk without rebuilding: GrayWallMale
+PASS: long-term silk adds permanent visible repairs: PantropicalFemale
+PASS: aging replaces only the current retained silk: PantropicalFemale
+PASS: web opacity hides aged silk without rebuilding: PantropicalFemale
+PASS: long-term silk adds permanent visible repairs: Pantropical
+PASS: aging replaces only the current retained silk: Pantropical
+PASS: web opacity hides aged silk without rebuilding: Pantropical
+PASS: long-term silk adds permanent visible repairs: ApacheFemale
+PASS: aging replaces only the current retained silk: ApacheFemale
+PASS: web opacity hides aged silk without rebuilding: ApacheFemale
+PASS: long-term silk adds permanent visible repairs: Apache
+PASS: aging replaces only the current retained silk: Apache
+PASS: web opacity hides aged silk without rebuilding: Apache
+PASS: long-term silk adds permanent visible repairs: PortiaLabiata
+PASS: aging replaces only the current retained silk: PortiaLabiata
+PASS: web opacity hides aged silk without rebuilding: PortiaLabiata
+PASS: long-term silk adds permanent visible repairs: HyllusDiardiGreen
+PASS: aging replaces only the current retained silk: HyllusDiardiGreen
+PASS: web opacity hides aged silk without rebuilding: HyllusDiardiGreen
+PASS: long-term silk adds permanent visible repairs: PortiaLabiataMale
+PASS: aging replaces only the current retained silk: PortiaLabiataMale
+PASS: web opacity hides aged silk without rebuilding: PortiaLabiataMale
+PASS: long-term silk adds permanent visible repairs: HyllusDiardiMale
+PASS: aging replaces only the current retained silk: HyllusDiardiMale
+PASS: web opacity hides aged silk without rebuilding: HyllusDiardiMale
+PASS: long-term silk adds permanent visible repairs: GardenOrb
+PASS: aging replaces only the current retained silk: GardenOrb
+PASS: web opacity hides aged silk without rebuilding: GardenOrb
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: GardenOrb / Groom / 315
+PASS: long-term silk adds permanent visible repairs: GardenOrbMale
+PASS: aging replaces only the current retained silk: GardenOrbMale
+PASS: web opacity hides aged silk without rebuilding: GardenOrbMale
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: GardenOrbMale / Groom / 315
+PASS: long-term silk adds permanent visible repairs: CrossOrb
+PASS: aging replaces only the current retained silk: CrossOrb
+PASS: web opacity hides aged silk without rebuilding: CrossOrb
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: CrossOrb / Groom / 315
+PASS: long-term silk adds permanent visible repairs: CrossOrbMale
+PASS: aging replaces only the current retained silk: CrossOrbMale
+PASS: web opacity hides aged silk without rebuilding: CrossOrbMale
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: CrossOrbMale / Groom / 315
+PASS: long-term silk adds permanent visible repairs: MarbledOrb
+PASS: aging replaces only the current retained silk: MarbledOrb
+PASS: web opacity hides aged silk without rebuilding: MarbledOrb
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrb / Groom / 315
+PASS: long-term silk adds permanent visible repairs: MarbledOrbMale
+PASS: aging replaces only the current retained silk: MarbledOrbMale
+PASS: web opacity hides aged silk without rebuilding: MarbledOrbMale
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: MarbledOrbMale / Groom / 315
+PASS: long-term silk adds permanent visible repairs: GoldenOrb
+PASS: aging replaces only the current retained silk: GoldenOrb
+PASS: web opacity hides aged silk without rebuilding: GoldenOrb
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrb / Groom / 315
+PASS: long-term silk adds permanent visible repairs: GoldenOrbMale
+PASS: aging replaces only the current retained silk: GoldenOrbMale
+PASS: web opacity hides aged silk without rebuilding: GoldenOrbMale
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: GoldenOrbMale / Groom / 315
+PASS: long-term silk adds permanent visible repairs: SouthernWidow
+PASS: aging replaces only the current retained silk: SouthernWidow
+PASS: web opacity hides aged silk without rebuilding: SouthernWidow
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidow / Groom / 315
+PASS: long-term silk adds permanent visible repairs: SouthernWidowMale
+PASS: aging replaces only the current retained silk: SouthernWidowMale
+PASS: web opacity hides aged silk without rebuilding: SouthernWidowMale
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: SouthernWidowMale / Groom / 315
+PASS: long-term silk adds permanent visible repairs: BrownWidow
+PASS: aging replaces only the current retained silk: BrownWidow
+PASS: web opacity hides aged silk without rebuilding: BrownWidow
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: BrownWidow / Groom / 315
+PASS: long-term silk adds permanent visible repairs: BrownWidowMale
+PASS: aging replaces only the current retained silk: BrownWidowMale
+PASS: web opacity hides aged silk without rebuilding: BrownWidowMale
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: BrownWidowMale / Groom / 315
+PASS: long-term silk adds permanent visible repairs: RedbackWidow
+PASS: aging replaces only the current retained silk: RedbackWidow
+PASS: web opacity hides aged silk without rebuilding: RedbackWidow
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidow / Groom / 315
+PASS: long-term silk adds permanent visible repairs: RedbackWidowMale
+PASS: aging replaces only the current retained silk: RedbackWidowMale
+PASS: web opacity hides aged silk without rebuilding: RedbackWidowMale
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: RedbackWidowMale / Groom / 315
+PASS: long-term silk adds permanent visible repairs: HouseTangle
+PASS: aging replaces only the current retained silk: HouseTangle
+PASS: web opacity hides aged silk without rebuilding: HouseTangle
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: HouseTangle / Groom / 315
+PASS: long-term silk adds permanent visible repairs: HouseTangleMale
+PASS: aging replaces only the current retained silk: HouseTangleMale
+PASS: web opacity hides aged silk without rebuilding: HouseTangleMale
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: HouseTangleMale / Groom / 315
+PASS: long-term silk adds permanent visible repairs: BarnFunnel
+PASS: aging replaces only the current retained silk: BarnFunnel
+PASS: web opacity hides aged silk without rebuilding: BarnFunnel
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnel / Groom / 315
+PASS: long-term silk adds permanent visible repairs: BarnFunnelMale
+PASS: aging replaces only the current retained silk: BarnFunnelMale
+PASS: web opacity hides aged silk without rebuilding: BarnFunnelMale
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: BarnFunnelMale / Groom / 315
+PASS: long-term silk adds permanent visible repairs: Nebula
+PASS: aging replaces only the current retained silk: Nebula
+PASS: web opacity hides aged silk without rebuilding: Nebula
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: Nebula / Groom / 315
+PASS: long-term silk adds permanent visible repairs: NebulaMale
+PASS: aging replaces only the current retained silk: NebulaMale
+PASS: web opacity hides aged silk without rebuilding: NebulaMale
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: NebulaMale / Groom / 315
+PASS: long-term silk adds permanent visible repairs: Crystal
+PASS: aging replaces only the current retained silk: Crystal
+PASS: web opacity hides aged silk without rebuilding: Crystal
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: Crystal / Groom / 315
+PASS: long-term silk adds permanent visible repairs: CrystalMale
+PASS: aging replaces only the current retained silk: CrystalMale
+PASS: web opacity hides aged silk without rebuilding: CrystalMale
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: CrystalMale / Groom / 315
+PASS: long-term silk adds permanent visible repairs: Copperbot
+PASS: aging replaces only the current retained silk: Copperbot
+PASS: web opacity hides aged silk without rebuilding: Copperbot
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: Copperbot / Groom / 315
+PASS: long-term silk adds permanent visible repairs: CopperbotMale
+PASS: aging replaces only the current retained silk: CopperbotMale
+PASS: web opacity hides aged silk without rebuilding: CopperbotMale
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Rest / 0
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Rest / 45
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Rest / 90
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Rest / 135
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Rest / 180
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Rest / 225
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Rest / 270
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Rest / 315
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Walk / 0
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Walk / 45
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Walk / 90
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Walk / 135
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Walk / 180
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Walk / 225
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Walk / 270
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Walk / 315
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Inspect / 0
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Inspect / 45
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Inspect / 90
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Inspect / 135
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Inspect / 180
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Inspect / 225
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Inspect / 270
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Inspect / 315
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Groom / 0
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Groom / 45
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Groom / 90
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Groom / 135
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Groom / 180
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Groom / 225
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Groom / 270
+PASS: actual family artwork fits edge clearance after a molt: CopperbotMale / Groom / 315
+PASS: walking along finished supports leaves the rendered web unchanged: before spiral
+PASS: supported travel reuses the retained silk image
+PASS: walking along finished supports leaves the rendered web unchanged: return to hub
+PASS: supported travel reuses the retained silk image
+PASS: resident web obeys visibility without affecting its construction: 1
+PASS: resident web obeys visibility without affecting its construction: 0.5
+PASS: resident web obeys visibility without affecting its construction: 0
+PASS: completed orb web reuses one generated silk image across 180 redraws
+PASS: departure fade reuses the web artwork without rebuilding geometry
+PASS: construction progress replaces the single retained silk layer
+PASS: rendered orb has clearly visible spoke and capture silk
+PASS: rendered orb preserves transparency outside the reserved corner
+PASS: full construction batches image updates instead of allocating a bitmap per strand or frame
+PASS: rendered silk touches both desktop edges in TopLeft
+PASS: rendered silk touches both desktop edges in TopRight
+PASS: rendered silk touches both desktop edges in BottomLeft
+PASS: rendered silk touches both desktop edges in BottomRight
+PASS: repeated plucks reuse the retained web image while only the contacted spoke ripples
+PASS: plucking adds no tether strands outside the existing concave web
+RESULT: PASS (0 failures).
