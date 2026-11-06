@@ -67,9 +67,13 @@ namespace CornerSpider {
         }
 
         static Point RetreatBranchPoint(Point a,Point b,double t,double slack) {
-            double u=1-t;
             Point c=RetreatMix(a,b,.32)+new Vector(slack*.38,slack);
             Point e=RetreatMix(a,b,.69)+new Vector(slack*.25,slack*.72);
+            return RetreatCurvePoint(a,c,e,b,t);
+        }
+
+        static Point RetreatCurvePoint(Point a,Point c,Point e,Point b,double t) {
+            double u=1-t;
             return new Point(u*u*u*a.X+3*u*u*t*c.X+3*u*t*t*e.X+t*t*t*b.X,
                              u*u*u*a.Y+3*u*u*t*c.Y+3*u*t*t*e.Y+t*t*t*b.Y);
         }
@@ -86,6 +90,16 @@ namespace CornerSpider {
             d.Pop();
         }
 
+        static Point RetreatFrameJoint(DrawingContext d,Point a,Point b,Vector pull,double join) {
+            Point c=RetreatMix(a,b,.32)+pull;
+            Point e=RetreatMix(a,b,.69)+pull*.72;
+            d.PushOpacity(.53);
+            Curve(d,"#65414b50",.94,a,c,e,b);
+            Curve(d,"#ecf8f7ec",.44,a,c,e,b);
+            d.Pop();
+            return RetreatCurvePoint(a,c,e,b,join);
+        }
+
         static void RetreatFoundation(DrawingContext d,SilkProfile profile,int level,int repairs,
                                        double ex,double ey,bool resident,bool portiaVolume) {
             var random=new Random(profile.Seed+77);
@@ -93,54 +107,58 @@ namespace CornerSpider {
             int count=resident?5:platformOnly?5:9;
             int topCount=platformOnly?2:5;
             var roots=new Point[count];
-            var branch=new Point[count];
-            var seam=new Point[count];
-            var slack=new double[count];
+            var joints=new Point[count-1];
+            var branch=new Point[count-1];
+            var seam=new Point[count-1];
+            var slack=new double[count-1];
+            bool residentTop=ey<=ex;
+            const double cornerGap=18;
             for(int i=0;i<count;i++) {
-                bool top=resident?ey<=ex:i<topCount;
-                double along=resident?i/4.0:top?i/(double)(topCount-1):(i-topCount+1)/(double)(count-topCount);
-                double wallOffset=RetreatRange(random,-11,10);
-                if(resident) {
-                    double pos=-95+along*188+wallOffset;
-                    roots[i]=top?new Point(pos,-ey):new Point(ex,pos);
-                } else if(top) {
-                    double x=Math.Min(ex-10,-43+(ex+36)*along+wallOffset);
-                    roots[i]=new Point(x,-ey);
-                } else {
-                    double y=-ey+(ey+42)*along+wallOffset;
-                    roots[i]=new Point(ex,y);
-                }
-                double t=.91-.82*i/(count-1)+RetreatRange(random,-.025,.025);
+                bool top=resident?residentTop:i<topCount;
+                int index=resident || top?i:i-topCount;
+                int divisions=(resident?count:top?topCount:count-topCount)-1;
+                double first=resident?-86:top?-43:-ey+cornerGap;
+                double last=resident?86:top?ex-cornerGap:45;
+                double step=(last-first)/divisions;
+                double jitter=index==0 || index==divisions?0:Math.Min(6,step*.19);
+                double position=first+index*step+RetreatRange(random,-jitter,jitter);
+                roots[i]=top?new Point(position,-ey):new Point(ex,position);
+                RetreatAttachment(d,roots[i],top,RetreatRange(random,platformOnly?15:8,platformOnly?18:12));
+            }
+
+            // A shallow, scalloped frame follows the substrate and bends
+            // around the corner. Sleeve ties join the actual curves in this
+            // frame, so tension is shared along the edge contacts.
+            for(int i=0;i<joints.Length;i++) {
+                bool cornerSpan=!resident && i==topCount-1;
+                bool top=resident?residentTop:i<topCount-1;
+                double bow=RetreatRange(random,4,9);
+                Vector pull=cornerSpan?new Vector(-bow,bow):top?new Vector(0,bow):new Vector(-bow,0);
+                joints[i]=RetreatFrameJoint(d,roots[i],roots[i+1],pull,RetreatRange(random,.36,.62));
+
+                double t=.91-.82*i/(joints.Length-1)+RetreatRange(random,-.021,.021);
                 Point margin=PocketPoint(profile,-1,t);
-                // Structural threads are attached along the same wall-side seam
-                // as the veil, spreading the load over the length of the chamber.
                 if(profile.Scaffold) {
                     margin.X=-20+3*Math.Sin(t*5.7);
                     margin.Y=profile.Along(t)*.72;
                 }
                 seam[i]=NestPoint(margin.X*profile.Width,margin.Y*profile.Length);
-                branch[i]=RetreatMix(roots[i],seam[i],RetreatRange(random,.25,.69));
-                branch[i].Offset(RetreatRange(random,-6,8),RetreatRange(random,-9,5));
-                slack[i]=RetreatRange(random,-3.5,3.8);
-                RetreatAttachment(d,roots[i],top,RetreatRange(random,10,17));
-            }
-
-            for(int i=0;i<count;i++) {
-                // Short split bridles peel from each other before reaching a
-                // larger trunk. The asymmetry comes from the actual substrate.
-                if(!platformOnly && i==1) branch[i]=branch[0];
-                if(!platformOnly && i==count-2) branch[i]=branch[count-1];
+                branch[i]=RetreatMix(joints[i],seam[i],RetreatRange(random,.45,.68));
+                branch[i].Offset(RetreatRange(random,-3,4),RetreatRange(random,-3,3));
+                slack[i]=RetreatRange(random,-2.5,2.8);
                 bool light=(i%3==1);
-                RetreatFiber(d,roots[i],branch[i],slack[i]*.5,light?.32:.50,light?.34:.54,!light);
+                RetreatFiber(d,joints[i],branch[i],slack[i]*.5,light?.32:.49,light?.34:.54,!light);
                 RetreatFiber(d,branch[i],seam[i],slack[i],light?.31:.52,light?.35:.51,!light);
+                if(!platformOnly && i%3==0)
+                    RetreatFiber(d,roots[i+1],branch[i],slack[i],.25,.24);
             }
 
-            for(int i=0;i<count-1;i++) {
+            for(int i=0;i<joints.Length-1;i++) {
                 random=new Random(profile.Seed+713+i*157);
                 if(!platformOnly && i%3!=1) {
-                    Point outer=RetreatMix(roots[i],branch[i],.58);
+                    Point outer=RetreatBranchPoint(joints[i],branch[i],.58,slack[i]*.5);
                     Point inner=RetreatBranchPoint(branch[i+1],seam[i+1],.21,slack[i+1]);
-                    RetreatFiber(d,outer,inner,RetreatRange(random,1.4,7.2),.29,.28);
+                    RetreatFiber(d,outer,inner,RetreatRange(random,.9,4.8),.29,.28);
                 }
                 Point join=RetreatBranchPoint(branch[i],seam[i],.48,slack[i]);
                 if(!platformOnly && i%3==0) RetreatFiber(d,branch[i+1],join,RetreatRange(random,-2,4),.24,.25);
@@ -171,13 +189,13 @@ namespace CornerSpider {
             // three-sheet space web. The projected sheets converge into
             // a flexible lower mesh instead of a closed sleeve.
             var random=new Random(profile.Seed+341);
-            int last=roots.Length-1;
+            int last=seam.Length-1;
             Point low=RetreatMix(branch[2],seam[last],.82)+new Vector(-12,67);
-            Point high=branch[last-1];
-            Point[] upper={roots[0],branch[2],high,roots[last]};
+            Point high=branch[last];
+            Point[] upper={roots[0],branch[2],high,roots[roots.Length-1]};
             Point[] lower={seam[1],low,low+new Vector(24,-6),seam[last-1]};
             RetreatFiber(d,low,roots[0],13,.36,.37,true);
-            RetreatFiber(d,lower[2],roots[last],9,.33,.32);
+            RetreatFiber(d,lower[2],roots[roots.Length-1],9,.33,.32);
             for(int face=0;face<3;face++) {
                 random=new Random(profile.Seed+341+face*127);
                 int ribs=7+level/6+repairs/5;
@@ -287,8 +305,14 @@ namespace CornerSpider {
             nestLevel=level;nestRepairs=repairs;nestEdgeX=edgeX;nestEdgeY=edgeY;nestSpecies=species;NestBuilds++;
             SilkProfile profile=SilkProfile.Get(species);
             bool platform=profile.Scaffold;
+            // The border-facing half of an attachment pad must remain inside
+            // the work area when the corner is mirrored or space is tight.
+            const double clearSide=256;
+            var cornerClip=new RectangleGeometry(new Rect(-clearSide,-edgeY,edgeX+clearSide,edgeY+clearSide));
+            cornerClip.Freeze();
             nestBack=new DrawingGroup();nestFront=new DrawingGroup();
             using(var d=nestBack.Open()) {
+                d.PushClip(cornerClip);
                 RetreatFoundation(d,profile,level,repairs,edgeX,edgeY,resident,platform && !SkinCatalog.Get(species).Male);
                 d.PushTransform(new RotateTransform(135));d.PushTransform(new ScaleTransform(profile.Width,profile.Length));
                 if(platform) DrawPortiaPlatform(d,profile,level,repairs);
@@ -303,11 +327,12 @@ namespace CornerSpider {
                     RetreatMouth(d,profile,true);
                     RetreatMouth(d,profile,false);
                 }
-                d.Pop();d.Pop();
+                d.Pop();d.Pop();d.Pop();
             }
             nestBack.Freeze();
             using(var d=nestFront.Open()) {
                 if(!platform) {
+                    d.PushClip(cornerClip);
                     d.PushTransform(new RotateTransform(135));d.PushTransform(new ScaleTransform(profile.Width,profile.Length));
                     var roof=Pocket(profile,.058,.958,13.2);
                     d.PushOpacity(Math.Min(1,profile.Density));
@@ -322,7 +347,7 @@ namespace CornerSpider {
                     RetreatWeave(d,profile,level,repairs,true);
                     d.Pop();
                     FeatherRetreat(d,profile);
-                    d.Pop();d.Pop();d.Pop();
+                    d.Pop();d.Pop();d.Pop();d.Pop();
                 }
             }
             nestFront.Freeze();

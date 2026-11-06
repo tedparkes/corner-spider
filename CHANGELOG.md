@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 1.1.0-alpha.6 (local preview)
+
+- Give the Cross orb a rounder capture field, clear hub and wider spiral
+  spacing. Keep its support frame attached to the actual desktop edges.
+- Move jumping-spider cocoons into the corner. Distribute their short supports
+  along a curved edge frame and leave room to walk around the diagonal sleeve.
+- Update the settings preview to use each species' actual home placement.
+
 ## 1.1.0-alpha.5 (local preview)
 
 - Rebuild corner silk around actual desktop edges. Orb webs use curved frames,

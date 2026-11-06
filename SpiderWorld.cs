@@ -115,9 +115,12 @@ namespace CornerSpider {
         public void UpdateHome() {
             if(IsColonyResident) { Home=ResidentHome;ResetNestRoute();return; }
             HomeArea=Math.Max(0,Math.Min(Areas.Count-1,HomeArea));var a=Areas[HomeArea];double s=HomeScale;
-            // Leave room for a whole spider to line up outside either end. The
-            // cocoon itself keeps its size and its silk remains attached to the corner.
-            V home=a.Clamp(new V(Corner.EndsWith("Right")?a.X+a.W-160*s:a.X+160*s,Corner.StartsWith("Top")?a.Y+160*s:a.Y+a.H-160*s),160*s);
+            // Pull one side of the diagonal sleeve close to the wall. The
+            // wider gap on the other side leaves a route out from behind it.
+            double insetX=Math.Min((WebDweller?160:116)*s,a.W*.5);
+            double insetY=Math.Min((WebDweller?160:144)*s,a.H*.5);
+            V home=new V(Corner.EndsWith("Right")?a.X+a.W-insetX:a.X+insetX,
+                Corner.StartsWith("Top")?a.Y+insetY:a.Y+a.H-insetY);
             if((home-Home).Length>.01) nestInside=false;
             bool moved=(home-Home).Length>.01;Home=home;ResetNestRoute();if(moved) ReflowResidents();
         }

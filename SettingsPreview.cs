@@ -51,6 +51,7 @@ namespace CornerSpider {
             double silkScale=silkFit*(Enlarged?1:Math.Max(.2,Math.Min(1.8,PetScale))/1.8);
             silkPreview.WebVisibility=WebVisibility;
             if(silkScale>0) {
+                silkPreview.SetSpecies(Species);
                 d.PushTransform(new TranslateTransform(ActualWidth-400*silkScale,0));
                 d.PushTransform(new ScaleTransform(silkScale,silkScale));
                 silkArt.DrawHammock(d,silkPreview,false,Species);

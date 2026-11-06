@@ -61,7 +61,7 @@ static class BehaviorRegressionTests {
         Check(quietSeconds/totalSeconds>.60,"watching and resting dominate unoccupied behavior");
         Check(walkPauses>100,"patrols include deliberate motionless pauses");
         w=New(15);w.Spider=w.Perch(0,3);w.GoHome();
-        for(int i=0;i<2400;i++) { w.Tick(.025,away);Check(w.Spider.X<150 || w.Spider.X>1130 || w.Spider.Y<145 || w.Spider.Y>575 || (w.Spider-w.Home).Length<145*w.HomeScale,"opposite-corner return follows the perimeter before the local end-entrance approach");if(w.State==Mood.Sleep) break; }
+        for(int i=0;i<2400;i++) { w.Tick(.025,away);Check(w.Spider.X<150 || w.Spider.X>1130 || w.Spider.Y<145 || w.Spider.Y>575 || (w.Spider-w.Home).Length<145*w.HomeScale,"opposite-corner return follows the perimeter before the local end-entrance approach: "+w.Spider.X+","+w.Spider.Y);if(w.State==Mood.Sleep) break; }
         var settings=new Settings();settings.Parse(new[]{"scale=NaN","web=Infinity","meals=-9","species=bogus","corner=bad","flies=nonsense"});
         Check(settings.Scale==1 && settings.Web==.15 && settings.Meals==0 && settings.Species=="Regal" && settings.AutoFeed,"malformed settings cannot poison simulation");
         string folder=Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"test-settings-"+Guid.NewGuid().ToString("N"));

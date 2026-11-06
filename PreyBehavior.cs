@@ -20,9 +20,14 @@ namespace CornerSpider {
             if(!SkinCatalog.Contains(id) || species==id) return;
             if(WebStage!=WebVisit.None) CancelWebVisit();
             if(State==Mood.SpeciesAct) { decision=2;Enter(Mood.Rest); }
-            bool previousBusy=LifeBusy;
+            bool previousBusy=LifeBusy,previousWebDweller=WebDweller;
             species=id;behavior=BehaviorCatalog.Get(id);nextSpeciesMoment=Clock+28;NextWebVisit=Clock+100;
             if(previousBusy) { nestInside=false;Wake(); }
+            if(previousWebDweller!=WebDweller && !IsColonyResident) {
+                bool goingHome=State==Mood.Return || State==Mood.EnterNest || State==Mood.ExitNest || State==Mood.Sleep;
+                UpdateHome();
+                if(goingHome) GoHome(false);
+            }
             RestoreLife();
         }
         public void Feed() { if(HuntsSpiders) SpawnSmallSpider();else SpawnFly(); }

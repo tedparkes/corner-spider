@@ -11,6 +11,7 @@ namespace CornerSpider {
             bool golden = skin.Pattern == "Golden";
             bool garden = skin.Pattern == "Garden";
             bool marble = skin.Pattern == "Marble";
+            bool cross = skin.Pattern == "Cross";
             bool crystal = skin.WebKind == WebKind.Crystal;
             bool swap = resident && ex < ey;
             if (swap) {
@@ -27,8 +28,8 @@ namespace CornerSpider {
                 if (swap) drawing.Pop();
                 return;
             }
-            double farX = resident ? 108 : side * (golden ? 1.43 : marble ? 1.53 : 1.63);
-            double farY = resident ? 94 : upper * (golden ? 1.82 : marble ? 1.74 : 1.71);
+            double farX = resident ? 108 : side * (golden ? 1.43 : marble ? 1.53 : cross ? 1.88 : 1.63);
+            double farY = resident ? 94 : upper * (golden ? 1.82 : marble ? 1.74 : cross ? 1.96 : 1.71);
             double topGap = upper * .045;
             double sideGap = side * .05;
             var rim = resident ? new[] {
@@ -96,17 +97,20 @@ namespace CornerSpider {
             }
             OrbStroke(drawing, mounts, frameColor, .49, "#49394748");
 
-            int spokes = golden ? 34 : crystal ? 20 : marble ? 25 : garden ? 27 : 29;
-            int turns = golden ? 22 : crystal ? 12 : marble ? 14 : garden ? 17 : 16;
+            int spokes = golden ? 34 : crystal ? 20 : marble || cross ? 25 : garden ? 27 : 29;
+            int turns = cross ? (resident ? 8 : 11) : golden ? 22 : crystal ? 12 : marble ? 14 : garden ? 17 : 16;
             double phase = golden ? .38 : marble ? .73 : garden ? .17 : crystal ? 1.26 : .51;
             V openSpan = rim[5] - rim[4];
             V towardOpening = resident ? new V(0, 1) : new V(openSpan.Y, -openSpan.X) * (1 / openSpan.Length);
             V towardCorner = towardOpening * -1;
             double fore = OrbRimHit(rim, towardOpening, resident, crystal).Length * .94;
             double aft = OrbRimHit(rim, towardCorner, resident, crystal).Length * (resident ? .85 : .71);
-            double halfDepth = (fore + aft) * .5;
-            double centerDepth = (fore - aft) * .5;
-            double halfWidth = side * (golden ? .82 : marble ? .88 : .96);
+            // Keep the Cross orb's oval within the available depth. Fitting a
+            // wide ellipse through the short sector compressed its sticky silk
+            // into a dense wedge, especially in the small settings preview.
+            double halfDepth = cross ? Math.Min(fore, aft) * .88 : (fore + aft) * .5;
+            double centerDepth = cross ? halfDepth * .09 : (fore - aft) * .5;
+            double halfWidth = cross ? halfDepth * 1.14 : side * (golden ? .82 : marble ? .88 : .96);
             var rays = new V[spokes];
             var tips = new V[spokes];
             var captureEdge = new double[spokes];
@@ -130,18 +134,18 @@ namespace CornerSpider {
                     double clearance = rimLimit - ellipse;
                     double blend = Math.Min(30, Math.Min(rimLimit, ellipse) * .21);
                     captureEdge[i] = (rimLimit + ellipse - Math.Sqrt(clearance * clearance + blend * blend)) * .5;
-                    OrbLine(path, new V(0, 0), tips[i]);
+                    OrbLine(path, cross ? ray * 3.5 : new V(0, 0), tips[i]);
                 }
             }
-            OrbStroke(drawing, radii, radialColor, .45, "#403c4a4c");
+            OrbStroke(drawing, radii, radialColor, cross ? .34 : .45, cross ? "#303c4a4c" : "#403c4a4c");
 
             var spiral = new StreamGeometry();
             using (var path = spiral.Open()) {
                 int count = Math.Min(turns, Math.Max(4, (int)Math.Ceiling(growth * turns))) * spokes;
-                V a = OrbCapturePoint(rays, captureEdge, 0, turns, phase);
+                V a = OrbCapturePoint(rays, captureEdge, 0, turns, phase, cross);
                 path.BeginFigure(OrbPoint(a), false, false);
                 for (int i = 1; i <= count; i++) {
-                    V b = OrbCapturePoint(rays, captureEdge, i, turns, phase);
+                    V b = OrbCapturePoint(rays, captureEdge, i, turns, phase, cross);
                     int turn = i / spokes, sector = i % spokes;
                     // A small damaged patch ends on intact spokes. It avoids
                     // pristine repeated rows without loose floating fragments.
@@ -159,20 +163,22 @@ namespace CornerSpider {
                     a = b;
                 }
             }
-            OrbCaptureStroke(drawing, spiral, catchColor);
+            OrbCaptureStroke(drawing, spiral, catchColor, cross);
 
             // Nonsticky hub turns are separated from the capture spiral.
             var hub = new StreamGeometry();
             using (var path = hub.Open()) {
-                path.BeginFigure(OrbPoint(rays[0] * 2.8), false, false);
-                for (int i = 1; i <= 3 * spokes; i++) {
+                double innerHub = cross ? 3.5 : 2.8;
+                int hubSegments = (cross ? 2 : 3) * spokes;
+                path.BeginFigure(OrbPoint(rays[0] * innerHub), false, false);
+                for (int i = 1; i <= hubSegments; i++) {
                     int ray = i % spokes;
-                    double radius = Math.Min(8.5, captureEdge[ray] * .36);
-                    double r = 2.8 + (radius - 2.8) * i / (3 * spokes);
+                    double radius = Math.Min(cross ? 7.4 : 8.5, captureEdge[ray] * .36);
+                    double r = innerHub + (radius - innerHub) * i / hubSegments;
                     path.LineTo(OrbPoint(rays[ray] * r), true, false);
                 }
             }
-            OrbStroke(drawing, hub, frameColor, .40, "#42404c4d");
+            OrbStroke(drawing, hub, frameColor, cross ? .30 : .40, cross ? "#30404c4d" : "#42404c4d");
 
             if (garden) {
                 for (int sideOfHub = -1; sideOfHub <= 1; sideOfHub += 2) {
@@ -305,11 +311,11 @@ namespace CornerSpider {
             return direction * 32;
         }
 
-        static V OrbCapturePoint(V[] rays, double[] edge, int index, int turns, double phase) {
+        static V OrbCapturePoint(V[] rays, double[] edge, int index, int turns, double phase, bool cross) {
             int k = index % rays.Length;
             double progress = index / (double)(turns * rays.Length);
-            double radial = Math.Pow(Math.Max(0, 1 - progress), 1.11);
-            double freeZone = Math.Min(17.5, edge[k] * .58);
+            double radial = Math.Pow(Math.Max(0, 1 - progress), cross ? 1.025 : 1.11);
+            double freeZone = Math.Min(cross ? 20.5 : 17.5, edge[k] * .58);
             double sway = Math.Sin(index * .89 + phase) * .75 * Math.Sin(progress * Math.PI);
             return rays[k] * (freeZone + (edge[k] - freeZone) * radial + sway);
         }
@@ -327,9 +333,9 @@ namespace CornerSpider {
             drawing.DrawGeometry(null, P(tint, width), geometry);
         }
 
-        static void OrbCaptureStroke(DrawingContext drawing, StreamGeometry geometry, string tint) {
+        static void OrbCaptureStroke(DrawingContext drawing, StreamGeometry geometry, string tint, bool cross) {
             geometry.Freeze();
-            drawing.DrawGeometry(null, P("#423c4a4c", .74), geometry);
+            drawing.DrawGeometry(null, P(cross ? "#323c4a4c" : "#423c4a4c", cross ? .57 : .74), geometry);
             var silk = (Color)ColorConverter.ConvertFromString(tint);
             var sheen = new LinearGradientBrush {
                 MappingMode = BrushMappingMode.Absolute,
@@ -342,7 +348,7 @@ namespace CornerSpider {
                     i / (double)(brightness.Length - 1)));
             }
             sheen.Freeze();
-            var pen = new Pen(sheen, .35) { StartLineCap = PenLineCap.Round, EndLineCap = PenLineCap.Round };
+            var pen = new Pen(sheen, cross ? .30 : .35) { StartLineCap = PenLineCap.Round, EndLineCap = PenLineCap.Round };
             pen.Freeze();
             drawing.DrawGeometry(null, pen, geometry);
         }

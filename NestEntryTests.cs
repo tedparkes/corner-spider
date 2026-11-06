@@ -35,7 +35,9 @@ static class NestEntryTests {
             } else if(w.State==Mood.Return) {
                 Check(!w.UnderNestSilk,"approaching from outside does not fade under the silk");
                 // The centre of the body must never cross a side wall on its way to the mouth.
-                Check(Math.Abs(Across(w,w.Spider))>32 || Math.Abs(Along(w,w.Spider))>60,"return route stays outside the cocoon body");
+                Check(Math.Abs(Across(w,w.Spider))>32 || Math.Abs(Along(w,w.Spider))>60,
+                    "return route stays outside the cocoon body: "+w.Corner+", scale="+w.Scale+
+                    ", DPI="+w.Areas[w.HomeArea].Dpi+", along="+Along(w,w.Spider)+", across="+Across(w,w.Spider));
             }
         }
         Check(w.State==Mood.Sleep && (w.Spider-w.Home).Length<.01,"return finishes inside the retreat: corner="+w.Corner+", scale="+w.Scale+", dpi="+w.Areas[w.HomeArea].Dpi+", state="+w.State+", position="+w.Spider.X+","+w.Spider.Y+", home="+w.Home.X+","+w.Home.Y);

@@ -36,6 +36,7 @@ namespace CornerSpider {
             }
         }
         static RenderTargetBitmap SilkBitmap(PetCanvas canvas,World w,string species) {
+            w.SetSpecies(species);
             var v=new DrawingVisual();using(var d=v.RenderOpen()) { canvas.DrawHammock(d,w,false,species);canvas.DrawHammock(d,w,true,species); }
             var bitmap=new RenderTargetBitmap(360,360,96,96,PixelFormats.Pbgra32);bitmap.Render(v);return bitmap;
         }
@@ -115,7 +116,7 @@ namespace CornerSpider {
             foreach(var skin in SkinCatalog.All) foreach(double size in new[]{.2,1.0,1.8}) {
                 // A large offscreen work area prevents the small-screen scale fit
                 // from disguising the true 20% and 180% rendering bounds.
-                var w=new World(1200,900,42);w.AutoFeed=w.CursorPlay=false;w.SetScale(size);w.Web=1;
+                var w=new World(1200,900,42);w.AutoFeed=w.CursorPlay=false;w.SetSpecies(skin.Id);w.SetScale(size);w.Web=1;
                 var v=new DrawingVisual();using(var d=v.RenderOpen()) {
                     canvas.DrawHammock(d,w,false,skin.Id,true);canvas.DrawHammock(d,w,true,skin.Id,true);
                 }

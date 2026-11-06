@@ -7,11 +7,12 @@ namespace CornerSpider {
         List<V> nestRoute;
         int nestWaypoint;
         public V NestForward { get { double a=NestAngle*Math.PI/180;return new V(Math.Sin(a),-Math.Cos(a)); } }
+        double NestClearance { get { return SpiderPose.Radius*Math.Max(HomeScale*LifeSize,BodyScale); } }
         // A real entrance, measured on the retreat's long axis. Both ends stay
         // on that axis even on an unusually small work area.
         double NestRun {
             get {
-                var a=Areas[HomeArea];double margin=SpiderPose.Radius*HomeScale;
+                var a=Areas[HomeArea];double margin=NestClearance;
                 double x=Math.Min(Home.X-a.X,a.X+a.W-Home.X)-Math.Min(margin,a.W/2);
                 double y=Math.Min(Home.Y-a.Y,a.Y+a.H-Home.Y)-Math.Min(margin,a.H/2);
                 return Math.Max(0,Math.Min(96*HomeScale,Math.Min(x,y)*Math.Sqrt(2)));
@@ -27,7 +28,8 @@ namespace CornerSpider {
         // A tiny visibility graph also handles starting on the far side of it.
         void PlanNestEntry() {
             nestRoute=new List<V>();nestWaypoint=0;
-            var a=Areas[HomeArea];double margin=SpiderPose.Radius*HomeScale;
+            if(!WebDweller && !IsColonyResident && NestRun>=65*HomeScale && PlanSleeveEntry()) return;
+            var a=Areas[HomeArea];double margin=NestClearance;
             double hx=Math.Max(0,Math.Min(90*HomeScale,Math.Min(Home.X-a.X,a.X+a.W-Home.X)-Math.Min(margin,a.W/2)));
             double hy=Math.Max(0,Math.Min(90*HomeScale,Math.Min(Home.Y-a.Y,a.Y+a.H-Home.Y)-Math.Min(margin,a.H/2)));
             V start=Spider,relative=start-Home;
@@ -38,19 +40,88 @@ namespace CornerSpider {
             }
             V[] nodes={start,Home+new V(-hx,-hy),Home+new V(hx,-hy),Home+new V(hx,hy),Home+new V(-hx,hy)};
             V rear=NestForward*(-1);int finish=rear.Y<0?(rear.X<0?1:2):(rear.X>0?3:4);
-            double[] costs={0,double.MaxValue,double.MaxValue,double.MaxValue,double.MaxValue};
-            int[] previous={-1,-1,-1,-1,-1};bool[] used=new bool[5];
-            for(int k=0;k<5;k++) {
-                int at=-1;for(int i=0;i<5;i++) if(!used[i] && (at<0 || costs[i]<costs[at])) at=i;
+            var path=NestPath(nodes,finish,(from,to)=>CrossesNestBox(from-Home,to-Home,hx,hy));
+            if(path!=null) nestRoute.AddRange(path);
+            else nestRoute.Add(nodes[finish]);
+            nestRoute.Add(NestEntrance);
+        }
+        bool PlanSleeveEntry() {
+            // The diagonal sleeve takes less room than its axis-aligned bounds.
+            // Clip its four bypass sides to the space the entire spider can use.
+            var area=Areas[HomeArea];
+            double halfX=area.W*.5-NestClearance,halfY=area.H*.5-NestClearance;
+            if(halfX<=0 || halfY<=0) return false;
+            double length=64*HomeScale,width=39*HomeScale;
+            V forward=NestForward,across=new V(-forward.Y,forward.X);
+            V end=forward*length,side=across*width;
+            V[] corners={Home-end-side,Home+end-side,Home+end+side,Home-end+side};
+            V approach=SleeveApproach(area);
+            var nodes=new List<V> { approach };
+            V nearest=approach;
+            double best=double.MaxValue;
+            for(int i=0;i<corners.Length;i++) {
+                V start=corners[i],delta=corners[(i+1)%corners.Length]-start;
+                V offset=start-area.Center;
+                double lo=0,hi=1;
+                if(!NestSlab(offset.X,delta.X,halfX,ref lo,ref hi) ||
+                   !NestSlab(offset.Y,delta.Y,halfY,ref lo,ref hi)) continue;
+                nodes.Add(start+delta*lo);
+                nodes.Add(start+delta*hi);
+                V fromStart=approach-start;
+                double t=(fromStart.X*delta.X+fromStart.Y*delta.Y)/(delta.Length*delta.Length);
+                V point=start+delta*Math.Max(lo,Math.Min(hi,t));
+                double distance=(point-approach).Length;
+                if(distance<best) { best=distance;nearest=point; }
+            }
+            if(nodes.Count==1) return false;
+            V local=SleevePoint(approach,forward,across);
+            bool inside=Math.Abs(local.X)<length && Math.Abs(local.Y)<width;
+            if(inside) nodes[0]=nearest;
+            nodes.Add(NestEntrance);
+            var path=NestPath(nodes,nodes.Count-1,(from,to)=>CrossesNestBox(
+                SleevePoint(from,forward,across),SleevePoint(to,forward,across),length,width));
+            if(path==null) return false;
+            if((approach-Spider).Length>.001) nestRoute.Add(approach);
+            if(inside) nestRoute.Add(nearest);
+            nestRoute.AddRange(path);
+            return true;
+        }
+        V SleeveApproach(Area area) {
+            // A long perimeter return stays beside the edge until it is
+            // close enough to turn around the sleeve.
+            double margin=NestClearance,range=116*HomeScale;
+            double wallX=Corner.EndsWith("Right")?area.X+area.W-margin:area.X+margin;
+            double wallY=Corner.StartsWith("Top")?area.Y+margin:area.Y+area.H-margin;
+            if(Math.Abs(Spider.X-wallX)<12*HomeScale && Math.Abs(Spider.Y-Home.Y)>range)
+                return area.Clamp(new V(Spider.X,Home.Y+Math.Sign(Spider.Y-Home.Y)*range),margin);
+            if(Math.Abs(Spider.Y-wallY)<12*HomeScale && Math.Abs(Spider.X-Home.X)>range)
+                return area.Clamp(new V(Home.X+Math.Sign(Spider.X-Home.X)*range,Spider.Y),margin);
+            return Spider;
+        }
+        V SleevePoint(V point,V forward,V across) {
+            V offset=point-Home;
+            return new V(offset.X*forward.X+offset.Y*forward.Y,offset.X*across.X+offset.Y*across.Y);
+        }
+        static List<V> NestPath(IList<V> nodes,int finish,Func<V,V,bool> blocked) {
+            int count=nodes.Count;
+            var costs=new double[count];
+            var previous=new int[count];
+            var used=new bool[count];
+            for(int i=1;i<count;i++) { costs[i]=double.MaxValue;previous[i]=-1; }
+            for(int k=0;k<count;k++) {
+                int at=-1;for(int i=0;i<count;i++) if(!used[i] && (at<0 || costs[i]<costs[at])) at=i;
                 if(at<0 || costs[at]==double.MaxValue) break;used[at]=true;
-                for(int next=1;next<5;next++) {
-                    if(used[next] || CrossesNestBox(nodes[at]-Home,nodes[next]-Home,hx,hy)) continue;
+                for(int next=1;next<count;next++) {
+                    if(used[next] || blocked(nodes[at],nodes[next])) continue;
                     double cost=costs[at]+(nodes[next]-nodes[at]).Length;
                     if(cost<costs[next]) { costs[next]=cost;previous[next]=at; }
                 }
             }
-            var path=new List<V>();for(int at=finish;at>0;at=previous[at]) { path.Add(nodes[at]);if(previous[at]<0) break; }
-            path.Reverse();nestRoute.AddRange(path);nestRoute.Add(NestEntrance);
+            if(previous[finish]<0) return null;
+            var path=new List<V>();
+            for(int at=finish;at>0;at=previous[at]) path.Add(nodes[at]);
+            path.Reverse();
+            return path;
         }
         static bool CrossesNestBox(V a,V b,double hx,double hy) {
             // Open interior only: walking along a clearance edge is allowed.

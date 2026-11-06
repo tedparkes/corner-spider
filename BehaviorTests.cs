@@ -7,8 +7,13 @@ class BehaviorTests {
     static World New() { var w=new World(1280,720,42); w.AutoFeed=false; return w; }
     static void Main() {
         try {
-            var w=New(); Assert(w.Home.X>1000 && w.Home.Y<180,"Default corner with end-entrance clearance");
-            Assert(w.Areas[0].Contains(w.NestEntrance) && w.Areas[0].Contains(w.NestExit) && (w.NestEntrance-w.Home).Length>90,"Both nest ends have room for a full approach");
+            var w=New();
+            Assert(w.Width-w.Home.X<125 && w.Home.Y<150,"Default retreat sits close to both sides of its corner");
+            var retreat=SilkProfile.Get(w.Species);
+            double sleeveEnd=Math.Max(-retreat.Along(0),retreat.Along(1))*retreat.Length*w.HomeScale;
+            Assert((w.Clamp(w.NestEntrance)-w.NestEntrance).Length<.001 &&
+                (w.Clamp(w.NestExit)-w.NestExit).Length<.001 &&
+                (w.NestEntrance-w.Home).Length>sleeveEnd,"Both nest ends clear the sleeve and the whole spider fits");
             foreach(string corner in new string[]{"TopLeft","TopRight","BottomLeft","BottomRight"}) {
                 w.Corner=corner; w.UpdateHome(); w.GoHome(); Advance(w,50,away);
                 Assert(w.Spider.X>=0 && w.Spider.X<=w.Width && w.Spider.Y>=0 && w.Spider.Y<=w.Height,"Corner bounds");
