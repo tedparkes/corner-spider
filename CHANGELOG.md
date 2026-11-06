@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 1.1.0-alpha.8 (local preview)
+
+- Widen and lengthen cocoon sleeves so they read as shelters for the spider.
+  The longer end extends into the room and the silk ties meet the larger sleeve.
+
 ## 1.1.0-alpha.7 (local preview)
 
 - Tuck cocoon-style retreats into the corner vertex with tapered silk extending

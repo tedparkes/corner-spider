@@ -100,15 +100,8 @@ namespace CornerSpider {
             return RetreatCurvePoint(a,c,e,b,join);
         }
 
-        static Point CornerPocketJoint(SilkProfile profile,double width,double length,int side,double t) {
-            Point point=PocketPoint(profile,side,t);
-            double x=point.X*width,y=point.Y*length;
-            const double diagonal=.7071067811865476;
-            return new Point((x-y)*diagonal,(x+y)*diagonal);
-        }
-
         static void CornerPocketFrame(DrawingContext d,SilkProfile profile,int level,int repairs,
-                                      double ex,double ey,double width,double length) {
+                                      double ex,double ey,Matrix sleeve) {
             // The pouch is against the corner. Two long, shallow runs follow
             // the walls and taper into the short fibers carrying each flank.
             for(int wall=0;wall<2;wall++) {
@@ -117,7 +110,7 @@ namespace CornerSpider {
                 var random=new Random(profile.Seed+517+wall*311);
                 double reach=top?165:180;
                 Point root=top?new Point(ex-reach,-ey):new Point(ex,reach-ey);
-                Point shoulder=CornerPocketJoint(profile,width,length,side,.72);
+                Point shoulder=sleeve.Transform(PocketPoint(profile,side,.72));
                 Point c=top?new Point(root.X+reach*.36,root.Y+1.8):
                     new Point(root.X-1.6,root.Y-reach*.39);
                 Point e=top?new Point(shoulder.X-20,shoulder.Y-7):
@@ -126,8 +119,8 @@ namespace CornerSpider {
                 Curve(d,"#9eeef3e7",.45,root,c,e,shoulder);
                 RetreatAttachment(d,root,top,6);
 
-                Point first=CornerPocketJoint(profile,width,length,side,.20);
-                Point last=CornerPocketJoint(profile,width,length,side,.48);
+                Point first=sleeve.Transform(PocketPoint(profile,side,.20));
+                Point last=sleeve.Transform(PocketPoint(profile,side,.48));
                 for(int i=0;i<3;i++) {
                     double distance=8+i*13+RetreatRange(random,-1.6,1.6);
                     Point anchor=top?new Point(ex-distance,-ey):new Point(ex,distance-ey);
@@ -148,7 +141,7 @@ namespace CornerSpider {
                 for(int i=0;i<6+level/4+repairs/2;i++) {
                     double t=RetreatRange(random,.61,.95);
                     Point a=RetreatCurvePoint(root,c,e,shoulder,t);
-                    Point b=CornerPocketJoint(profile,width,length,side,RetreatRange(random,.28,.72));
+                    Point b=sleeve.Transform(PocketPoint(profile,side,RetreatRange(random,.28,.72)));
                     RetreatFiber(d,a,b,RetreatRange(random,-2,3),i%5==0?.38:.22,
                         RetreatRange(random,.17,.37),i%7==0);
                 }
@@ -362,8 +355,19 @@ namespace CornerSpider {
             bool platform=profile.Scaffold;
             bool cornerPocket=!resident && !platform;
             double fit=cornerPocket?Math.Min(1,Math.Min(edgeX,edgeY)/48):1;
-            double sleeveWidth=profile.Width*(cornerPocket?.90*fit:1);
-            double sleeveLength=cornerPocket?Math.Min(.78,.72*profile.Length)*fit:profile.Length;
+            double sleeveWidth=profile.Width*(cornerPocket?1.25*fit:1);
+            double sleeveLength=cornerPocket?Math.Min(1.12,1.08*profile.Length)*fit:profile.Length;
+            var sleeve=Matrix.Identity;
+            sleeve.Scale(sleeveWidth,sleeveLength);
+            // Give the extra length to the room-facing end. The rear remains
+            // tucked against the corner and the pet's resting point stays put.
+            if(cornerPocket) {
+                double oldLength=Math.Min(.78,.72*profile.Length)*fit;
+                sleeve.Translate(0,-profile.Along(0)*(sleeveLength-oldLength));
+            }
+            sleeve.Rotate(cornerPocket?45:135);
+            var sleeveTransform=new MatrixTransform(sleeve);
+            sleeveTransform.Freeze();
             // The border-facing half of an attachment pad must remain inside
             // the work area when the corner is mirrored or space is tight.
             const double clearSide=256;
@@ -372,10 +376,9 @@ namespace CornerSpider {
             nestBack=new DrawingGroup();nestFront=new DrawingGroup();
             using(var d=nestBack.Open()) {
                 d.PushClip(cornerClip);
-                if(cornerPocket) CornerPocketFrame(d,profile,level,repairs,edgeX,edgeY,sleeveWidth,sleeveLength);
+                if(cornerPocket) CornerPocketFrame(d,profile,level,repairs,edgeX,edgeY,sleeve);
                 else RetreatFoundation(d,profile,level,repairs,edgeX,edgeY,resident,platform && !SkinCatalog.Get(species).Male);
-                d.PushTransform(new RotateTransform(cornerPocket?45:135));
-                d.PushTransform(new ScaleTransform(sleeveWidth,sleeveLength));
+                d.PushTransform(sleeveTransform);
                 if(platform) DrawPortiaPlatform(d,profile,level,repairs);
                 else {
                     var shape=Pocket(profile,.018,.985,3.7);
@@ -388,14 +391,13 @@ namespace CornerSpider {
                     RetreatMouth(d,profile,true);
                     RetreatMouth(d,profile,false);
                 }
-                d.Pop();d.Pop();d.Pop();
+                d.Pop();d.Pop();
             }
             nestBack.Freeze();
             using(var d=nestFront.Open()) {
                 if(!platform) {
                     d.PushClip(cornerClip);
-                    d.PushTransform(new RotateTransform(cornerPocket?45:135));
-                    d.PushTransform(new ScaleTransform(sleeveWidth,sleeveLength));
+                    d.PushTransform(sleeveTransform);
                     var roof=Pocket(profile,.058,.958,13.2);
                     d.PushOpacity(Math.Min(1,profile.Density));
                     d.DrawGeometry(B("#08f2f2e4"),null,roof);
@@ -409,7 +411,7 @@ namespace CornerSpider {
                     RetreatWeave(d,profile,level,repairs,true);
                     d.Pop();
                     FeatherRetreat(d,profile);
-                    d.Pop();d.Pop();d.Pop();d.Pop();
+                    d.Pop();d.Pop();d.Pop();
                 }
             }
             nestFront.Freeze();
