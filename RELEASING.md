@@ -39,6 +39,23 @@ tags and ZIPs unchanged.
    Both ZIPs contain CHANGELOG.md at the root.
 7. Check the draft's changelog, files and links, then publish when ready.
 
+## Publish an alpha with one command
+
+Push the reviewed tag early so the GitHub Windows job can run alongside local
+packaging and the native self-test of the extracted Windows ZIP. With GitHub CLI
+signed in as `tedparkes`, use the reviewed notes and passing self-test log:
+
+```powershell
+.\Publish-Alpha.ps1 -Tag vNEXT_VERSION -PackageDirectory .\dist `
+    -NotesFile .\reviewed-release-notes.md -NativeLog .\diagnostics\runtime-tests.txt -Publish
+```
+
+The command stages or reuses a draft, verifies asset hashes, and checks the tagged
+GitHub build before publishing. Leave out `-Publish` and `-NativeLog` to stage the
+draft while local checks run. Use `-Gallery` for reviewed images and `-GhPath` if
+GitHub CLI is outside PATH. Afterwards, download the public Windows ZIP without
+authentication and confirm an older alpha finds it in the updater.
+
 ## Preserve the published wording
 
 Before editing an existing release or preparing its successor, fetch the current

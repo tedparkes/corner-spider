@@ -23,27 +23,39 @@ try {
     # Include only public documentation/assets. Never collect the parent workspace.
     foreach ($destination in @($source,$portable)) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'docs') -Destination $destination -Recurse }
     foreach ($file in Get-ChildItem -LiteralPath $PSScriptRoot -Filter '*.cs' -File) { Copy-Item -LiteralPath $file.FullName -Destination $source }
-    foreach ($file in @('Build.cmd','Start-Spider.cmd','Stop-Spider.cmd','Package.ps1','app.manifest','JumpingSpider.exe.config','.gitignore','.gitattributes')) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot $file) -Destination $source }
+    foreach ($file in @('Build.cmd','Start-Spider.cmd','Stop-Spider.cmd','Package.ps1','Publish-Alpha.ps1','app.manifest','JumpingSpider.exe.config','.gitignore','.gitattributes')) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot $file) -Destination $source }
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot '.github') -Destination $source -Recurse
     foreach ($file in @('JumpingSpider.exe','JumpingSpider.exe.config','Start-Spider.cmd','Stop-Spider.cmd')) { Copy-Item -LiteralPath (Join-Path $PSScriptRoot $file) -Destination $portable }
+    Add-Type -AssemblyName System.IO.Compression
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     $archives = @()
     foreach ($kind in @('Windows','Source')) {
         $archive = Join-Path $output ('CornerSpider-v' + $releaseVersion + '-' + $kind + '.zip')
         if (Test-Path -LiteralPath $archive) { throw "Archive already exists; choose a new output folder to preserve prior release bytes: $archive" }
         $tree = if ($kind -eq 'Windows') { $portable } else { $source }
-        [IO.Compression.ZipFile]::CreateFromDirectory((Split-Path $tree),$archive,[IO.Compression.CompressionLevel]::Optimal,$false)
+        $treePrefix = [IO.Path]::GetFullPath($tree) + [IO.Path]::DirectorySeparatorChar
+        $expected = [Collections.Generic.Dictionary[string,string]]::new([StringComparer]::Ordinal)
+        $zip = [IO.Compression.ZipFile]::Open($archive,[IO.Compression.ZipArchiveMode]::Create)
+        try {
+            # The updater expects ZIP paths with forward slashes on every PowerShell host.
+            foreach ($file in Get-ChildItem -LiteralPath $tree -File -Recurse -Force) {
+                $relative = $file.FullName.Substring($treePrefix.Length).Replace('\','/')
+                $entryName = 'CornerSpider/' + $relative
+                $expected.Add($entryName,$file.FullName)
+                [void][IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip,$file.FullName,$entryName,[IO.Compression.CompressionLevel]::Optimal)
+            }
+        } finally { $zip.Dispose() }
         $zip = [IO.Compression.ZipFile]::OpenRead($archive)
         try {
-            $entries = @($zip.Entries | Where-Object { $_.Name.Length -gt 0 })
-            $expected = @(Get-ChildItem -LiteralPath $tree -File -Recurse -Force)
-            if ($entries.Count -ne $expected.Count) { throw 'Archive entry count mismatch.' }
-            foreach ($entry in $entries) {
-                $relative = $entry.FullName.Substring('CornerSpider/'.Length).Replace('/',[IO.Path]::DirectorySeparatorChar)
-                $original = Join-Path $tree $relative
+            if ($zip.Entries.Count -ne $expected.Count) { throw 'Archive entry count mismatch.' }
+            foreach ($entry in $zip.Entries) {
+                $entryName = $entry.FullName
+                if (!$expected.ContainsKey($entryName)) { throw "Unexpected or duplicate archive entry: $entryName" }
+                $original = $expected[$entryName]
+                [void]$expected.Remove($entryName)
                 $stream = $entry.Open();$sha = [Security.Cryptography.SHA256]::Create()
                 try { $hash = ([BitConverter]::ToString($sha.ComputeHash($stream))).Replace('-','') } finally { $stream.Dispose();$sha.Dispose() }
-                if ($hash -ne (Get-FileHash -LiteralPath $original -Algorithm SHA256).Hash) { throw "Archive content mismatch: $relative" }
+                if ($hash -ne (Get-FileHash -LiteralPath $original -Algorithm SHA256).Hash) { throw "Archive content mismatch: $entryName" }
             }
         } finally { $zip.Dispose() }
         $archives += $archive
