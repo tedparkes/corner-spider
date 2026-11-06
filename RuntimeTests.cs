@@ -90,7 +90,8 @@ namespace CornerSpider {
                         Check(!own,"OS hit testing passes through the illustrated finger");host.World.FingerBlend=0;host.Render();
                         host.Commands["pause"].PerformClick();Check(host.Paused,"pause tray handler");host.Commands["pause"].PerformClick();Check(!host.Paused,"resume tray handler");
                         host.Commands["feed"].PerformClick();Check(host.World.HasFly,"feed tray handler");host.Commands["home"].PerformClick();Check(host.World.State==Mood.Return,"home tray handler");
-                        Check(host.Commands.Count==13 && host.Commands.ContainsKey("settings"),"tray contains quick actions, seven food choices and a single settings entry");
+                        Check(host.Commands.Count==14 && host.Commands.ContainsKey("settings"),"tray contains quick actions, seven food choices, Settings and Check for updates");
+                        CheckTrayUpdates(host);
                         foreach(PreyKind food in Enum.GetValues(typeof(PreyKind))) { host.World.HasFly=false;host.Commands["food-"+food].PerformClick();Check(host.World.HasFly && host.World.Prey==food,"tray food selection: "+food); }host.World.HasFly=false;
                         var settingsPanel=new PetSettingsWindow(host);
                         settingsPanel.KeepBabiesCheck.IsChecked=true;settingsPanel.ResidentLimitSlider.Value=10;Check(host.World.KeepBabies && host.World.ResidentLimit==10,"resident checkbox and population slider apply live");
@@ -183,6 +184,31 @@ namespace CornerSpider {
                     stage++;
                 } catch(Exception ex) { log.AppendLine(ex.ToString());File.WriteAllText(Path.Combine(folder,"runtime-tests.txt"),log.ToString());timer.Stop();host.Dispose();app.Shutdown(1); }
             };timer.Start();return app.Run();
+        }
+        static void CheckTrayUpdates(PetHost host) {
+            var command=host.Commands["updates"];
+            Check(command.Enabled==Settings.DefaultTrayUpdateShortcut(host.Updates.Current),"tray update action starts at the build default");
+            host.SetTrayUpdateShortcut(true);
+            command.PerformClick();
+            var window=host.SettingsWindow;
+            Check(window!=null && ((TabItem)window.Tabs.SelectedItem).Header.Equals("Updates") &&
+                host.Updates.Status.Contains("checks are disabled in diagnostics"),"tray action opens Updates and calls the shared checker");
+            if(window==null) return;
+            window.Tabs.SelectedIndex=0;
+            window.WindowState=WindowState.Minimized;
+            host.Updates.Busy=true;
+            host.Updates.Status="Checking fixture";
+            command.PerformClick();
+            Check(host.SettingsWindow==window && window.WindowState==WindowState.Normal &&
+                ((TabItem)window.Tabs.SelectedItem).Header.Equals("Updates") && host.Updates.Status=="Checking fixture",
+                "tray action restores the existing window and leaves an active check running");
+            host.Updates.Busy=false;
+            window.TrayUpdateShortcutSelector.SelectedIndex=2;
+            Check(!command.Enabled && host.Settings.TrayUpdateShortcut==false,"Updates can disable the tray shortcut");
+            window.TrayUpdateShortcutSelector.SelectedIndex=0;
+            Check(!host.Settings.TrayUpdateShortcut.HasValue && command.Enabled==Settings.DefaultTrayUpdateShortcut(host.Updates.Current),
+                "Updates can restore the build's tray shortcut default");
+            window.Close();
         }
         static void CheckCursorVisibility(string folder) {
             using(var veil=new CursorVeil()) {

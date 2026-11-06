@@ -1,4 +1,4 @@
-CORNER SPIDER 1.1.0-alpha.12 - LOCAL PREVIEW
+CORNER SPIDER 1.1.0-alpha.13 - LOCAL PREVIEW
 
 Extract the whole Windows ZIP, then open JumpingSpider.exe or Start-Spider.cmd.
 Requires Windows 10/11 and .NET Framework 4.8. No installer or admin rights.
@@ -63,6 +63,8 @@ checks contact GitHub. Automatic checks are off by default.
 The optional support button shows only the original Cash App QR.
 
 UPDATES: Settings > Updates offers Check now and optional daily checks. Enable
+the tray shortcut there to use Check for updates from the tray menu. Preview
+builds enable the shortcut by default, and full releases default to disabled.
 Include prereleases in regular checks to consider stable and preview builds.
 Check for prerelease looks for the latest compatible preview once. Choose
 Download and restart when a newer build is offered. Version 1.0 users can move

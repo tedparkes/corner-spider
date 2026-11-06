@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 1.1.0-alpha.13 (local preview)
+
+- Add **Check for updates** to the tray menu. It opens Updates and checks the
+  selected release channel. The shortcut defaults on in preview builds and off
+  in full releases, with an override in Updates.
+
 ## 1.1.0-alpha.12 (local preview)
 
 - Real male orb weavers roam in search of mates instead of building a personal

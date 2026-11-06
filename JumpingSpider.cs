@@ -13,7 +13,7 @@ using Forms=System.Windows.Forms;
 [assembly:System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.8")]
 [assembly:System.Reflection.AssemblyVersion("1.1.0.0")]
 [assembly:System.Reflection.AssemblyFileVersion("1.1.0.0")]
-[assembly:System.Reflection.AssemblyInformationalVersion("1.1.0-alpha.12")]
+[assembly:System.Reflection.AssemblyInformationalVersion("1.1.0-alpha.13")]
 [assembly:System.Reflection.AssemblyTitle("Corner Spider")]
 [assembly:System.Reflection.AssemblyProduct("Corner Spider")]
 [assembly:System.Reflection.AssemblyDescription("A local jumping-spider companion for the Windows desktop.")]
@@ -125,10 +125,10 @@ namespace CornerSpider {
             World.FlyInterval=Settings.FlyInterval;World.InviteDelay=Settings.InviteDelay;World.CarryTolerance=Settings.CarryTolerance;
             World.FingerTone=Settings.FingerTone;World.WebVisibility=Settings.WebVisibility;
             World.AttentionDistance=Settings.AttentionDistance;World.DismissDistance=Settings.DismissDistance;World.NextFly=Math.Min(35,World.FlyInterval);
+            Updates=new UpdateController(this);
             BuildTray();RefreshDisplays();World.Spider=World.Home;World.RestoreLife();
             if(World.HasCornerSleeve && !World.LifeBusy) World.GoHome(false);
             World.KeepBabies=Settings.KeepBabies;World.ResidentLimit=Settings.ResidentLimit;World.RestoreResidents(Settings.Colonists);
-            Updates=new UpdateController(this);
             timer.Interval=TimeSpan.FromMilliseconds(33);timer.Tick+=OnTick;
             displayTimer.Interval=TimeSpan.FromMilliseconds(350);displayTimer.Tick+=delegate { displayTimer.Stop();if(!Disposed) RefreshDisplays(); };
             Microsoft.Win32.SystemEvents.DisplaySettingsChanged+=DisplayChanged;
@@ -241,10 +241,23 @@ namespace CornerSpider {
                 if(enabled) key.SetValue("CornerSpider","\""+System.Reflection.Assembly.GetExecutingAssembly().Location+"\"");else key.DeleteValue("CornerSpider",false);
             }return true; } catch(Exception ex) { Forms.MessageBox.Show("Couldn't change startup: "+ex.Message,"Corner Spider");return false; }
         }
-        public void OpenSettings() {
-            if(SettingsWindow==null) {
-                CursorVisibility.Release();World.Resume();SettingsWindow=new PetSettingsWindow(this);SettingsWindow.Closed+=delegate { SettingsWindow=null; };SettingsWindow.Show();
-            } else SettingsWindow.Activate();
+        public void OpenSettings() { OpenSettings(false); }
+        void OpenSettings(bool showUpdates) {
+            bool opening=SettingsWindow==null;
+            if(opening) {
+                CursorVisibility.Release();World.Resume();SettingsWindow=new PetSettingsWindow(this);SettingsWindow.Closed+=delegate { SettingsWindow=null; };
+            }
+            if(showUpdates) SettingsWindow.SelectUpdatesTab();
+            if(opening) SettingsWindow.Show();
+            else {
+                if(SettingsWindow.WindowState==WindowState.Minimized) SettingsWindow.WindowState=WindowState.Normal;
+                SettingsWindow.Activate();
+            }
+        }
+        internal void SetTrayUpdateShortcut(bool? enabled) {
+            Settings.TrayUpdateShortcut=enabled;
+            Commands["updates"].Enabled=Settings.TrayUpdateShortcutEnabled(Updates.Current);
+            Save();
         }
         void UpdateIcon() {
             var old=icon;icon=MakeIcon(Settings.Species);if(Tray!=null) Tray.Icon=icon;if(old!=null) old.Dispose();
@@ -291,6 +304,8 @@ namespace CornerSpider {
             var pause=Item("pause","Pause",delegate { Paused=!Paused;ResumeClock(); });Menu.Items.Add(pause);Menu.Opening+=delegate { pause.Text=Paused?"Resume":"Pause"; };
             Menu.Items.Add(new Forms.ToolStripSeparator());
             Menu.Items.Add(Item("settings","Settings...",OpenSettings));
+            var updates=Item("updates","Check for updates...",delegate { OpenSettings(true);Updates.CheckNow(); });
+            updates.Enabled=Settings.TrayUpdateShortcutEnabled(Updates.Current);Menu.Items.Add(updates);
             Menu.Items.Add(new Forms.ToolStripSeparator());
             Menu.Items.Add(Item("quit","Quit",delegate { Dispose();Application.Current.Shutdown(); }));
             UpdateIcon();Tray=new Forms.NotifyIcon { Text="Corner Spider - right-click for controls",Icon=icon,ContextMenuStrip=Menu,Visible=true };

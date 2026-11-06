@@ -15,12 +15,20 @@ namespace CornerSpider {
         public double MoltHours=6,MateHours=8;
         public readonly Dictionary<string,LifeRecord> Lives=new Dictionary<string,LifeRecord>();
         public bool KeepBabies,AutoUpdateCheck,PreviewUpdates;
+        public bool? TrayUpdateShortcut;
         public int ResidentLimit=6;
         public long LastUpdateCheckTicks;
         public readonly List<ColonyRecord> Colonists=new List<ColonyRecord>();
         public static readonly string[] SpeciesNames=SkinCatalog.Names;
         public static readonly string[] Corners={"TopLeft","TopRight","BottomLeft","BottomRight"};
         public string LastError="";
+        internal static bool DefaultTrayUpdateShortcut(string version) {
+            var release=ReleaseVersion.Parse(version);
+            return release!=null && release.Preview.Length>0;
+        }
+        internal bool TrayUpdateShortcutEnabled(string version) {
+            return TrayUpdateShortcut ?? DefaultTrayUpdateShortcut(version);
+        }
         public static Settings Load(string folder) {
             var s=new Settings();string path=Path.Combine(folder,"settings.txt");
             try { if(File.Exists(path)) s.Parse(File.ReadAllLines(path));else if(File.Exists(path+".bak")) s.Parse(File.ReadAllLines(path+".bak")); }
@@ -60,6 +68,7 @@ namespace CornerSpider {
                 if(k=="residentLimit" && int.TryParse(v,out count)) ResidentLimit=Math.Max(1,Math.Min(World.MaxResidents,count));
                 if(k=="autoUpdateCheck" && (v=="true" || v=="false")) AutoUpdateCheck=v=="true";
                 if(k=="previewUpdates" && (v=="true" || v=="false")) PreviewUpdates=v=="true";
+                if(k=="trayUpdateShortcut" && (v=="true" || v=="false")) TrayUpdateShortcut=v=="true";
                 long ticks;if(k=="lastUpdateCheck" && long.TryParse(v,out ticks) && ticks>=0 && ticks<=DateTime.MaxValue.Ticks) LastUpdateCheckTicks=ticks;
                 if(k.StartsWith("colony.") && Colonists.Count<World.MaxResidents) { var resident=ColonyRecord.Unpack(v);if(resident!=null) Colonists.Add(resident); }
             }
@@ -72,6 +81,7 @@ namespace CornerSpider {
                 var lifeLines=new List<string>();
                 lifeLines.Add("keepBabies="+KeepBabies.ToString().ToLowerInvariant());lifeLines.Add("residentLimit="+ResidentLimit);
                 lifeLines.Add("autoUpdateCheck="+AutoUpdateCheck.ToString().ToLowerInvariant());lifeLines.Add("previewUpdates="+PreviewUpdates.ToString().ToLowerInvariant());lifeLines.Add("lastUpdateCheck="+LastUpdateCheckTicks);
+                if(TrayUpdateShortcut.HasValue) lifeLines.Add("trayUpdateShortcut="+TrayUpdateShortcut.Value.ToString().ToLowerInvariant());
                 for(int i=0;i<Math.Min(World.MaxResidents,Colonists.Count);i++) lifeLines.Add("colony."+i+"="+Colonists[i].Pack());
                 lifeLines.Add("molting="+MoltingEnabled.ToString().ToLowerInvariant());lifeLines.Add("mating="+MatingEnabled.ToString().ToLowerInvariant());
                 lifeLines.Add("moltHours="+MoltHours.ToString(CultureInfo.InvariantCulture));lifeLines.Add("mateHours="+MateHours.ToString(CultureInfo.InvariantCulture));

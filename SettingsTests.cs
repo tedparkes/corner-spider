@@ -9,6 +9,8 @@ static class SettingsTests {
         var ids=new System.Collections.Generic.HashSet<string>();
         var oldSave=new Settings();oldSave.Parse(new[]{"version=3","web=.76","meals=12","species=Bold"});
         Check(oldSave.FingerTone==World.DefaultFingerTone && oldSave.Web==.76 && oldSave.Meals==12 && oldSave.Species=="Bold","old saves keep the original finger tone and pet progress");
+        Check(oldSave.TrayUpdateShortcutEnabled("1.1.0-alpha.13") && !oldSave.TrayUpdateShortcutEnabled("1.1.0"),
+            "old saves follow the installed build's tray update default");
         foreach(string value in new[]{"NaN","Infinity","-Infinity","invalid",""}) {
             var invalidTone=new Settings();invalidTone.Parse(new[]{"fingerTone="+value});Check(invalidTone.FingerTone==World.DefaultFingerTone,"invalid finger tone keeps safe default");
         }
@@ -51,6 +53,15 @@ static class SettingsTests {
         string folder=Path.Combine(Path.GetTempPath(),"CornerSpider-settings-test-"+Guid.NewGuid().ToString("N"));
         try {
             parsed.Species="Emerald";Check(parsed.Save(folder),"save new preferences");var loaded=Settings.Load(folder);Check(loaded.Scale==.2 && loaded.InviteDelay==10 && loaded.AttentionDistance==400 && loaded.DismissDistance==420 && loaded.Species=="Emerald" && loaded.FlyInterval==300 && loaded.CarryTolerance==1500,"all new preferences survive restart");
+            foreach(bool enabled in new[]{true,false}) {
+                parsed.TrayUpdateShortcut=enabled;
+                Check(parsed.Save(folder),"save explicit tray shortcut preference");
+                loaded=Settings.Load(folder);
+                Check(loaded.TrayUpdateShortcutEnabled("1.1.0") == enabled && loaded.TrayUpdateShortcutEnabled("1.1.0-alpha.13") == enabled,
+                    "explicit tray shortcut preference survives a build change");
+            }
+            parsed.TrayUpdateShortcut=null;
+            Check(parsed.Save(folder) && !Settings.Load(folder).TrayUpdateShortcut.HasValue,"returning to the build default removes the saved override");
             foreach(var skin in SkinCatalog.All) { parsed.Species=skin.Id;Check(parsed.Save(folder),"save species "+skin.Id);Check(Settings.Load(folder).Species==skin.Id,"reload species "+skin.Id); }
             foreach(double opacity in new[]{0,.25,.75,1}) { parsed.WebVisibility=opacity;Check(parsed.Save(folder),"save web visibility");loaded=Settings.Load(folder);Check(loaded.WebVisibility==opacity,"web visibility survives reload"); }
             parsed.Species="Emerald";

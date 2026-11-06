@@ -18,11 +18,13 @@ namespace CornerSpider {
         public readonly CheckBox KeepBabiesCheck,AutoUpdatesCheck,PreviewUpdatesCheck;
         public readonly Slider ResidentLimitSlider;
         public readonly Button CheckUpdateButton,CheckPrereleaseButton,InstallUpdateButton;
+        public readonly ComboBox TrayUpdateShortcutSelector;
         public readonly CheckBox FliesCheck,RidesCheck,AllMonitorsCheck,StartupCheck,TraitsCheck,WebVisitsCheck;
         public readonly Button WebVisitButton,SupportButton;
         public readonly SettingsPreview Preview=new SettingsPreview();
         public readonly FingerPreview FingerPreview=new FingerPreview();
         public readonly TabControl Tabs=new TabControl();
+        readonly TabItem updatesTab;
         readonly TextBlock speciesNote,saveStatus;
         bool syncing;
         public bool IsClosed { get;private set; }
@@ -47,8 +49,10 @@ namespace CornerSpider {
             slider.ValueChanged+=delegate { update();if(!syncing) { change(slider.Value);Changed(); } };
             return slider;
         }
-        void AddTab(string title,UIElement content) {
-            Tabs.Items.Add(new TabItem { Header=title,Padding=new Thickness(17,10,17,10),Content=new ScrollViewer { VerticalScrollBarVisibility=ScrollBarVisibility.Auto,HorizontalScrollBarVisibility=ScrollBarVisibility.Disabled,Content=content } });
+        TabItem AddTab(string title,UIElement content) {
+            var tab=new TabItem { Header=title,Padding=new Thickness(17,10,17,10),Content=new ScrollViewer { VerticalScrollBarVisibility=ScrollBarVisibility.Auto,HorizontalScrollBarVisibility=ScrollBarVisibility.Disabled,Content=content } };
+            Tabs.Items.Add(tab);
+            return tab;
         }
         public PetSettingsWindow(PetHost owner) {
             host=owner;Title="Corner Spider - Settings";Width=940;Height=730;MinWidth=720;MinHeight=520;
@@ -166,7 +170,8 @@ namespace CornerSpider {
             var reset=new Button { Content="Reset preferences",HorizontalAlignment=HorizontalAlignment.Left,Padding=new Thickness(14,7,14,7),Margin=new Thickness(0,12,0,8) };desktop.Children.Add(reset);reset.Click+=delegate { ResetPreferences(); };
             Note(desktop,"Restores appearance, interaction and screen defaults. Keeps your hammock progress, meals and Windows startup choice.");
             AddTab("Desktop",desktop);
-            Action unsubscribeUpdates;AddTab("Updates",UpdateSettings.Create(host,out AutoUpdatesCheck,out PreviewUpdatesCheck,out CheckUpdateButton,out CheckPrereleaseButton,out InstallUpdateButton,out unsubscribeUpdates));
+            Action unsubscribeUpdates;
+            updatesTab=AddTab("Updates",UpdateSettings.Create(host,out AutoUpdatesCheck,out PreviewUpdatesCheck,out TrayUpdateShortcutSelector,out CheckUpdateButton,out CheckPrereleaseButton,out InstallUpdateButton,out unsubscribeUpdates));
             Closed+=delegate { unsubscribeUpdates(); };
             var help=NewPanel();help.Children.Add(Text("A quiet little desktop companion",21));
             Note(help,"Approach an awake spider and hold still for the configured invitation delay. The finger fades in; the spider can jump on, hang, climb and wander. Move gently to carry it. A click lets it plan an upward hop; a fast move startles it. The finger holds still until takeoff, and your pointer returns immediately. Your clicks still reach your apps.");
@@ -176,6 +181,7 @@ namespace CornerSpider {
             saveTimer.Tick+=delegate { saveTimer.Stop();host.Save();saveStatus.Text=host.Settings.LastError.Length==0?"Saved. Changes are live on your desktop.":"Could not save preferences. Check that your save folder is writable."; };
             Closed+=delegate { IsClosed=true;saveTimer.Stop();encounterTimer.Stop();Preview.Dispose();host.Save(); };
         }
+        internal void SelectUpdatesTab() { Tabs.SelectedItem=updatesTab; }
         void Changed() { if(syncing) return;saveStatus.Text="Changes are live. Saving...";saveTimer.Stop();saveTimer.Start();host.Render(); }
         public void RefreshMonitors() {
             syncing=true;MonitorSelector.Items.Clear();
@@ -187,6 +193,7 @@ namespace CornerSpider {
         }
         public void ResetPreferences() {
             KeepBabiesCheck.IsChecked=false;ResidentLimitSlider.Value=6;AutoUpdatesCheck.IsChecked=false;PreviewUpdatesCheck.IsChecked=false;
+            TrayUpdateShortcutSelector.SelectedIndex=0;
             CategorySelector.SelectedItem="Jumping spiders";MoltingCheck.IsChecked=true;MatingCheck.IsChecked=true;MoltSlider.Value=6;MateSlider.Value=8;
             TraitsCheck.IsChecked=true;WebVisitsCheck.IsChecked=true;SpeciesSelector.SelectedItem=SkinCatalog.Get("Regal");SizeSlider.Value=100;WebSlider.Value=100;FingerToneSlider.Value=World.DefaultFingerTone*100;FlySlider.Value=100;InviteSlider.Value=4.5;ToleranceSlider.Value=850;
             AttentionSlider.Value=185;DismissSlider.Value=230;FliesCheck.IsChecked=true;RidesCheck.IsChecked=true;CornerSelector.SelectedIndex=1;AllMonitorsCheck.IsChecked=true;MonitorSelector.SelectedIndex=0;Changed();

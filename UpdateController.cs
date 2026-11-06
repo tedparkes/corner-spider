@@ -51,7 +51,7 @@ namespace CornerSpider {
         public void Dispose() { if(Disposed) return;Disposed=true;cancel.Cancel();Changed=null; }
     }
     public static class UpdateSettings {
-        public static FrameworkElement Create(PetHost host,out CheckBox automatic,out CheckBox previews,out Button check,out Button checkPrerelease,out Button install,out Action unsubscribe) {
+        public static FrameworkElement Create(PetHost host,out CheckBox automatic,out CheckBox previews,out ComboBox trayShortcut,out Button check,out Button checkPrerelease,out Button install,out Action unsubscribe) {
             var panel=new StackPanel { Margin=new Thickness(22) };
             panel.Children.Add(new TextBlock { Text="Updates from GitHub",FontSize=21,Margin=new Thickness(0,0,0,12) });
             panel.Children.Add(new TextBlock { Text="Installed: "+host.Updates.Current,Margin=new Thickness(0,0,0,10) });
@@ -61,6 +61,20 @@ namespace CornerSpider {
             panel.Children.Add(new TextBlock { Text="Regular checks look for stable releases by default. Use Check for prerelease for a one-time check for a newer preview.",TextWrapping=TextWrapping.Wrap,Margin=new Thickness(0,0,0,16) });
             autoBox.Checked+=delegate { host.Settings.AutoUpdateCheck=true;host.Save(); };autoBox.Unchecked+=delegate { host.Settings.AutoUpdateCheck=false;host.Save(); };
             Action channel=delegate { host.Settings.PreviewUpdates=previewBox.IsChecked==true;host.Updates.Available=null;host.Updates.Status="Release channel changed. Check again before installing.";host.Save(); };previewBox.Checked+=delegate { channel(); };previewBox.Unchecked+=delegate { channel(); };
+            panel.Children.Add(new TextBlock { Text="Tray update shortcut" });
+            trayShortcut=new ComboBox { HorizontalAlignment=HorizontalAlignment.Left,MinWidth=205,Margin=new Thickness(0,4,0,14) };
+            System.Windows.Automation.AutomationProperties.SetName(trayShortcut,"Tray update shortcut");
+            bool enabledByDefault=Settings.DefaultTrayUpdateShortcut(host.Updates.Current);
+            trayShortcut.Items.Add(new ComboBoxItem { Content="Build default ("+(enabledByDefault?"enabled":"disabled")+")" });
+            trayShortcut.Items.Add(new ComboBoxItem { Content="Enabled",Tag=true });
+            trayShortcut.Items.Add(new ComboBoxItem { Content="Disabled",Tag=false });
+            trayShortcut.SelectedIndex=!host.Settings.TrayUpdateShortcut.HasValue?0:host.Settings.TrayUpdateShortcut.Value?1:2;
+            var traySelector=trayShortcut;
+            traySelector.SelectionChanged+=delegate {
+                var choice=traySelector.SelectedItem as ComboBoxItem;
+                if(choice!=null) host.SetTrayUpdateShortcut((bool?)choice.Tag);
+            };
+            panel.Children.Add(trayShortcut);
             var buttons=new WrapPanel();panel.Children.Add(buttons);
             check=new Button { Content="Check now",Padding=new Thickness(12,7,12,7),Margin=new Thickness(0,0,10,6) };
             checkPrerelease=new Button { Content="Check for prerelease",Padding=new Thickness(12,7,12,7),Margin=new Thickness(0,0,10,6) };

@@ -1,6 +1,6 @@
 # Corner Spider 1.1 preview
 
-A spider companion for your actual Windows desktop. This is **1.1.0-alpha.12**,
+A spider companion for your actual Windows desktop. This is **1.1.0-alpha.13**,
 a local preview. The [1.0 release](https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0)
 remains the stable version. [Published community preview and release notes](https://github.com/tedparkes/corner-spider/releases/tag/v1.1.0-alpha.8).
 
@@ -9,6 +9,9 @@ Framework 4.8; no installer, administrator rights or asset downloads. Startup is
 opt-in. This community build is unsigned.
 
 ## New in this preview
+
+Alpha.13 adds **Check for updates** to the tray menu. Choose a different tray
+shortcut setting in **Settings > Updates**.
 
 Alpha.12 gives real male orb weavers mate-search patrols and occasional visits
 at the edge of a same-species female's orb. The mating-visit setting controls
@@ -155,6 +158,8 @@ Portia leaves. The encounter shares the single prey slot and waits during life e
 **Settings > Updates** has **Check now** and an opt-in daily check. Enable
 **Include prereleases in regular checks** to consider stable and preview builds
 together. **Check for prerelease** looks for the latest compatible preview once.
+**Check for updates** in the tray menu opens Updates and checks the saved channel.
+The tray shortcut defaults on in preview builds and off in full releases.
 Use **Download and restart** when a newer build is offered. Updates require
 your confirmation and a version newer than your current installation.
 
