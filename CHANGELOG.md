@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## 1.1.0-alpha.15
+
+- Add **Inspect routes** to habitats. Pause the scene and click a point to see
+  the walks and hops that reach it or why the point is unreachable.
+- Check footing on both sides of the walking path and along every step.
+  Check hop clearance against the displayed arc and avoid starting on a map
+  with no stable surface.
+- Reach the silk anchor before building, climb only laid support strands, and
+  return along the same support. Stay on the surface when the support is blocked.
+
 ## 1.1.0-alpha.14
 
 - Add optional depth habitats with a local library for aligned color and depth

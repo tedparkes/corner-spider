@@ -3,6 +3,13 @@ using System.Collections.Generic;
 
 namespace CornerSpider {
     public sealed class HabitatDepth {
+        const double FootRadius=.008;
+        const double SampleSpacing=.0035;
+        internal const double HopHeight=.018;
+        static readonly V[] FootProbes={
+            new V(1,0),new V(-1,0),new V(0,1),new V(0,-1),
+            new V(.707,.707),new V(-.707,.707),new V(.707,-.707),new V(-.707,-.707)
+        };
         readonly byte[] samples;
         HabitatRoute router;
 
@@ -47,27 +54,41 @@ namespace CornerSpider {
         }
 
         internal bool HasFooting(V point) {
-            const double radius=.008;
+            return HasFooting(point,DepthAt(point));
+        }
+
+        bool HasFooting(V point,double center,double margin=1) {
             if(!Inside(point) || point.X<.022 || point.X>.978 || point.Y<.022 || point.Y>.978) return false;
-            double center=DepthAt(point);
-            double dx=radius/Aspect;
-            return Math.Abs(DepthAt(point+new V(dx,0))-center)<.090 &&
-                Math.Abs(DepthAt(point-new V(dx,0))-center)<.090 &&
-                Math.Abs(DepthAt(point+new V(0,radius))-center)<.090 &&
-                Math.Abs(DepthAt(point-new V(0,radius))-center)<.090;
+            double horizontal=FootRadius/Aspect;
+            double low=center,high=center;
+            foreach(var probe in FootProbes) {
+                double depth=DepthAt(point+new V(probe.X*horizontal,probe.Y*FootRadius));
+                if(Math.Abs(depth-center)>.082*margin) return false;
+                low=Math.Min(low,depth);high=Math.Max(high,depth);
+            }
+            return high-low<=.125*margin;
         }
 
         public bool CanWalk(V from,V to) {
             if(!Inside(from) || !Inside(to)) return false;
             double distance=Distance(from,to);
-            int count=Math.Max(1,(int)Math.Ceiling(distance/.004));
+            if(distance<.000001) return HasFooting(from);
+            int count=Math.Max(1,(int)Math.Ceiling(distance/SampleSpacing));
             int shortSpan=Math.Min(count,Math.Max(1,(int)Math.Round(count*.018/Math.Max(.018,distance))));
             double previous=DepthAt(from);
+            if(!HasFooting(from,previous)) return false;
             V step=(to-from)*(1.0/count);
             for(int i=1;i<=count;i++) {
-                double depth=DepthAt(from+step*i);
-                if(Math.Abs(depth-previous)>.065) return false;
+                V point=from+step*i;
+                double depth=DepthAt(point);
+                if(Math.Abs(depth-previous)>.065 || !HasFooting(point,depth,i==count?1:.96)) return false;
                 if(i>=shortSpan && Math.Abs(depth-DepthAt(from+step*(i-shortSpan)))>.115) return false;
+                // Sample the footprint more finely than the slope. A thin
+                // edge can hide between two valid centerline samples.
+                for(int part=1;part<=3;part++) {
+                    V contact=from+step*(i-part*.25);
+                    if(!HasFooting(contact,DepthAt(contact),.96)) return false;
+                }
                 previous=depth;
             }
             return true;
@@ -79,10 +100,15 @@ namespace CornerSpider {
             double start=DepthAt(from),end=DepthAt(to);
             if(Math.Abs(start-end)>.22) return false;
             V delta=to-from;
-            int count=(int)Math.Ceiling(distance/.004);
+            V shoulder=new V(-delta.Y/Aspect,delta.X*Aspect)*(FootRadius*.44/distance);
+            int count=(int)Math.Ceiling(distance/SampleSpacing);
             for(int i=1;i<count;i++) {
                 double t=(double)i/count;
-                if(DepthAt(from+delta*t)>start+(end-start)*t+.135) return false;
+                double arc=4*t*(1-t);
+                V position=from+delta*t-new V(0,HopHeight*arc);
+                double clear=start+(end-start)*t+.031+.064*arc;
+                if(!Inside(position) || DepthAt(position)>clear ||
+                    DepthAt(position-shoulder)>clear || DepthAt(position+shoulder)>clear) return false;
             }
             return true;
         }
@@ -234,18 +260,23 @@ namespace CornerSpider {
             return steps;
         }
 
-        internal V FindStart(V preferred) {
+        internal bool TryFindStart(V preferred,out V start) {
             if(field.HasFooting(preferred)) {
-                foreach(var point in points) if(field.Distance(preferred,point)<.10 &&
-                    field.Distance(preferred,point)>.023 && field.CanWalk(preferred,point)) return preferred;
+                for(int i=0;i<points.Length;i++) if(edges[i]!=null && field.Distance(preferred,points[i])<.10 &&
+                    field.CanWalk(preferred,points[i])) { start=preferred;return true; }
             }
-            V best=new V(.5,.5);
+            start=preferred;
             double distance=double.MaxValue;
             for(int i=0;i<points.Length;i++) if(edges[i]!=null) {
                 double error=field.Distance(preferred,points[i]);
-                if(error<distance) { distance=error;best=points[i]; }
+                if(error<distance) { distance=error;start=points[i]; }
             }
-            return best;
+            if(distance<double.MaxValue || field.HasFooting(preferred)) return true;
+            for(int i=0;i<points.Length;i++) if(footing[i]) {
+                double error=field.Distance(preferred,points[i]);
+                if(error<distance) { distance=error;start=points[i]; }
+            }
+            return distance<double.MaxValue;
         }
     }
 
@@ -264,7 +295,9 @@ namespace CornerSpider {
             this.field=field;
             random=new Random(seed);
             V preferred=start??new V(.52,.77);
-            Position=field.Router.FindStart(HabitatDepth.Inside(preferred)?preferred:new V(.52,.77));
+            V position;
+            HasSurface=field.Router.TryFindStart(HabitatDepth.Inside(preferred)?preferred:new V(.52,.77),out position);
+            Position=position;
             Target=Position;
             Depth=field.DepthAt(Position);
             BeginPause(.65);
@@ -277,13 +310,15 @@ namespace CornerSpider {
         public double Speed { get; private set; }
         public double WalkDistance { get; private set; }
         public HabitatMotion Mood { get; private set; }
+        public bool HasSurface { get; private set; }
         public bool HasRoute { get { return nextStep<route.Count; } }
         public double PauseRemaining { get { return Math.Max(0,pause); } }
         public double HopProgress { get { return Mood==HabitatMotion.Hop?Math.Min(1,hopTime/hopDuration):0; } }
-        public double HopLift { get { double t=HopProgress;return .018*4*t*(1-t); } }
+        public double HopLift { get { double t=HopProgress;return HabitatDepth.HopHeight*4*t*(1-t); } }
+        internal V GroundPoint { get { return Mood==HabitatMotion.Hop?hopStart:Position; } }
 
         public bool SetDestination(V normalized) {
-            if(Mood==HabitatMotion.Hop || field.Distance(Position,normalized)<.00001) return false;
+            if(!HasSurface || Mood==HabitatMotion.Hop || field.Distance(Position,normalized)<.00001) return false;
             List<HabitatStep> steps;
             if(!HabitatRoute.TryPlan(field,Position,normalized,out steps) || steps.Count==0) return false;
             SetRoute(normalized,steps);
@@ -350,7 +385,7 @@ namespace CornerSpider {
         }
 
         public void Tick(double dt) {
-            if(!World.Finite(dt) || dt<=0) return;
+            if(!HasSurface || !World.Finite(dt) || dt<=0) return;
             double remaining=Math.Min(.25,dt);
             while(remaining>.000001) {
                 double step=Math.Min(1.0/60,remaining);
@@ -388,12 +423,20 @@ namespace CornerSpider {
             Mood=HabitatMotion.Walk;
             double distance=field.Distance(Position,step.Destination);
             double advance=Math.Min(distance,dt*(.085+.051*Depth));
-            if(distance>.000001) Position+=delta*(advance/distance);
+            V next=distance<=advance+.000001?step.Destination:Position+delta*(advance/distance);
+            // Validate the exact position too. A narrow edge can fall between
+            // the samples taken when this route was planned.
+            if(!field.HasFooting(next)) {
+                route.Clear();nextStep=0;Target=Position;
+                BeginPause(.38);
+                return;
+            }
+            Position=next;
             Depth=field.DepthAt(Position);
             WalkDistance+=advance;
             Speed=advance/dt;
             walkBudget-=dt;
-            if(distance<=advance+.000001) { Position=step.Destination;nextStep++; }
+            if(distance<=advance+.000001) nextStep++;
             if(!HasRoute || walkBudget<=0) {
                 BeginPause(HasRoute?Between(.48,1.04):Between(.80,1.50));
                 walkBudget=Between(1.15,2.5);

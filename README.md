@@ -1,14 +1,23 @@
 # Corner Spider 1.1 preview
 
-A spider companion for your actual Windows desktop. This is **1.1.0-alpha.14**,
+A spider companion for your actual Windows desktop. This is **1.1.0-alpha.15**,
 a prerelease for community testing. The [1.0 release](https://github.com/tedparkes/corner-spider/releases/tag/v1.0.0)
-remains the stable version. [Download this preview and read its release notes](https://github.com/tedparkes/corner-spider/releases/tag/v1.1.0-alpha.14).
+remains the stable version. [Download this preview and read its release notes](https://github.com/tedparkes/corner-spider/releases/tag/v1.1.0-alpha.15).
 
 Extract the Windows ZIP and open **JumpingSpider.exe**. Windows 10/11 with .NET
 Framework 4.8; no installer, administrator rights or asset downloads. Startup is
 opt-in. This community build is unsigned.
 
 ## New in this preview
+
+Alpha.15 adds **Inspect routes** inside a habitat. Click a spot in the photo
+to test travel from the spider's current or last surface foothold. A solid
+teal line shows a walk, dashed gold shows a hop, and a red cross marks a point
+the spider cannot reach. Turn inspection off to resume exploring.
+
+Walks now need stable depth beside the path and at every step. Hops check the
+visible arc for obstacles. During web construction, the spider climbs only
+the part of a support it has laid, and returns along that strand.
 
 Alpha.14 adds **Depth habitats**. Import a photo and matching grayscale depth map
 under **Settings > Habitat**. The spider follows visible surfaces, hops over

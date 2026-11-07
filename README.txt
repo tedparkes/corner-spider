@@ -1,4 +1,4 @@
-CORNER SPIDER 1.1.0-alpha.14 - COMMUNITY PRERELEASE
+CORNER SPIDER 1.1.0-alpha.15 - COMMUNITY PRERELEASE
 
 Extract the whole Windows ZIP, then open JumpingSpider.exe or Start-Spider.cmd.
 Requires Windows 10/11 and .NET Framework 4.8. No installer or admin rights.
@@ -17,6 +17,8 @@ Right-click the spider tray icon > Settings, or double-click the icon.
 Habitat: import a photo and aligned grayscale depth map, choose the near-depth
 color, and open the saved scene. F11 fills the screen. Close to return to the
 desktop pet. Image pairs stay local.
+Inspect routes: pause the habitat and click a destination. Teal lines are
+walks, dashed gold arcs are hops, and red crosses mark unreachable points.
 Appearance: five categories, 46 male/female choices, 20-180% size and web opacity.
 Life & home: infrequent molts, female mating visits, interval sliders, current
 stage and Invite a mate. Only an available female can accept a visit.

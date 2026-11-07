@@ -13,10 +13,12 @@ namespace CornerSpider {
         HabitatSilkPlan web;
         HabitatSilkConstruction construction;
         Visit visit;
-        V spider, surfaceArrival;
+        V spider, silkLanding;
         double depth, heading, clock, untilVisit=5, visitAge, lift, hop;
-        bool moving, airborne;
-        string species="";
+        double silkPosition, silkRest;
+        HabitatSilkSegment entrySupport;
+        bool moving, airborne, hasEntrySupport;
+        string species="", pendingSpecies;
         double size=1, opacity=1;
         DrawingGroup completedSilk;
         int completedStrands;
@@ -31,9 +33,15 @@ namespace CornerSpider {
 
         internal string Status {
             get {
+                if(!explorer.HasSurface) return "No stable surface found in this depth map";
                 if(web==null) return "Exploring the habitat";
                 if(visit==Visit.Approaching) return "Finding a route to the silk anchors";
-                if(visit==Visit.Weaving) return construction.Complete?"Resting on the silk":"Laying silk";
+                if(visit==Visit.Returning) return "Heading back to the surface";
+                if(visit==Visit.Weaving) {
+                    if(!construction.Complete) return "Laying silk";
+                    if(!hasEntrySupport) return "Waiting at the silk anchor";
+                    return silkRest>0?"Resting on the silk":"Crossing the silk";
+                }
                 return construction.Complete?"Exploring near its silk home":"Exploring the habitat";
             }
         }
@@ -41,15 +49,49 @@ namespace CornerSpider {
         internal double Depth { get { return depth; } }
         internal bool WebComplete { get { return construction!=null && construction.Complete; } }
         internal int VisibleSilk { get { return construction==null?0:construction.VisibleCount; } }
+        internal double SilkPosition { get { return silkPosition; } }
 
         public void Apply(string skin,double scale,double webOpacity) {
-            if(species!=skin) {
-                species=skin;pose.SetSpecies(skin);
-                web=HabitatSilk.Plan(scene.Field,skin,explorer.Position);
-                construction=web==null?null:new HabitatSilkConstruction(web);
-                completedSilk=null;visit=Visit.Roaming;untilVisit=5;
-            }
             size=scale;opacity=webOpacity;
+            if(species==skin) { pendingSpecies=null;return; }
+            if(silkPosition>0) {
+                pendingSpecies=skin;
+                if(visit!=Visit.Returning) ChangeVisit(Visit.Returning);
+                return;
+            }
+            SelectSpecies(skin);
+        }
+
+        void SelectSpecies(string skin) {
+            species=skin;pendingSpecies=null;pose.SetSpecies(skin);
+            web=explorer.HasSurface?HabitatSilk.Plan(scene.Field,skin,explorer.Position):null;
+            construction=web==null?null:new HabitatSilkConstruction(web);
+            silkPosition=silkRest=0;hasEntrySupport=false;
+            if(web!=null) {
+                silkLanding=web.Landing.Position;
+                if(web.Segments.Count>0) {
+                    entrySupport=web.Segments[0];
+                    V start=entrySupport.Start.Position;
+                    HabitatDepth field=scene.Field;
+                    hasEntrySupport=entrySupport.Role==HabitatSilkRole.Support &&
+                        field.Distance(start,silkLanding)<=.025 && field.HasFooting(start) &&
+                        field.CanWalk(silkLanding,start) && Math.Abs(entrySupport.Start.Depth-field.DepthAt(start))<.002 &&
+                        CanFollowSupport(field,entrySupport);
+                    if(hasEntrySupport) silkLanding=start;
+                }
+            }
+            completedSilk=null;ChangeVisit(Visit.Roaming);untilVisit=5;
+        }
+
+        static bool CanFollowSupport(HabitatDepth field,HabitatSilkSegment support) {
+            double distance=field.Distance(support.Start.Position,support.End.Position);
+            if(distance<=.00002) return false;
+            int samples=Math.Max(1,(int)Math.Ceiling(distance*field.Height*2));
+            for(int i=1;i<=samples;i++) {
+                HabitatSilkPoint point=HabitatSilkPoint.Lerp(support.Start,support.End,(double)i/samples);
+                if(field.VisibilityAt(point.Position,point.Depth)<.5) return false;
+            }
+            return true;
         }
 
         public void Tick(double seconds) {
@@ -69,13 +111,14 @@ namespace CornerSpider {
                 lift=explorer.HopLift;hop=explorer.HopProgress;
 
                 if(visit==Visit.Approaching) {
-                    if((spider-web.Landing.Position).Length<.016 && !airborne) {
-                        surfaceArrival=spider;ChangeVisit(Visit.Weaving);
+                    if(AtSilkLanding()) {
+                        BeginWeaving();
                     } else if(!explorer.HasRoute || visitAge>30) {
                         ChangeVisit(Visit.Roaming);untilVisit=12;
                     }
                 } else if(web!=null && (untilVisit-=dt)<=0 && !airborne) {
-                    if(explorer.SetDestination(web.Landing.Position)) ChangeVisit(Visit.Approaching);
+                    if(AtSilkLanding()) BeginWeaving();
+                    else if(explorer.SetDestination(silkLanding)) ChangeVisit(Visit.Approaching);
                     else untilVisit=12;
                 }
             }
@@ -93,47 +136,61 @@ namespace CornerSpider {
 
         void ChangeVisit(Visit next) { visit=next;visitAge=0; }
 
+        bool AtSilkLanding() {
+            return !airborne && scene.Field.Distance(spider,silkLanding)<=.00002 &&
+                Math.Abs(depth-scene.Field.DepthAt(silkLanding))<.002;
+        }
+
+        void BeginWeaving() {
+            silkRest=0;ChangeVisit(Visit.Weaving);
+        }
+
         void UpdateOnSilk(double dt) {
             airborne=false;lift=hop=0;
             if(visit==Visit.Returning) {
-                var exit=new HabitatSilkPoint(surfaceArrival,scene.Field.DepthAt(surfaceArrival));
-                if(MoveOnSilk(exit,dt)) { ChangeVisit(Visit.Roaming);untilVisit=46; }
-                return;
-            }
-
-            if(!construction.Complete) {
-                construction.Advance(dt);
-                int last=construction.VisibleCount-1;
-                if(last>=0) {
-                    var strand=web.Segments[last];
-                    var tip=HabitatSilkPoint.Lerp(strand.Start,strand.End,construction.SegmentProgress(last));
-                    // Stay close to silk already placed while the free end is drawn in.
-                    var work=last<2?tip:HabitatSilkPoint.Lerp(web.Perch,tip,.70);
-                    MoveOnSilk(work,dt);
+                if(MoveOnSilk(0,dt)) {
+                    ChangeVisit(Visit.Roaming);untilVisit=46;
+                    if(pendingSpecies!=null) SelectSpecies(pendingSpecies);
                 }
                 return;
             }
-            if(MoveOnSilk(web.Perch,dt)) {
-                untilVisit-=dt;
-                if(untilVisit<=-4) ChangeVisit(Visit.Returning);
-            }
+
+            construction.Advance(dt);
+            // Only the anchored support is a known route. Its drawn prefix limits the climb.
+            double available=hasEntrySupport?construction.SegmentProgress(0):0;
+            bool atEnd=MoveOnSilk(available,dt);
+            if(construction.Complete && atEnd && (silkRest+=dt)>=4) ChangeVisit(Visit.Returning);
         }
 
-        bool MoveOnSilk(HabitatSilkPoint target,double dt) {
-            V direction=target.Position-spider;
-            double aspect=(double)scene.Color.PixelWidth/scene.Color.PixelHeight;
-            double distance=new V(direction.X*aspect,direction.Y).Length;
-            double step=Math.Min(1,dt*.24/Math.Max(.00001,distance));
-            moving=distance>.001;
+        bool MoveOnSilk(double target,double dt) {
+            moving=false;
+            if(!hasEntrySupport || target==silkPosition) return true;
+            V strand=entrySupport.End.Position-entrySupport.Start.Position;
+            double projected=scene.Field.Distance(entrySupport.Start.Position,entrySupport.End.Position);
+            double depthSpan=(entrySupport.End.Depth-entrySupport.Start.Depth)*.32;
+            double length=Math.Sqrt(projected*projected+depthSpan*depthSpan);
+            double direction=Math.Sign(target-silkPosition);
+            double advance=Math.Min(Math.Abs(target-silkPosition),dt*.24/length);
+            moving=advance*projected>.00001;
             if(moving) {
-                double targetAngle=Math.Atan2(direction.X*aspect,-direction.Y)*180/Math.PI;
+                double targetAngle=Math.Atan2(strand.X*scene.Field.Aspect*direction,-strand.Y*direction)*180/Math.PI;
                 double turn=(targetAngle-heading+540)%360-180;
                 heading=(heading+Math.Max(-360*dt,Math.Min(360*dt,turn))+360)%360;
             }
-            spider+=direction*step;
-            double zStep=Math.Min(1,Math.Max(step,dt*4));
-            depth+=(target.Depth-depth)*zStep;
-            return distance<.002 && Math.Abs(target.Depth-depth)<.02;
+            silkPosition+=direction*advance;
+            if(Math.Abs(target-silkPosition)<.000001) silkPosition=target;
+            HabitatSilkPoint point=HabitatSilkPoint.Lerp(entrySupport.Start,entrySupport.End,silkPosition);
+            spider=point.Position;depth=point.Depth;
+            return silkPosition==target;
+        }
+
+        internal HabitatRouteOverlay RouteOverlay { get; set; }
+        internal Rect ImageViewport { get { return FitImage(new Rect(0,0,ActualWidth,ActualHeight)); } }
+
+        internal bool TryGetInspectionOrigin(out V origin,out bool atSpider) {
+            origin=explorer.GroundPoint;
+            atSpider=!airborne && visit!=Visit.Weaving && visit!=Visit.Returning;
+            return explorer.HasSurface && scene.Field.HasFooting(origin);
         }
 
         protected override void OnRender(DrawingContext d) {
@@ -142,11 +199,15 @@ namespace CornerSpider {
             Draw(d,new Rect(0,0,ActualWidth,ActualHeight));
         }
 
-        internal void Draw(DrawingContext d,Rect bounds) {
-            d.DrawRectangle(Brushes.Black,null,bounds);
+        Rect FitImage(Rect bounds) {
             double ratio=Math.Min(bounds.Width/scene.Color.PixelWidth,bounds.Height/scene.Color.PixelHeight);
             double width=scene.Color.PixelWidth*ratio,height=scene.Color.PixelHeight*ratio;
-            var viewport=new Rect(bounds.X+(bounds.Width-width)*.5,bounds.Y+(bounds.Height-height)*.5,width,height);
+            return new Rect(bounds.X+(bounds.Width-width)*.5,bounds.Y+(bounds.Height-height)*.5,width,height);
+        }
+
+        internal void Draw(DrawingContext d,Rect bounds) {
+            d.DrawRectangle(Brushes.Black,null,bounds);
+            var viewport=FitImage(bounds);
             d.DrawImage(scene.Color,viewport);
             d.PushClip(new RectangleGeometry(viewport));
             if(construction!=null && construction.VisibleCount>0 && opacity>0) {
@@ -154,7 +215,8 @@ namespace CornerSpider {
                 DrawSilk(d,viewport);
                 d.Pop();
             }
-            if(species.Length>0) DrawPet(d,viewport);
+            if(species.Length>0 && explorer.HasSurface) DrawPet(d,viewport);
+            if(RouteOverlay!=null) RouteOverlay.Draw(d,viewport);
             d.Pop();
         }
 

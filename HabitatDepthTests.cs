@@ -83,6 +83,23 @@ namespace CornerSpider {
             var cliff=Field((x,y)=>x<.5?.15:.90);
             Check(!HabitatRoute.TryPlan(cliff,new V(.30,.52),new V(.70,.52),out steps),"a hard depth cliff is never crossed by a walk or long hop");
 
+            var ridge=Field((x,y)=>x<.30 || x>.70 || Math.Abs(y-.50)<.005?.62:.12,360,360);
+            start=new V(.23,.50);end=new V(.77,.50);
+            Check(ridge.HasFooting(start) && ridge.HasFooting(end) && !ridge.HasFooting(new V(.5,.5)),
+                "the narrow ridge has supported ends and an unsupported middle");
+            Check(!ridge.CanWalk(start,end) && !HabitatRoute.TryPlan(ridge,start,end,out steps),
+                "a continuous centerline cannot carry a walk along an unsupported ridge");
+
+            var obstacle=Field((x,y)=>Math.Abs(x-.5)<.006?.66:.54,400,160);
+            start=new V(.467,.50);end=new V(.533,.50);
+            Check(obstacle.HasFooting(start) && obstacle.HasFooting(end) && !obstacle.CanHop(start,end),
+                "a short hop rejects a foreground obstacle on the drawn arc");
+
+            var unsteady=Field((x,y)=>(14*y)%1,160,560);
+            var invalid=new HabitatExplorer(unsteady,8);
+            Check(!invalid.HasSurface && !invalid.SetDestination(new V(.6,.5)),
+                "a map with no reliable foothold does not spawn a walking spider");
+
             var first=new HabitatExplorer(ramp,19);
             var second=new HabitatExplorer(ramp,19);
             for(int i=0;i<55;i++) { first.Tick(.02);second.Tick(.02); }

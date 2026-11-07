@@ -23,6 +23,7 @@ namespace CornerSpider {
                 Check(log,!HabitatLibrary.List(profile)[0].WhiteIsNear,"each saved habitat remembers its own depth convention");
                 HabitatLibrary.SetPolarity(profile,scene.Id,true);
                 CheckOcclusion(log);
+                CheckRoutes(log,folder,scene);
                 foreach(string species in new[]{"Regal","CrossOrb","SouthernWidow","BarnFunnel","CrossOrbMale"})
                     TestExploration(log,folder,scene,species);
 
@@ -33,6 +34,9 @@ namespace CornerSpider {
                     host.OpenHabitat(scene,true);
                     var window=FindHabitat();
                     Check(log,window!=null && window.IsVisible && !window.Topmost && AllOverlays(host,false),"habitat opens normally and hides desktop overlays");
+                    window.RouteInspectionEnabled=true;
+                    Check(log,window.RouteInspectionEnabled && !host.Paused,"route inspection pauses the habitat without changing the pet pause setting");
+                    window.RouteInspectionEnabled=false;
                     SendKey(window,Key.F11);
                     Check(log,window.WindowState==WindowState.Maximized && window.WindowStyle==WindowStyle.None,"F11 fills the screen");
                     SendKey(window,Key.Escape);
@@ -74,23 +78,52 @@ namespace CornerSpider {
         static void TestExploration(StringBuilder log,string folder,HabitatScene scene,string species) {
             var canvas=new HabitatCanvas(scene);canvas.Apply(species,1,1);
             var from=canvas.Position;double near=canvas.Depth,far=canvas.Depth,travel=0;
-            bool silk=false;
+            var plan=HabitatSilk.Plan(scene.Field,species,from);
+            int silkFrames=0;
+            bool silk=false,validFooting=true,validSilk=true;
             for(int i=0;i<2600;i++) {
                 var before=canvas.Position;
                 canvas.Tick(.05);near=Math.Max(near,canvas.Depth);far=Math.Min(far,canvas.Depth);
                 travel+=(canvas.Position-before).Length;
+                V ground;bool atSpider;
+                validFooting&=canvas.TryGetInspectionOrigin(out ground,out atSpider);
+                if(canvas.SilkPosition>0) {
+                    silkFrames++;
+                    var support=plan.Segments[0];
+                    var onStrand=HabitatSilkPoint.Lerp(support.Start,support.End,canvas.SilkPosition);
+                    validSilk&=(onStrand.Position-canvas.Position).Length<.00002 &&
+                        Math.Abs(onStrand.Depth-canvas.Depth)<.00002 && !atSpider;
+                }
                 if(!silk && canvas.VisibleSilk>4 && !canvas.WebComplete) {
                     silk=true;Snapshot(folder,species+"-building",canvas);
                 }
             }
             Check(log,travel>.18 && near-far>.10,"pet explores different depth surfaces: "+species);
+            Check(log,validFooting && validSilk,"surface footholds and laid silk support every move: "+species);
             if(SkinCatalog.Get(species).Category=="Orb weavers" && SkinCatalog.Get(species).Male)
                 Check(log,canvas.VisibleSilk==0,"male orb weaver searches without building a capture web");
             else
                 Check(log,silk && canvas.WebComplete,"anchors and progressive silk finish: "+species);
-            log.AppendLine(String.Format("{0} depth {1:F2} to {2:F2}, traveled {3:F2}, started at {4:F2},{5:F2}, strands {6}",
-                species,far,near,travel,from.X,from.Y,canvas.VisibleSilk));
+            log.AppendLine(String.Format("{0} depth {1:F2} to {2:F2}, traveled {3:F2}, strands {4}, silk-supported frames {5}",
+                species,far,near,travel,canvas.VisibleSilk,silkFrames));
             Snapshot(folder,species+"-habitat",canvas);
+        }
+
+        static void CheckRoutes(StringBuilder log,string folder,HabitatScene scene) {
+            var canvas=new HabitatCanvas(scene);canvas.Apply("CrossOrbMale",1,1);
+            var overlay=new HabitatRouteOverlay(scene.Field);canvas.RouteOverlay=overlay;
+            V start;bool atSpider;
+            Check(log,canvas.TryGetInspectionOrigin(out start,out atSpider) && atSpider,"route inspector starts at the spider's measured surface");
+            V[] destinations={new V(.73,.31),new V(.68,.40),new V(.62,.83),new V(.56,.87)};
+            foreach(var target in destinations) {
+                overlay.Inspect(start,target,atSpider);
+                if(overlay.Reachable) break;
+            }
+            Check(log,overlay.Reachable,"forest route inspector finds a supported destination");
+            Snapshot(folder,"forest-route-supported",canvas);
+            overlay.Inspect(start,new V(.72091,.24607),atSpider);
+            Check(log,!overlay.Reachable,"forest route inspector rejects the previously unsupported pause point");
+            Snapshot(folder,"forest-route-blocked",canvas);
         }
 
         static void Snapshot(string folder,string name,HabitatCanvas canvas) {

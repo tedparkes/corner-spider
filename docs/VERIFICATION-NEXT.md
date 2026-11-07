@@ -1,5 +1,14 @@
 # Verification: Corner Spider 1.1 previews
 
+## 1.1.0-alpha.15
+
+- Depth regressions cover a narrow ridge with a continuous centerline, an
+  obstacle across the hop arc and a map with no stable starting surface.
+- Habitat diagnostics check a reachable and an unsupported destination in a
+  local forest test, and verify surface footing and support strand contact
+  during exploration and silk construction. The depth map still approximates
+  the visible surfaces of a single view.
+
 ## 1.1.0-alpha.14
 
 - The deterministic habitat suite covers projected distance, route continuity,
